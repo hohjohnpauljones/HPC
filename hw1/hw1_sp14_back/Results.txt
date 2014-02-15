@@ -1,0 +1,255 @@
+1. 	
+	int i, j, k;
+	
+	for (i = 0; i < lhs.size1(); i++)
+	{
+		for (j = 0; j < rhs.size2(); j++)
+		{
+			for (k = 0; k < lhs.size2(); k++)
+			{
+				result(i, j) += lhs(i,k) * rhs(k,j);
+			}
+		}
+	}
+	
+	Self Test Complete
+==================
+After Build, run 'make analysis' to run analysis
+[mabcb7@babbage-lb1 hw1_sp14]$ make analysis
+make[1]: Entering directory `/students/7/mabcb7/HPC/hw1/hw1_sp14/analyze'
+Running hw1_analyze:
+
+Program Execution Times
+
+real    13m18.290s
+user    13m18.812s
+sys     0m0.156s
+make[1]: Leaving directory `/students/7/mabcb7/public_html/HPC/hw1/hw1_sp14/analyze'
+[mabcb7@babbage-lb2 hw1_sp14]$
+
+2.
+added -O3 flag to compilation
+
+Program Execution Times
+
+real    8m7.914s
+user    8m8.248s
+sys     0m0.093s
+
+
+3. 
+
+switch from i++ to ++i
+
+Program Execution Times
+
+real    8m11.309s
+user    8m11.637s
+sys     0m0.102s
+
+
+4. 
+
+added transpose to rhs
+
+
+Program Execution Times
+
+real    10m5.118s
+user    10m5.469s
+sys     0m0.180s
+
+
+5. 
+
+from 3:
+	Converted lhs and rhs into vectors instead of matricies, result still matrix
+	
+Program Execution Times
+
+real    6m2.958s
+user    6m3.089s
+sys     0m0.186s
+make[1]: Leaving directory `/students/7/mabcb7/public_html/HPC/hw1/hw1_sp14/analyze'
+
+6. 
+
+from 5:
+	added transpose to rhs
+	in Summary: transposed rhs and then. lhs and rhs are converted to 1D arrays
+	
+Program Execution Times
+
+real    6m1.760s
+user    6m1.913s
+sys     0m0.163s
+
+7. 
+
+from 6:
+	added compiler flags -funroll-loops -march=native 
+	
+Program Execution Times
+
+real    6m1.939s
+user    6m2.072s
+sys     0m0.184s
+
+no significant plot change from 6.
+	
+8. 
+	From 5 
+		removed all compiler flags 
+		compiled with -Ofast
+		
+		
+		
+9. 
+	Fresh start with all changes in 6.
+	compiler flat -O3 in all files (including analyze)
+	
+[mabcb7@babbage-lb2 hw1_sp14]$ valgrind --tool=cachegrind make analysis
+==14873== Cachegrind, a cache and branch-prediction profiler
+==14873== Copyright (C) 2002-2012, and GNU GPL'd, by Nicholas Nethercote et al.
+==14873== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==14873== Command: make analysis
+==14873==
+--14873-- warning: L3 cache found, using its data for the LL simulation.
+make[1]: Entering directory `/students/7/mabcb7/public_html/HPC/hw1/hw1_sp14/analyze'
+Running hw1_analyze:
+Scrapping Timing Statistics:
+Generating Plots:
+Program Execution Times
+
+real    4m1.320s
+user    4m1.410s
+sys     0m0.119s
+make[1]: Leaving directory `/students/7/mabcb7/public_html/HPC/hw1/hw1_sp14/analyze'
+==14873==
+==14873== I   refs:      2,299,874
+==14873== I1  misses:        5,145
+==14873== LLi misses:        2,317
+==14873== I1  miss rate:      0.22%
+==14873== LLi miss rate:      0.10%
+==14873==
+==14873== D   refs:        784,082  (538,573 rd   + 245,509 wr)
+==14873== D1  misses:        9,940  (  7,046 rd   +   2,894 wr)
+==14873== LLd misses:        4,326  (  1,943 rd   +   2,383 wr)
+==14873== D1  miss rate:       1.2% (    1.3%     +     1.1%  )
+==14873== LLd miss rate:       0.5% (    0.3%     +     0.9%  )
+==14873==
+==14873== LL refs:          15,085  ( 12,191 rd   +   2,894 wr)
+==14873== LL misses:         6,643  (  4,260 rd   +   2,383 wr)
+==14873== LL miss rate:        0.2% (    0.1%     +     0.9%  )
+
+10. 
+	Normal Loop with -O3 flag
+	
+Running hw1_analyze:
+Scrapping Timing Statistics:
+Generating Plots:
+Program Execution Times
+
+real    6m40.971s
+user    6m41.254s
+sys     0m0.068s
+make[1]: Leaving directory `/students/7/mabcb7/public_html/HPC/hw1/hw1_sp14/analyze'
+==17636==
+==17636== I   refs:      2,301,655
+==17636== I1  misses:        5,145
+==17636== LLi misses:        2,317
+==17636== I1  miss rate:      0.22%
+==17636== LLi miss rate:      0.10%
+==17636==
+==17636== D   refs:        784,657  (538,912 rd   + 245,745 wr)
+==17636== D1  misses:        9,935  (  7,038 rd   +   2,897 wr)
+==17636== LLd misses:        4,329  (  1,944 rd   +   2,385 wr)
+==17636== D1  miss rate:       1.2% (    1.3%     +     1.1%  )
+==17636== LLd miss rate:       0.5% (    0.3%     +     0.9%  )
+==17636==
+==17636== LL refs:          15,080  ( 12,183 rd   +   2,897 wr)
+==17636== LL misses:         6,646  (  4,261 rd   +   2,385 wr)
+==17636== LL miss rate:        0.2% (    0.1%     +     0.9%  )
+
+11.
+	remove -g
+	
+failed flags...
+
+-ffast-math -fforce-addr -march=native -msse2
+
+12. 
+	directly accesing matrix elements instead of using functions
+	
+	
+[mabcb7@babbage-lb4 hw1_sp14]$ make analysis
+make[1]: Entering directory `/students/7/mabcb7/public_html/HPC/hw1/hw1_sp14/analyze'
+Running hw1_analyze:
+
+Scrapping Timing Statistics:
+Generating Plots:
+Program Execution Times
+
+real    3m17.595s
+user    3m17.705s
+sys     0m0.041s
+
+13. 
+	From 12, added flags: 
+	
+	-O3 -march=native -msse2
+	
+	
+Generating Plots:
+Program Execution Times
+
+real    3m15.893s
+user    3m15.984s
+sys     0m0.059s
+
+
+14. 
+	From 13, transposed rhs
+	
+	
+Generating Plots:
+Program Execution Times
+
+real    2m44.332s
+user    2m44.413s
+sys     0m0.058s
+
+15. 
+	flags = -m64 -O3 -ffast-math -funroll-loops -sse4_2 -march=native
+	
+	-sse4_2 unrecognized
+
+Generating Plots:
+Program Execution Times
+
+real    2m31.377s
+user    2m31.442s
+sys     0m0.065s
+make[1]: Leaving directory `/s
+	
+16. 
+	flags = -g0 -m64 -O3 -ffast-math -funroll-loops -march=native
+	
+
+Program Execution Times
+
+real    2m30.832s
+user    2m30.890s
+sys     0m0.069s
+
+17. 
+	flags = -g0 -m64 -O3 -ffast-math -funroll-loops -march=core-i7 -mtune=core-i7 -DNDEBUG
+	
+
+Program Execution Times
+
+real    0m11.491s
+user    0m11.439s
+sys     0m0.059s
+make[1]: Leaving directory `/students/7/mabcb7/public_html/HPC/hw1/hw1_sp14/analyze'
+	

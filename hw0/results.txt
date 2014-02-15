@@ -1,0 +1,15 @@
+1:
+Parsing the file took  172.047 seconds.
+1000000 lines were parsed
+Finding the bounding values took  6.93573 seconds.
+1000000 lines searched
+2:
+Parsing the file took  176.773 seconds.
+1000000 lines were parsed
+Finding the bounding values took  6.9472 seconds.
+1000000 lines searched
+Parsing the file took  91.4887 seconds.
+1000000 lines were parsed
+Finding the bounding values took  1.02219 seconds.
+1000000 lines searched
+
