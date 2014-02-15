@@ -9,19 +9,15 @@
 #include <chrono>
 using namespace std;
 
-//commiting from windows
-
-vector<float> splitFloat(const string& s, const string& delim, const bool keep_empty = true) {
+vector<float> splitFloat(const string& s, const string& delim) {
     vector<float> result;
-    if (delim.empty()) {
-        result.push_back(::atof(s.c_str()));
-        return result;
-    }
+	
     string::const_iterator substart = s.begin(), subend;
+	
     while (true) {
         subend = search(substart, s.end(), delim.begin(), delim.end());
         string temp(substart, subend);
-        if (keep_empty || !temp.empty()) {
+        if (!temp.empty()) {
             result.push_back(::atof(temp.c_str()));
         }
         if (subend == s.end()) {
