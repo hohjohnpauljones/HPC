@@ -1,3 +1,5 @@
+#include "csvparse.hpp"
+
 #include <string.h>
 #include <vector>
 #include <iostream>
@@ -7,7 +9,13 @@
 #include <algorithm>
 #include <iterator>
 #include <chrono>
-using namespace std;
+
+std::vector<mabcb7::Line> parseFile(const std::string filename)
+{
+	std::vector<mabcb7::Line> result;
+	
+	return result;
+}
 
 vector<float> splitFloat(const string& s, const string& delim) {
     vector<float> result;
@@ -49,6 +57,10 @@ int main(int argc, char* argv[])
 	float ymax;
 	vector<float> min;
 	vector<float> max;
+	
+	
+	
+	
 	
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	
