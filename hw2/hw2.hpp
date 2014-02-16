@@ -12,7 +12,7 @@ struct result
     }
 };
 
-std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vector<float> cir, int n, std::pair<float, float> coord)
+std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vector<float> cir, int n)
 {
 	int i;
 	int sizeOfSearch = svector.size();
@@ -21,7 +21,9 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 	int offset;
 	result temp;
 	std::vector<result> results;
-	temp.coord = coord;
+	temp.coord = make_pair(cir[0], cir[1]);
+	
+	cir.resize(2, cir.size());
 	
 	for (offset = 0; offset < sizeOfCircle; offset += 5)
 	{
