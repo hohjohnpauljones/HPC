@@ -1,12 +1,12 @@
-OTHER_FLAGS=(-std=c++0x)
+OTHER_FLAGS= -std=c++0x
 
 all: hw2
 
-hw2: csvparse.o hw2.o
-	g++ -o hw2 hw2.o csvparse.o
+hw2: hw2.o
+	g++ -o hw2 hw2.o 
 
-hw2.o: hw2.cpp
-	g++ ${OTHER_FLAGS} -c hw2.cpp
+hw2.o: hw2.cpp csvparse.o
+	g++ ${OTHER_FLAGS} -c hw2.cpp csvparse.o
 
 csvparse.o: csvparse.cpp csvparse.hpp
 	g++ ${OTHER_FLAGS} -c csvparse.cpp

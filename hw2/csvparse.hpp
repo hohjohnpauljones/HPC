@@ -1,15 +1,14 @@
+
 using namespace std;
 
-namespace mabcb7
-{
-
-typedef struct line {
+/*
+struct line {
 	int x;
 	int y;
 	std::vector<float> points;
 } Line;
+*/
+//typedef std::map<std::pair<float,float>, vector<float>> line;
 
-std::vector<mabcb7::Line> parseFile(const std::string filename);
 
-}
-
+//std::multimap<std::pair<float,float>, vector<float>> mapa;
