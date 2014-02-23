@@ -12,8 +12,9 @@
 
 
 typedef std::map<std::pair<float,float>, vector<float>> line_map;
+typedef std::vector<std::vector<float>> lineType;
 
-line_map parseFile(const char* filename);
+lineType parseFile(const char* filename);
 
 
 vector<float> splitFloat(const string& s, const string& delim) {
@@ -35,16 +36,17 @@ vector<float> splitFloat(const string& s, const string& delim) {
     return result;
 	}
 
-line_map parseFile(const char* filename)
+lineType parseFile(const char* filename)
 {
 
 	//std::multimap<std::pair<float,float>, vector<float>> mapa;	//multimap to hold data
-	line_map mapa;
+	//line_map mapa;
 	int count = 0;												//counter for number of lines read and processed
 	ifstream myfile (filename);									//file stream
 	string line;												//temporary line pointer
 	float x;													
 	float y;
+	std::vector<std::vector<float>> lines;
 	
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	
@@ -54,11 +56,13 @@ line_map parseFile(const char* filename)
 		{
 			++count;
 			vector<float> tokens = splitFloat(line, ",");
-			x = tokens[0];
-			y = tokens[1];
-			tokens.erase(tokens.begin(),tokens.begin()+1);
+			//x = tokens[0];
+			//y = tokens[1];
+			//tokens.erase(tokens.begin(),tokens.begin()+1);
 			
-			mapa.insert(std::pair<std::pair<float, float>, vector<float>>(std::make_pair(x,y), tokens));
+			//mapa.insert(std::pair<std::pair<float, float>, vector<float>>(std::make_pair(x,y), tokens));
+			lines.push_back(tokens);
+			
 		}
 	  }
 	
@@ -70,7 +74,7 @@ line_map parseFile(const char* filename)
 	
 	myfile.close();
 	
-	return mapa;
+	return lines;
 	
 }
 
