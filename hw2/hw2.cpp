@@ -18,7 +18,13 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
+	line_map fileData = parseFile(argv[1]);
+	line_map::iterator itr = fileData.begin();
+	std::vector<result> results;
+	std::vector<float> search = {1,2,3,4,5,6,7,8,9};
+	int search_vector_length = 9;
 	
+	results = circularSubvectorMatch(search, itr->first, search_vector_length);
 	
 	
 	/*

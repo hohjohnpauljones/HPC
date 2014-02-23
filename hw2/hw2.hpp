@@ -7,15 +7,10 @@ using namespace std;
 
 struct result 
 {
-	//std::pair<float,float> coord;
-	float x, y;
+	std::pair<float,float> coord;
+	//float x, y;
 	int offset;
 	float distance;
-	
-	bool operator < (const result& str) const
-    {
-        return (distance < str.distance);
-    }
 };
 
 std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vector<float> cir, int n)
@@ -27,9 +22,9 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 	int offset;
 	result temp;
 	std::vector<result> results;
-	//temp.coord = make_pair(cir[0], cir[1]);
-	temp.x = cir[0];
-	temp.y = cir[1];
+	temp.coord = make_pair(cir[0], cir[1]);
+	//temp.x = cir[0];
+	//temp.y = cir[1];
 	
 	cir.resize(2, cir.size());
 	
@@ -46,8 +41,8 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 		
 	}
 	
-	std::sort(results.begin(), results.end());
-	results.resize(10);
+	//std::sort(results.begin(), results.end());
+	//results.resize(10);
 	return results;
 }
 
