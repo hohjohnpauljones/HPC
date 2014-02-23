@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
-	int i, m;
+	int i, j, m;
 	
 	std::vector<result> results;
 	std::vector<result> tempResults;
@@ -21,37 +21,37 @@ int main(int argc, char* argv[])
 	//line_map::iterator itr = mapa.begin();
 	lineType mapa = parseFile(argv[1]);
 	const int mapa_count = mapa.size();
+	int sizes[] = {9, 11, 17, 29};
 	
 	
 	// 2: for Each vector size s in S = {9,11,17, 29} do
-	
+	for (j = 0; j < 1; j++)
+	{
 	
 	// 3: Run Test Vector against circularSubvectorMatch(Ts, D=P, N) . Verify and display self test results	
-	
-	std::vector<float> test_data = {12,13,1,2,3,4,5,6,7};
-	std::vector<float> test_vector = {1,2,3};
-	std::vector<result> test_results = circularSubvectorMatch(test_vector, test_data);
-	
-	//cout << "Test Data: " << test_data << std::endl;
-	//cout << "Test Vector: " << test_vector << std::endl;
-	std::vector<result>::iterator it_test = test_results.begin();
-	printf("%9s | %9s | %9s | %8s |\n---------------------------------------------\n", "x", "y", "Offset", "Distance");
-	for (it_test; it_test != test_results.end(); ++it_test)
+	int test_pass = runTest();
+	if (test_pass)
 	{
-		printf("%1.6f | %1.6f | %9d | %1.6f |\n", it_test->coord.first, it_test->coord.second, it_test->offset, it_test->distance);
-		//cout << it_test->coord.first << ", " << it_test->coord.second << " " << it_test->offset << " " << it_test->distance << std::endl;
+		cout << "Test Passed" << std::endl;
+	}
+	else
+	{
+		cout << "Test Failed" << std::endl;
+		return 0;
 	}
 	
 	
 	// 4: Generate V as a set of 30 random vectors of length s
-	for (i = 0; i < 1; i++)
+	for (i = 0; i < 30; i++)
 	{
-		sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
+		//sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
+		sVectors[i] = generateRandomVector(sizes[j]);
 	}
 
 	// 5: for Each vector v in V do
 	for (i = 0; i < 1; i++)
 	{
+		results.erase(results.begin(), results.end());
 		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 		
 		// 6: Using P parallel processes
@@ -73,7 +73,9 @@ int main(int argc, char* argv[])
 		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(stop - start);
 		
 		// 11: Report Search Time for v
-		std::cout << "Swinging through once took:  " << time_span.count() << " seconds." << std::endl;
+		std::cout << "Search: " << sizes[j] << "-D" << std::endl
+		<< "---------------------" << std::endl
+		<< "{" << vectorToCSV(sVectors[i]) << "}" << std::endl;
 		
 		// 12: Report Match Results for v
 		std::vector<result>::iterator it = results.begin();
@@ -83,14 +85,14 @@ int main(int argc, char* argv[])
 			//cout << it->coord.first << ", " << it->coord.second << " " << it->offset << " " << it->distance << std::endl;
 			printf("%1.6f | %1.6f | %9d | %1.6f |\n", it->coord.first, it->coord.second, it->offset, it->distance);
 		}
-		
+		cout << " Time: " << time_span.count() << " seconds." << std::endl;
 		
 		
 		// 13: end for
 	}
 	
 	// 14: end for	
-	
+	}
 	// 15: Free and Release Shared Memory
 	// 16: Report average search time for each size, s
 	
