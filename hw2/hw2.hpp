@@ -10,6 +10,7 @@ struct result
     {
         return (distance < str.distance);
     }
+	
 };
 
 std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vector<float> cir)
@@ -43,7 +44,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 		
 	}
 	
-	//std::sort(results.begin(), results.end());
+	std::sort(results.begin(), results.end());
 	results.resize(10);
 	return results;
 }

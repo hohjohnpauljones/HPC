@@ -35,9 +35,11 @@ int main(int argc, char* argv[])
 	//cout << "Test Data: " << test_data << std::endl;
 	//cout << "Test Vector: " << test_vector << std::endl;
 	std::vector<result>::iterator it_test = test_results.begin();
+	printf("%9s | %9s | %9s | %8s |\n---------------------------------------------\n", "x", "y", "Offset", "Distance");
 	for (it_test; it_test != test_results.end(); ++it_test)
 	{
-		cout << it_test->coord.first << ", " << it_test->coord.second << " " << it_test->offset << " " << it_test->distance << std::endl;
+		printf("%1.6f | %1.6f | %9d | %1.6f |\n", it_test->coord.first, it_test->coord.second, it_test->offset, it_test->distance);
+		//cout << it_test->coord.first << ", " << it_test->coord.second << " " << it_test->offset << " " << it_test->distance << std::endl;
 	}
 	
 	
@@ -75,10 +77,14 @@ int main(int argc, char* argv[])
 		
 		// 12: Report Match Results for v
 		std::vector<result>::iterator it = results.begin();
+		printf("%9s | %9s | %9s | %8s |\n---------------------------------------------\n", "x", "y", "Offset", "Distance");
 		for (it; it != results.end(); ++ it)
 		{
-			cout << it->coord.first << ", " << it->coord.second << " " << it->offset << " " << it->distance << std::endl;
+			//cout << it->coord.first << ", " << it->coord.second << " " << it->offset << " " << it->distance << std::endl;
+			printf("%1.6f | %1.6f | %9d | %1.6f |\n", it->coord.first, it->coord.second, it->offset, it->distance);
 		}
+		
+		
 		
 		// 13: end for
 	}
