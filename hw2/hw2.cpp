@@ -18,61 +18,109 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
-	//Define an STL compatible allocator of ints that allocates from the managed_shared_memory.
-	//This allocator will allow placing containers in the segment
-	typedef allocator<int, managed_shared_memory::segment_manager>  ShmemAllocator;
-
-	//Alias a vector that uses the previous STL-like allocator so that allocates
-	//its values from the segment
-	typedef vector<int, ShmemAllocator> MyVector;
-	
-	//Create a new segment with given name and size
-	managed_shared_memory segment(create_only, "MySharedMemory", 65536);
-
-	
-	//Initialize shared memory STL-compatible allocator
-	const ShmemAllocator alloc_inst (segment.get_segment_manager());
-
-	//Construct a vector named "MyVector" in shared memory with argument alloc_inst
-	MyVector *myvector = segment.construct<MyVector>("MyVector")(alloc_inst);
 	
 	
 	
+	/*
+	//1: Load data, D, from le into Shared Memory
+	line_map fileData = parseFile(argv[1]);
+	line_map::iterator itr = fileData.begin();
 	
-	//Initialize shared memory STL-compatible allocator
-	//const allocator<int, managed_shared_memory::segment_manager> alloc_inst (segment.get_segment_manager());
-
-	//Construct a vector named "MyVector" in shared memory with argument alloc_inst
-	//boost::container::vector<float, allocator<float, managed_shared_memory::segment_manager>> * fileData = segment.construct<fileData>("fileData")(alloc_inst);
+	int i, j, k;
+	int P = 1;			//degree of multiprocessing
 	
-	parseFile(argv[1], fileData);
-	std::vector<float>::iterator itr = fileData.begin();
-	std::vector<float> svector {9, 8, 7, 6, 5, 4, 3, 2, 1};
+	std::vector<std::vector<float>> svectors;
 	std::vector<result> results;
+	int vsize[] = {9, 11, 17, 29};
+	int numSearchSizes = sizeof(vsize)/sizeof(int);
 	
-	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-	
+	/*
 	for (itr; itr !=fileData.end(); ++itr)
 	{
-		results = (circularSubvectorMatch(svector, itr->first, 9));
+	
+		results = (circularSubvectorMatch({0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231},
+										itr->first, 9));
+	
 	}
 	
-	sort(results.begin(), results.end());
-	results.resize(10);
 	
-	std::chrono::high_resolution_clock::time_point stop = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(stop - start);
 	
-	std::cout << "Swinging through once took:  " << time_span.count() << " seconds." << std::endl;
+		//2: for Each vector size do
+		for (i = 0; i < numSearchSizes; i++)
+		{
+		
+			//4: Generate V as a set of 30 random vectors of length s
+			const int s = vsize[i];
+			
+			cout << "Search: " << s << "D" << std::endl << "-----------" << std::endl;
+			
+
+			for (j = 0; j < 1; j++)
+			{
+				//svectors[j] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
+				
+				svectors[j] = rvec(s);
+			}
+			
+			//5: for Each vector v 2 V do
+			for (j = 0; j < 1; j++)
+			{
+			
+				std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+				/*
+				6: Using P parallel processes
+				7: circularSubvectorMatch(s, D=P, N)
+				8: . where D=P is an even portion of D searched by one of the P processes
+				9: Merge P Partial Results
+				10: . Alternative to Merge, you can use Shared Memory and Mutex to merge results during searching
+				
+				
+				std::vector<result> resulttemp = (circularSubvectorMatch(svectors[j], itr->first, s));
 	
-	std::vector<result>::iterator it = results.begin();
-	
-	for (it; it != results.end(); ++ it)
-	{
-		cout << it->coord.first << ", " << it->coord.second << " " << it->offset << " " << it->distance << std::endl;
+				//results.insert(results.end(), resulttemp.begin(), resulttemp.end());
+				
+				//sort(results.begin(), results.end());
+				//results.resize(10);
+
+				std::chrono::high_resolution_clock::time_point stop = std::chrono::high_resolution_clock::now();
+				std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(stop - start);
+		
+				std::cout << ":  " << time_span.count() << " seconds." << std::endl;
+
+				std::vector<result>::iterator it = results.begin();
+				
+				for (it; it != results.end(); ++it)
+				{
+					cout << it->x << ", " << it->y << " " << it->offset << " " << it->distance << std::endl;
+				}
+				
+			}
+		}
 	}
+
 	
-	shared_memory_object::remove("MySharedMemory");
-	
+	*/
 	return 0;
 }
+
+
+/*
+1: Load data, D, from le into Shared Memory
+2: for Each vector size s 2 f9;11;17;29g do
+3: Run Test Vector against circularSubvectorMatch(Ts, D=P, N) . Verify and display self test results
+4: Generate V as a set of 30 random vectors of length s
+5: for Each vector v 2 V do
+6: Using P parallel processes
+7: circularSubvectorMatch(s, D=P, N)
+8: . where D=P is an even portion of D searched by one of the P processes
+9: Merge P Partial Results
+10: . Alternative to Merge, you can use Shared Memory and Mutex to merge results during searching
+11: Report Search Time for v
+12: Report Match Results for v
+13: end for
+14: end for
+15: Free and Release Shared Memory
+16: Report average search time for each size, s
+
+
+*/
