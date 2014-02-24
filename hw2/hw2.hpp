@@ -37,9 +37,13 @@ struct shmem_result
 
 };
 
-std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vector<float> cir)
+// GJS: Accomplishing ?  Why not pass in a reference to cir ... const std::vector<float>& cir, then 
+// GJS:  const std::vector<float> threeSixty(cir.begin()+2, cir.end());
+// GJS: This is be a lot faster at runtime
+
+std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, const std::vector<float>& cir, const int start, const int end, const int p, const int p_num)
 {
-	
+	const std::vector<float> threeSixty(cir.begin()+2, cir.end());
 	result temp;
 	std::vector<result> results;
 	result * result_shm;
@@ -47,14 +51,15 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 	temp.x = cir[0];
 	temp.y = cir[1];
 	//cir.erase(cir.begin(), cir.begin()+1);
-	std::vector<float>(cir.begin()+2, cir.end()).swap(cir);
+	//std::vector<float>(cir.begin()+2, cir.end()).swap(cir);
 	
-	int i,j, p;
+	int i,j;
 	const int sizeOfSearch = svector.size();
-	const int sizeOfCircle = cir.size();
+	const int sizeOfCircle = threeSixty.size();
 	
 	int offset;
 	
+	/*
 	pid_t pid = getpid();
 	char MUTEXid[32];
 	sprintf(MUTEXid, "semmutex%d", pid);
@@ -92,7 +97,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 			res = (result *)shmptr;			
 			
 			//printf("1: %p, size: %d, should be: %d\n", res, sizeof(res), sizeof(result));
-			res[0].x = .124;
+			//res[0].x = .124;
 			
 			for (offset = 0; offset < sizeOfCircle; offset += 5)
 			{
@@ -103,7 +108,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 				for (i = offset; i < offset + sizeOfSearch; ++i)
 				{
 					//cout << i << " " << offset << ": " << temp.distance << " += |" << svector[j % sizeOfSearch] << " - " << cir[i % sizeOfCircle] << "| " << std::endl;
-					temp.distance += fabs(svector[j % sizeOfSearch] - cir[i % sizeOfCircle]);
+					temp.distance += fabs(svector[j] - threeSixty[i % sizeOfCircle]);
 					j++;
 				}
 				
@@ -126,7 +131,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 			sem_post(MUTEXptr);
 			//printf("how are you?\n");
 			//return results;
-			shmdt(shmptr);                  /* detach the shared memory */
+			shmdt(shmptr);                  // detach the shared memory 
 			exit(0);
 		}
 		else
@@ -151,9 +156,9 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 			}
 			
 			
-			shmdt(shmptr);                  /* detach the shared memory */
-			shmctl(shm_id, IPC_RMID, NULL);  /* delete the shared memory segment */
-			sem_unlink(MUTEXid);            /* delete the MUTEX semaphore */
+			shmdt(shmptr);                  // detach the shared memory 
+			shmctl(shm_id, IPC_RMID, NULL);  // delete the shared memory segment 
+			sem_unlink(MUTEXid);            // delete the MUTEX semaphore 
 			//printf("return \n");
 			return results;
 			//sem_post(MUTEXptr);
@@ -168,9 +173,9 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 	}
 	//cout << "shared Memory value: " << *count << std::endl;
 	
+	*/
 	
-	
-	for (offset = 0; offset < sizeOfCircle; offset += 5)
+	for (offset = start; offset < end; offset += 5)
 	{
 		temp.distance = 0;
 		temp.offset = offset;
@@ -179,7 +184,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 		for (i = offset; i < offset + sizeOfSearch; ++i)
 		{
 			//cout << i << " " << offset << ": " << temp.distance << " += |" << svector[j % sizeOfSearch] << " - " << cir[i % sizeOfCircle] << "| " << std::endl;
-			temp.distance += fabs(svector[j % sizeOfSearch] - cir[i % sizeOfCircle]);
+			temp.distance += fabs(svector[j] - cir[i % sizeOfCircle]);
 			j++;
 			
 			
@@ -224,7 +229,7 @@ int runTest()
 	
 	std::vector<float> test_data = {12,13,1,2,3,4,5,6,7,8,9,10,11,12};
 	std::vector<float> test_vector = {1,2,3,4,5,6,7,8,9};
-	std::vector<result> test_results = circularSubvectorMatch(test_vector, test_data);
+	std::vector<result> test_results = circularSubvectorMatch(test_vector, test_data, 0, 360, 1, 1);
 	result temp;
 	std::vector<result> test_compare;
 	int test_pass = 1;

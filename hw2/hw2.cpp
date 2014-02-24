@@ -9,12 +9,30 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
-	int i, j, m;
-	
+	int i, j, m, k, start_d, end_d;
 	std::vector<result> results;
 	std::vector<result> tempResults;
 	std::vector<float> sVectors[30];
 	int sVectors_size = 9;
+	
+	//Declare IPC controls and initialize shared memory
+	pid_t pid = getpid();
+	char MUTEXid[32];
+	sprintf(MUTEXid, "semmutex%d", pid);
+	sem_t *MUTEXptr = sem_open(MUTEXid, O_CREAT, 0600, 1);
+	int shm_id;
+	void *shmptr;
+	result * res;
+	pid_t PID = -1;
+	key_t shm_key = 1029384756;
+	int D = 10;
+	int P = 2;
+	int count = 0;
+	
+	shm_id = shmget(shm_key, sizeof(result)*D*P, IPC_CREAT | 0660);
+	shmptr = shmat(shm_id, NULL, 0);
+	result * result_shm;
+	result_shm = (result*)shmptr;
 	
 	// 1: Load data, D, from file into Shared Memory -- why does this need to be in shared memory? it isn't mutated at all...
 	//line_map mapa = parseFile(argv[1]);
@@ -42,14 +60,14 @@ int main(int argc, char* argv[])
 	*/
 	
 	// 4: Generate V as a set of 30 random vectors of length s
-	for (i = 0; i < 30; i++)
+	for (i = 0; i < 1; i++)
 	{
-		//sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
-		sVectors[i] = generateRandomVector(sizes[j]);
+		sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
+		//sVectors[i] = generateRandomVector(sizes[j]);
 	}
 
 	// 5: for Each vector v in V do
-	for (i = 0; i < 30; i++)
+	for (i = 0; i < 1; i++)
 	{
 		results.erase(results.begin(), results.end());
 		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
@@ -60,13 +78,63 @@ int main(int argc, char* argv[])
 		
 		for (m = 0; m < mapa_count; ++m)
 		{
-			tempResults = circularSubvectorMatch(sVectors[i], mapa[m]);
+			count = 0;
+			for (k = 0; k < P; k++)
+			{
+				if (PID != 0)
+				{
+					if (PID != -1)
+					{
+						//add PID to the array of child PIDs
+					}
+					count++;
+					PID = fork();
+				}
+			}
+			if (PID == 0) //child
+			{
+				int const offset = (360 / P) * count;
+				//current state: count is child process number
+				start_d = (360 / P) * count;
+				end_d = offset + (360 / P);
+				
+				results = circularSubvectorMatch(sVectors[i], mapa[m], start_d, end_d, P, count);
+				
+				//store results into shared memory
+				
+				shm_id = shm_id = shmget(shm_key, sizeof(result)*D*P, IPC_CREAT | 0660);
+				shmptr = shmat(shm_id, NULL, 0600);
+				
+				res = (result *) shmptr;
+				
+				res = res + D * count;
+				int d2 = 0;
+				for (int d = D * count; d < D * (count + 1); d++)
+				{
+					cout << count << ": " << results[d2].offset << std::endl;
+					res[d] = results[d2];
+					d2++;
+				}
+				exit(0);
+			}
+			else
+			{
+				//add last PID to the array of child PIDs
+				//wait for all children to run
+				//collect data from shared memory 
+				//sort results for row
+			}
+		
+		
+		
+		
+			//tempResults = circularSubvectorMatch(sVectors[i], mapa[m], 0 , 0, 1);
 			
 			// 9: Merge P Partial Results
 			// 10: . Alternative to Merge, you can use Shared Memory and Mutex to merge results during searching
-			results.insert(results.end(), tempResults.begin(), tempResults.end());
+			//results.insert(results.end(), tempResults.begin(), tempResults.end());
 			sort(results.begin(), results.end());
-			results.resize(10);
+			results.resize(D);
 		}
 		
 		std::chrono::high_resolution_clock::time_point stop = std::chrono::high_resolution_clock::now();
