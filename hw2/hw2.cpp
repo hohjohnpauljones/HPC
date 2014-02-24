@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	for (j = 0; j < 1; j++)
 	{
 	
-	/* 3: Run Test Vector against circularSubvectorMatch(Ts, D=P, N) . Verify and display self test results	
+	// 3: Run Test Vector against circularSubvectorMatch(Ts, D=P, N) . Verify and display self test results	
 	int test_pass = runTest();
 	if (test_pass)
 	{
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 		cout << "Test Failed" << std::endl;
 		return 0;
 	}
-	*/
+	
 	
 	// 4: Generate V as a set of 30 random vectors of length s
 	for (i = 0; i < 1; i++)
