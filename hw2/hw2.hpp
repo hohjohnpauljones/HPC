@@ -46,7 +46,7 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 	const std::vector<float> threeSixty(cir.begin()+2, cir.end());
 	result temp;
 	std::vector<result> results;
-	result * result_shm;
+	//result * result_shm;
 	//temp.coord = make_pair(cir[0],cir[1]);
 	temp.x = cir[0];
 	temp.y = cir[1];
@@ -57,7 +57,7 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 	const int sizeOfSearch = svector.size();
 	const int sizeOfCircle = threeSixty.size();
 	
-	int offset;
+	int offset = 0;
 	
 	/*
 	pid_t pid = getpid();

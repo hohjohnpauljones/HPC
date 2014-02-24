@@ -76,16 +76,19 @@ int main(int argc, char* argv[])
 		// 7: circularSubvectorMatch(s, D=P, N) --D is assumed to be the entire dataset, or an indicator of the portion of the data set assigned
 		// 8: . where D=P is an even portion of D searched by one of the P processes
 		
-		for (m = 0; m < mapa_count; ++m)
+		pid_t children[P];
+		
+		for (m = 0; m < 1; ++m)
 		{
 			count = 0;
 			for (k = 0; k < P; k++)
 			{
-				if (PID != 0)
+				if (PID != 0) // parent
 				{
 					if (PID != -1)
 					{
 						//add PID to the array of child PIDs
+						children[count - 1] = PID;
 					}
 					count++;
 					PID = fork();
@@ -93,36 +96,54 @@ int main(int argc, char* argv[])
 			}
 			if (PID == 0) //child
 			{
-				int const offset = (360 / P) * count;
-				//current state: count is child process number
-				start_d = (360 / P) * count;
-				end_d = offset + (360 / P);
+				//cout << "hello, I am " << count << std::endl;
+				//int const offset = (360 / P) * (count - 1);
+				start_d = (360 / P) * (count - 1); 
+				end_d = (360 / P) * count;
 				
 				results = circularSubvectorMatch(sVectors[i], mapa[m], start_d, end_d, P, count);
-				
+				cout << count << " start:end " << start_d << ":" << end_d << std::endl;
 				//store results into shared memory
 				
 				shm_id = shm_id = shmget(shm_key, sizeof(result)*D*P, IPC_CREAT | 0660);
 				shmptr = shmat(shm_id, NULL, 0600);
 				
 				res = (result *) shmptr;
-				
-				res = res + D * count;
-				int d2 = 0;
-				for (int d = D * count; d < D * (count + 1); d++)
+				int offset2 = D * (count - 1);
+				cout << "p " << count << " offset: " << offset2 << std::endl;
+				res = res + D * (count - 1);
+				//for (int d = D * (count - 1); d < D * (count); d++)
+				for ( int d = 0; d < 10; d++)
 				{
-					cout << count << ": " << results[d2].offset << std::endl;
-					res[d] = results[d2];
-					d2++;
+					//cout << "d " << d << std::endl;
+					//cout << "(count - 1) * 360/P = " << (count - 1) * D << std::endl;
+					cout << count << ": " << results[d].offset << std::endl;
+					res[d + ((count - 1) * D)] = results[d];
+					cout << count << ": " << res[d + ((count - 1) * D)].offset << std::endl;
 				}
 				exit(0);
 			}
 			else
 			{
 				//add last PID to the array of child PIDs
+				children[P-1] = PID;
 				//wait for all children to run
-				//collect data from shared memory 
+				for (int d = 0; d < P; d++)
+				{
+					waitpid(children[d], NULL, 0);
+				}
+				//collect data from shared memory
+				for (int count = 0; count < P; count++)
+				{
+					for (int d = 0; d < D; d++)
+					{
+						results.push_back(result_shm[d + ((count) * D)]);
+						cout << result_shm[d].offset << std::endl;
+					}
+				}
 				//sort results for row
+				//sort(results.begin(), results.end());
+				//results.resize(D);
 			}
 		
 		
@@ -162,6 +183,10 @@ int main(int argc, char* argv[])
 	// 14: end for	
 	}
 	// 15: Free and Release Shared Memory
+	shmdt(shmptr);                  // detach the shared memory 
+	shmctl(shm_id, IPC_RMID, NULL);  // delete the shared memory segment 
+	sem_unlink(MUTEXid);            // delete the MUTEX semaphore 
+	
 	// 16: Report average search time for each size, s
 	
 	
