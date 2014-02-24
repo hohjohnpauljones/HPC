@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 	for (j = 0; j < 1; j++)
 	{
 	
-	// 3: Run Test Vector against circularSubvectorMatch(Ts, D=P, N) . Verify and display self test results	
+	/* 3: Run Test Vector against circularSubvectorMatch(Ts, D=P, N) . Verify and display self test results	
 	int test_pass = runTest();
 	if (test_pass)
 	{
@@ -39,17 +39,17 @@ int main(int argc, char* argv[])
 		cout << "Test Failed" << std::endl;
 		return 0;
 	}
-	
+	*/
 	
 	// 4: Generate V as a set of 30 random vectors of length s
-	for (i = 0; i < 30; i++)
+	for (i = 0; i < 1; i++)
 	{
 		//sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
 		sVectors[i] = generateRandomVector(sizes[j]);
 	}
 
 	// 5: for Each vector v in V do
-	for (i = 0; i < 1; i++)
+	for (i = 0; i < 30; i++)
 	{
 		results.erase(results.begin(), results.end());
 		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 		for (it; it != results.end(); ++ it)
 		{
 			//cout << it->coord.first << ", " << it->coord.second << " " << it->offset << " " << it->distance << std::endl;
-			printf("%1.6f | %1.6f | %9d | %1.6f |\n", it->coord.first, it->coord.second, it->offset, it->distance);
+			printf("%1.6f | %1.6f | %9d | %1.6f |\n", it->x, it->y, it->offset, it->distance);
 		}
 		cout << " Time: " << time_span.count() << " seconds." << std::endl;
 		

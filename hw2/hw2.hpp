@@ -18,8 +18,9 @@ std::string vectorToCSV(std::vector<T> v);
 
 struct result 
 {
-	std::pair<float,float> coord;
+	//std::pair<float,float> coord;
 	int offset;
+	float x, y;
 	float distance;
 	
 	bool operator < (const result& str) const
@@ -29,12 +30,22 @@ struct result
 	
 };
 
+struct shmem_result 
+{
+
+	result results[10];
+
+};
+
 std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vector<float> cir)
 {
 	
 	result temp;
 	std::vector<result> results;
-	temp.coord = make_pair(cir[0],cir[1]);
+	result * result_shm;
+	//temp.coord = make_pair(cir[0],cir[1]);
+	temp.x = cir[0];
+	temp.y = cir[1];
 	//cir.erase(cir.begin(), cir.begin()+1);
 	std::vector<float>(cir.begin()+2, cir.end()).swap(cir);
 	
@@ -60,7 +71,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 	shm_id = shmget(shm_key, sizeof(result)*10, IPC_CREAT | 0660);
 	
 	shmptr = shmat(shm_id, NULL, 0);
-	
+	result_shm = (result*)shmptr;
 	//count = (int *)shmptr;
 	//*count = 0;
 	p = 0;
@@ -71,27 +82,83 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 		if (PID == 0)//child
 		{	
 			void *shmptr;    //   pointer to shared memory returned by shmget() 
-			result * a;
+			result *res;
 			
-			cout << "In the Child \n";
 			
-			shm_id = shmget(shm_key, sizeof(int), IPC_CREAT | 0660);
+			shm_id = shmget(shm_key, sizeof(result)*10, IPC_CREAT | 0660);
+			//cout << shm_id << std::endl;
 			shmptr = shmat(shm_id, NULL, 0600);
 			
-			a = (int *)shmptr;
+			res = (result *)shmptr;			
 			
-			//*a = *a + 1;
-			cout << "count: " << *count << std::endl;
+			//printf("1: %p, size: %d, should be: %d\n", res, sizeof(res), sizeof(result));
+			res[0].x = .124;
 			
+			for (offset = 0; offset < sizeOfCircle; offset += 5)
+			{
+				temp.distance = 0;
+				temp.offset = offset;
+				j = 0;
+
+				for (i = offset; i < offset + sizeOfSearch; ++i)
+				{
+					//cout << i << " " << offset << ": " << temp.distance << " += |" << svector[j % sizeOfSearch] << " - " << cir[i % sizeOfCircle] << "| " << std::endl;
+					temp.distance += fabs(svector[j % sizeOfSearch] - cir[i % sizeOfCircle]);
+					j++;
+				}
+				
+				results.push_back(temp);
+				
+			}
+			
+			std::sort(results.begin(), results.end());
+			results.resize(10);
+			//printf("hello segfault\n");
+			sem_wait(MUTEXptr);
+			// memcpy(res, &results[0], sizeof(result)*10); 
+			for (int k = 0; k < 10; k++)
+			{
+				//cout << k << " " << results[k].x << std::endl;
+				//cout << k << " " << res[k].x << std::endl;
+				res[k] = results[k];
+			}
+			
+			sem_post(MUTEXptr);
+			//printf("how are you?\n");
+			//return results;
+			shmdt(shmptr);                  /* detach the shared memory */
 			exit(0);
 		}
 		else
 		{
-			sem_wait(MUTEXptr);
-			*count += 1;
-			sem_post(MUTEXptr);
-			children[p] = PID;
-			p++;
+			waitpid(PID, NULL, 0);
+			//sem_wait(MUTEXptr);
+			
+			//std::vector<result> results();
+			result temp;
+			//memcpy(&results[0], result_shm, sizeof(result)*10);
+			for (int k = 0; k < 10; k++)
+			{
+				//cout << k << " " << results[k].x << std::endl;
+				//out << k << " " << result_shm[k] << std::endl;
+				// temp.x = 0;
+				// temp.x = (*result_shm[k]).x;
+				// temp.y = result_shm[k].y;
+				// temp.offset = result_shm[k].offset;
+				// temp.offset = result_shm[k].distance;
+				
+				results.push_back(result_shm[k]);
+			}
+			
+			
+			shmdt(shmptr);                  /* detach the shared memory */
+			shmctl(shm_id, IPC_RMID, NULL);  /* delete the shared memory segment */
+			sem_unlink(MUTEXid);            /* delete the MUTEX semaphore */
+			//printf("return \n");
+			return results;
+			//sem_post(MUTEXptr);
+			//children[p] = PID;
+			//p++;
 		}
 	}
 	for (p = 0; p < 3; p++)
@@ -99,7 +166,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 		children[p] = PID;
 		waitpid(PID, NULL, 0);
 	}
-	cout << "shared Memory value: " << *count << std::endl;
+	//cout << "shared Memory value: " << *count << std::endl;
 	
 	
 	
@@ -162,15 +229,21 @@ int runTest()
 	std::vector<result> test_compare;
 	int test_pass = 1;
 	
-	temp.coord = make_pair(test_data[0], test_data[1]);
+	//temp.coord = make_pair(test_data[0], test_data[1]);
+	temp.x = test_data[0];
+	temp.y = test_data[1];
 	temp.offset = 0;
 	temp.distance = 0;
 	test_compare.push_back(temp);
-	temp.coord = make_pair(test_data[0], test_data[1]);
+	//temp.coord = make_pair(test_data[0], test_data[1]);
+	temp.x = test_data[0];
+	temp.y = test_data[1];
 	temp.offset = 5;
 	temp.distance = 49;
 	test_compare.push_back(temp);
-	temp.coord = make_pair(test_data[0], test_data[1]);
+	//temp.coord = make_pair(test_data[0], test_data[1]);
+	temp.x = test_data[0];
+	temp.y = test_data[1];
 	temp.offset = 10;
 	temp.distance = 34;
 	test_compare.push_back(temp);
@@ -184,8 +257,8 @@ int runTest()
 	printf("%9s | %9s | %9s | %8s |\n---------------------------------------------\n", "x", "y", "Offset", "Distance");
 	for (it_test; it_test != test_results.end(); ++it_test)
 	{
-		printf("%10s | %1.6f | %1.6f | %9d | %1.6f |\n", "Result", it_test->coord.first, it_test->coord.second, it_test->offset, it_test->distance);
-		printf("%10s | %1.6f | %1.6f | %9d | %1.6f |\n", "Check", it_compare->coord.first, it_compare->coord.second, it_compare->offset, it_compare->distance);
+		printf("%10s | %1.6f | %1.6f | %9d | %1.6f |\n", "Result", it_test->x, it_test->y, it_test->offset, it_test->distance);
+		printf("%10s | %1.6f | %1.6f | %9d | %1.6f |\n", "Check", it_compare->x, it_compare->y, it_compare->offset, it_compare->distance);
 		//cout << it_test->coord.first << ", " << it_test->coord.second << " " << it_test->offset << " " << it_test->distance << std::endl;
 		if ((it_test->distance != it_compare->distance) || it_test->offset != it_compare->offset)
 		{
