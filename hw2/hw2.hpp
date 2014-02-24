@@ -80,7 +80,7 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 	{
 		PID = fork();
 		if (PID == 0)//child
-		{	
+		{
 			void *shmptr;    //   pointer to shared memory returned by shmget() 
 			result *res;
 			

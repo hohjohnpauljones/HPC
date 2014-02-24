@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	*/
 	
 	// 4: Generate V as a set of 30 random vectors of length s
-	for (i = 0; i < 1; i++)
+	for (i = 0; i < 30; i++)
 	{
 		//sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
 		sVectors[i] = generateRandomVector(sizes[j]);
