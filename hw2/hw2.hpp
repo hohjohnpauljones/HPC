@@ -3,10 +3,18 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <memory.h>
+#include <fcntl.h>           /* For O_* constants */
+#include <sys/stat.h>        /* For mode constants */
+#include <semaphore.h>
+
 
 template <typename T>
 std::string vectorToCSV(std::vector<T> v);
-
 
 struct result 
 {
@@ -23,17 +31,77 @@ struct result
 
 std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vector<float> cir)
 {
+	
 	result temp;
 	std::vector<result> results;
 	temp.coord = make_pair(cir[0],cir[1]);
 	//cir.erase(cir.begin(), cir.begin()+1);
 	std::vector<float>(cir.begin()+2, cir.end()).swap(cir);
 	
-	int i,j;
+	int i,j, p;
 	const int sizeOfSearch = svector.size();
 	const int sizeOfCircle = cir.size();
 	
 	int offset;
+	
+	pid_t pid = getpid();
+	char MUTEXid[32];
+	sprintf(MUTEXid, "semmutex%d", pid);
+	sem_t *MUTEXptr = sem_open(MUTEXid, O_CREAT, 0600, 1);
+	
+	int shm_id;
+	int * count;
+	void *shmptr;
+	key_t shm_key;     //key for shared memory segment 
+	pid_t children[3];
+	pid_t PID = -1;
+	
+	shm_key = 1029384756;
+	shm_id = shmget(shm_key, sizeof(result)*10, IPC_CREAT | 0660);
+	
+	shmptr = shmat(shm_id, NULL, 0);
+	
+	//count = (int *)shmptr;
+	//*count = 0;
+	p = 0;
+	
+	//while (*count < 3)
+	{
+		PID = fork();
+		if (PID == 0)//child
+		{	
+			void *shmptr;    //   pointer to shared memory returned by shmget() 
+			result * a;
+			
+			cout << "In the Child \n";
+			
+			shm_id = shmget(shm_key, sizeof(int), IPC_CREAT | 0660);
+			shmptr = shmat(shm_id, NULL, 0600);
+			
+			a = (int *)shmptr;
+			
+			//*a = *a + 1;
+			cout << "count: " << *count << std::endl;
+			
+			exit(0);
+		}
+		else
+		{
+			sem_wait(MUTEXptr);
+			*count += 1;
+			sem_post(MUTEXptr);
+			children[p] = PID;
+			p++;
+		}
+	}
+	for (p = 0; p < 3; p++)
+	{
+		children[p] = PID;
+		waitpid(PID, NULL, 0);
+	}
+	cout << "shared Memory value: " << *count << std::endl;
+	
+	
 	
 	for (offset = 0; offset < sizeOfCircle; offset += 5)
 	{
@@ -46,6 +114,22 @@ std::vector<result> circularSubvectorMatch(std::vector<float> svector, std::vect
 			//cout << i << " " << offset << ": " << temp.distance << " += |" << svector[j % sizeOfSearch] << " - " << cir[i % sizeOfCircle] << "| " << std::endl;
 			temp.distance += fabs(svector[j % sizeOfSearch] - cir[i % sizeOfCircle]);
 			j++;
+			
+			
+			//factor = cir.size/N (n = number of processes
+			//count = 0; 									shm/mutexed? or can assume good read?
+			//nextSection = 0;								shm/mutexed
+			//pid = 0;
+			//while (pid = 0 && count < n)
+				//count ++
+				//fork
+			//if (pid = 0)
+				//collect children
+			//else
+				//compute section of result
+				//add it to distance
+			
+			
 		}
 		
 		results.push_back(temp);
