@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 		
 		pid_t children[P];
 		
-		for (m = 0; m < 1; ++m)
+		for (m = 0; m < mapa.size(); ++m)
 		{
 			count = 0;
 			for (k = 0; k < P; k++)
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 				end_d = (360 / P) * count;
 				
 				results = circularSubvectorMatch(sVectors[i], mapa[m], start_d, end_d, P, count);
-				cout << count << " start:end " << start_d << ":" << end_d << std::endl;
+				//cout << count << " start:end " << start_d << ":" << end_d << std::endl;
 				//store results into shared memory
 				
 				shm_id = shm_id = shmget(shm_key, sizeof(result)*D*P, IPC_CREAT | 0660);
@@ -110,16 +110,17 @@ int main(int argc, char* argv[])
 				
 				res = (result *) shmptr;
 				int offset2 = D * (count - 1);
-				cout << "p " << count << " offset: " << offset2 << std::endl;
+				//cout << "p " << count << " offset: " << offset2 << std::endl;
 				res = res + D * (count - 1);
 				//for (int d = D * (count - 1); d < D * (count); d++)
 				for ( int d = 0; d < 10; d++)
 				{
 					//cout << "d " << d << std::endl;
 					//cout << "(count - 1) * 360/P = " << (count - 1) * D << std::endl;
-					cout << count << ": " << results[d].offset << std::endl;
-					res[d + ((count - 1) * D)] = results[d];
-					cout << count << ": " << res[d + ((count - 1) * D)].offset << std::endl;
+					//cout << count << ": " << results[d].offset << std::endl;
+					res[d] = results[d];
+					//memcpy(res
+					//cout << count << ": " << res[d + ((count - 1) * D)].offset << std::endl;
 				}
 				exit(0);
 			}
@@ -138,7 +139,8 @@ int main(int argc, char* argv[])
 					for (int d = 0; d < D; d++)
 					{
 						results.push_back(result_shm[d + ((count) * D)]);
-						cout << result_shm[d].offset << std::endl;
+						//cout << "shm " << result_shm[d + count * D].offset << std::endl;
+						//cout << "vect " << results.end()->offset << std::endl;
 					}
 				}
 				//sort results for row
