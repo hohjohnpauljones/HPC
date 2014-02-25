@@ -1,4 +1,4 @@
-OTHER_FLAGS= -std=c++0x
+OTHER_FLAGS= -std=c++0x -O3 -funroll-loops -march=native -DNDEBUG -DNBOOST_DEBUG
 
 all: hw2
 

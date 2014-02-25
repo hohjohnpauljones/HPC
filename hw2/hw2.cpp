@@ -25,8 +25,8 @@ int main(int argc, char* argv[])
 	result * res;
 	pid_t PID = -1;
 	key_t shm_key = 1029384756;
-	int D = 10;
-	int P = 2;
+	int D = 10;						//SETS THE NUMBER OF TOP RESULTS TO FIND - NOT YET IMPLEMENTED
+	int P = 6;						//SETS THE DEGREE OF MULTIPROCESSING
 	int count = 0;
 	
 	shm_id = shmget(shm_key, sizeof(result)*D*P, IPC_CREAT | 0660);
@@ -42,8 +42,9 @@ int main(int argc, char* argv[])
 	int sizes[] = {9, 11, 17, 29};
 	
 	
+	
 	// 2: for Each vector size s in S = {9,11,17, 29} do
-	for (j = 0; j < 1; j++)
+	for (j = 0; j < 4; j++)
 	{
 	
 	// 3: Run Test Vector against circularSubvectorMatch(Ts, D=P, N) . Verify and display self test results	
@@ -60,14 +61,14 @@ int main(int argc, char* argv[])
 	
 	
 	// 4: Generate V as a set of 30 random vectors of length s
-	for (i = 0; i < 1; i++)
+	for (i = 0; i < 30; i++)
 	{
-		sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
-		//sVectors[i] = generateRandomVector(sizes[j]);
+		//sVectors[i] = {0.0536727,0.0384691,0.00146231,0.0122459,0.0198738,-0.116341,0.0998519,0.0269831,-0.000772231};
+		sVectors[i] = generateRandomVector(sizes[j]);
 	}
 
 	// 5: for Each vector v in V do
-	for (i = 0; i < 1; i++)
+	for (i = 0; i < 30; i++)
 	{
 		results.erase(results.begin(), results.end());
 		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
