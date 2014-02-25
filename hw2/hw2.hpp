@@ -30,22 +30,12 @@ struct result
 	
 };
 
-struct shmem_result 
-{
-
-	result results[10];
-
-};
-
-// GJS: Accomplishing ?  Why not pass in a reference to cir ... const std::vector<float>& cir, then 
-// GJS:  const std::vector<float> threeSixty(cir.begin()+2, cir.end());
-// GJS: This is be a lot faster at runtime
-
-std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, const std::vector<float>& cir, const int start, const int end, const int p, const int p_num)
+//std::vector<result> * circularSubvectorMatch(const std::vector<float>& svector, const std::vector<float>& cir, const int start, const int end)
+void circularSubvectorMatch(const std::vector<float>& svector, const std::vector<float>& cir, const int start, const int end, std::vector<result> & results)
 {
 	const std::vector<float> threeSixty(cir.begin()+2, cir.end());
 	result temp;
-	std::vector<result> results;
+	//std::vector<result> results;
 	//result * result_shm;
 	//temp.coord = make_pair(cir[0],cir[1]);
 	temp.x = cir[0];
@@ -75,7 +65,7 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 	}
 	std::sort(results.begin(), results.end());
 	results.resize(10);
-	return results;
+	return;
 	
 	/*
 	pid_t pid = getpid();
@@ -210,7 +200,8 @@ int runTest()
 	
 	std::vector<float> test_data = {12,13,1,2,3,4,5,6,7,8,9,10,11,12};
 	std::vector<float> test_vector = {1,2,3,4,5,6,7,8,9};
-	std::vector<result> test_results = circularSubvectorMatch(test_vector, test_data, 0, 12, 1, 1);
+	std::vector<result> test_results;
+	circularSubvectorMatch(test_vector, test_data, 0, 12,test_results);
 	result temp;
 	std::vector<result> test_compare;
 	int test_pass = 1;
