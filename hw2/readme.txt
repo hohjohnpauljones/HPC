@@ -1,3 +1,5 @@
+All testing and analysis was done on Babbage2
+
 to run do the following:
 
 1. make clean
