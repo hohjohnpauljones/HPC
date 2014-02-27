@@ -18,7 +18,6 @@ std::string vectorToCSV(std::vector<T> v);
 
 struct result 
 {
-	//std::pair<float,float> coord;
 	int offset;
 	float x, y;
 	float distance;
@@ -30,28 +29,17 @@ struct result
 	
 };
 
-struct shmem_result 
+std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, const std::vector<float>& cir, const int start, const int end, const int d, const int p_num)
 {
-
-	result results[10];
-
-};
-
-// GJS: Accomplishing ?  Why not pass in a reference to cir ... const std::vector<float>& cir, then 
-// GJS:  const std::vector<float> threeSixty(cir.begin()+2, cir.end());
-// GJS: This is be a lot faster at runtime
-
-std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, const std::vector<float>& cir, const int start, const int end, const int p, const int p_num)
-{
+	//std::ofstream log("time.txt", std::ios_base::app | std::ios_base::out);
+	//std::chrono::high_resolution_clock::time_point start_time = std::chrono::high_resolution_clock::now();
 	const std::vector<float> threeSixty(cir.begin()+2, cir.end());
 	result temp;
 	std::vector<result> results;
-	//result * result_shm;
-	//temp.coord = make_pair(cir[0],cir[1]);
+	
+	//extract x and y
 	temp.x = cir[0];
 	temp.y = cir[1];
-	//cir.erase(cir.begin(), cir.begin()+1);
-	//std::vector<float>(cir.begin()+2, cir.end()).swap(cir);
 	
 	int i,j;
 	const int sizeOfSearch = svector.size();
@@ -67,131 +55,21 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 		
 		for (i = offset; i < offset + sizeOfSearch; ++i)
 		{
-			//cout << i << " " << offset << ": " << temp.distance << " += |" << svector[j] << " - " << threeSixty[i % sizeOfCircle] << "| " << std::endl;
 			temp.distance += fabs(svector[j] - threeSixty[i % sizeOfCircle]);
 			j++;
 		}
 		results.push_back(temp);
 	}
 	std::sort(results.begin(), results.end());
-	results.resize(10);
+	results.resize(d);
+	//std::chrono::high_resolution_clock::time_point end_time = std::chrono::high_resolution_clock::now();
+	
+	//std::chrono::duration<double, std::milli> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(end_time - start_time);
+	//cout << "P-" << p_num << ": " << time_span.count() << " seconds\n";
+	//log << time_span.count() << std::endl;
+	
 	return results;
 	
-	/*
-	pid_t pid = getpid();
-	char MUTEXid[32];
-	sprintf(MUTEXid, "semmutex%d", pid);
-	sem_t *MUTEXptr = sem_open(MUTEXid, O_CREAT, 0600, 1);
-	
-	int shm_id;
-	int * count;
-	void *shmptr;
-	key_t shm_key;     //key for shared memory segment 
-	pid_t children[3];
-	pid_t PID = -1;
-	
-	shm_key = 1029384756;
-	shm_id = shmget(shm_key, sizeof(result)*10, IPC_CREAT | 0660);
-	
-	shmptr = shmat(shm_id, NULL, 0);
-	result_shm = (result*)shmptr;
-	//count = (int *)shmptr;
-	//*count = 0;
-	p = 0;
-	
-	//while (*count < 3)
-	{
-		PID = fork();
-		if (PID == 0)//child
-		{
-			void *shmptr;    //   pointer to shared memory returned by shmget() 
-			result *res;
-			
-			
-			shm_id = shmget(shm_key, sizeof(result)*10, IPC_CREAT | 0660);
-			//cout << shm_id << std::endl;
-			shmptr = shmat(shm_id, NULL, 0600);
-			
-			res = (result *)shmptr;			
-			
-			//printf("1: %p, size: %d, should be: %d\n", res, sizeof(res), sizeof(result));
-			//res[0].x = .124;
-			
-			for (offset = 0; offset < sizeOfCircle; offset += 5)
-			{
-				temp.distance = 0;
-				temp.offset = offset;
-				j = 0;
-
-				for (i = offset; i < offset + sizeOfSearch; ++i)
-				{
-					//cout << i << " " << offset << ": " << temp.distance << " += |" << svector[j % sizeOfSearch] << " - " << cir[i % sizeOfCircle] << "| " << std::endl;
-					temp.distance += fabs(svector[j] - threeSixty[i % sizeOfCircle]);
-					j++;
-				}
-				
-				results.push_back(temp);
-				
-			}
-			
-			std::sort(results.begin(), results.end());
-			results.resize(10);
-			//printf("hello segfault\n");
-			sem_wait(MUTEXptr);
-			// memcpy(res, &results[0], sizeof(result)*10); 
-			for (int k = 0; k < 10; k++)
-			{
-				//cout << k << " " << results[k].x << std::endl;
-				//cout << k << " " << res[k].x << std::endl;
-				res[k] = results[k];
-			}
-			
-			sem_post(MUTEXptr);
-			//printf("how are you?\n");
-			//return results;
-			shmdt(shmptr);                  // detach the shared memory 
-			exit(0);
-		}
-		else
-		{
-			waitpid(PID, NULL, 0);
-			//sem_wait(MUTEXptr);
-			
-			//std::vector<result> results();
-			result temp;
-			//memcpy(&results[0], result_shm, sizeof(result)*10);
-			for (int k = 0; k < 10; k++)
-			{
-				//cout << k << " " << results[k].x << std::endl;
-				//out << k << " " << result_shm[k] << std::endl;
-				// temp.x = 0;
-				// temp.x = (*result_shm[k]).x;
-				// temp.y = result_shm[k].y;
-				// temp.offset = result_shm[k].offset;
-				// temp.offset = result_shm[k].distance;
-				
-				results.push_back(result_shm[k]);
-			}
-			
-			
-			shmdt(shmptr);                  // detach the shared memory 
-			shmctl(shm_id, IPC_RMID, NULL);  // delete the shared memory segment 
-			sem_unlink(MUTEXid);            // delete the MUTEX semaphore 
-			//printf("return \n");
-			return results;
-			//sem_post(MUTEXptr);
-			//children[p] = PID;
-			//p++;
-		}
-	}
-	for (p = 0; p < 3; p++)
-	{
-		children[p] = PID;
-		waitpid(PID, NULL, 0);
-	}
-	//cout << "shared Memory value: " << *count << std::endl;
-	
-	*/
 }
 
 
@@ -210,7 +88,7 @@ int runTest()
 	
 	std::vector<float> test_data = {12,13,1,2,3,4,5,6,7,8,9,10,11,12};
 	std::vector<float> test_vector = {1,2,3,4,5,6,7,8,9};
-	std::vector<result> test_results = circularSubvectorMatch(test_vector, test_data, 0, 12, 1, 1);
+	std::vector<result> test_results = circularSubvectorMatch(test_vector, test_data, 0, 12, 10, 1);
 	result temp;
 	std::vector<result> test_compare;
 	int test_pass = 1;

@@ -11,5 +11,9 @@ hw2.o: hw2.cpp csvparse.o hw2.hpp
 csvparse.o: csvparse.cpp csvparse.hpp
 	g++ ${OTHER_FLAGS} -c csvparse.cpp
 
+analyze:
+	awk '{ total += $1; count++ } END { print total/count }' time.txt
+	
 clean:
-	rm -f *.o hw2;
+	rm -f *.o hw2 time.txt;
+
