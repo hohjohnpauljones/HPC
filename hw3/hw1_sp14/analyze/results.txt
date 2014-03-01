@@ -1,0 +1,36 @@
+1. normal matrix multiplication.
+Program Execution Times
+
+real    0m10.256s
+user    0m10.213s
+sys     0m0.037s
+
+
+1.1 added transpose
+Program Execution Times
+
+real    0m7.977s
+user    0m7.930s
+sys     0m0.043s
+
+
+2. added #pragma omp parallel for to first for loop (i)
+Program Execution Times
+
+real    0m6.638s
+user    0m17.911s
+sys     0m0.026s
+
+3. from 1: added omp parallel for to second for loop (j)
+Program Execution Times
+
+real    0m6.580s
+user    0m18.088s
+sys     0m0.094s
+
+4. from 1: added omp parallel for third for loop (k)
+Program Execution Times
+
+real    1m34.945s
+user    11m52.780s
+sys     0m8.812s
