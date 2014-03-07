@@ -4,4 +4,4 @@ To run the program:
 2. make
 3. make analysis
 
-Compiler flags used: -g0 -m64 -O3 -ffast-math -funroll-loops -march=core-i7 -mtune=core-i7 -DNDEBUG
+Compiler flags used: -g0 -m64 -O3 -ffast-math -funroll-loops -march=core-i7 -mtune=core-i7 -fopenmp -DNDEBUG

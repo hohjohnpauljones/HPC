@@ -38,6 +38,7 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	int const result2 = rhs2;
 	float temp;
 	
+	//transpose rhs matrix using defined transpose function.
 	scottgs::FloatMatrix tMatrix = scottgs::MatrixMultiply::transpose(rhs);
 	
 	//set up direct access to matrix data as a 1D array
@@ -49,27 +50,7 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	
 	
 	//perform multiplication 
-	for ( i = 0; i < lhs1; ++i)
-	{
 	#pragma omp parallel for schedule(dynamic) private(temp)
-		for (j = 0; j < rhs2; ++j)
-		{
-			temp = 0;
-			for (k = 0; k < rhs1; ++k)
-			{
-				//temp += lhs(i, k) * rhs(k,j);
-				//temp += lhsp[k + i * lhs2] * rhsp[j + k * rhs2];
-				temp += lhsp[k + i * lhs2] * rhsp[k + j * rhs1];
-			}
-			//result(i,j) = temp;
-			rst[j + i * rhs2] = temp;
-		}
-	}
-	
-	
-	//perform multiplication on transposed rhs
-	/*
-	#pragma omp parallel for
 	for ( i = 0; i < lhs1; ++i)
 	{
 		for (j = 0; j < rhs2; ++j)
@@ -77,36 +58,12 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 			temp = 0;
 			for (k = 0; k < rhs1; ++k)
 			{
-				//temp += lhs(i, k) * rhs(k,j);
 				temp += lhsp[k + i * lhs2] * rhsp[k + j * rhs1];
 			}
-			//result(i,j) = temp;
 			rst[j + i * rhs2] = temp;
 		}
 	}
-	*/
-	
-	/*	Original algorithm
-	//transpose one matrix
-	scottgs::FloatMatrix tMatrix = scottgs::MatrixMultiply::transpose(rhs);
-	
-	//set up direct access to matrix data as a 1D array
-	float * rst = &result(0,0);				//result
-	const float * lhsp = &lhs(0,0);			//left matrix
-	const float * rhsp = &tMatrix(0,0);		//right matrix
-	
-	//perform multiplication
-	for (i = 0; i < lhs1; ++i)
-	{
-		for (j = 0; j < rhs2; ++j)
-		{
-			for (k = 0; k < lhs2; ++k)
-			{
-				rst[j + i * rhs2] += lhsp[k + i * lhs2] * rhsp[k + j * rhs1];
-			}
-		}
-	}
-	*/
+
 	return result;
 }
 
