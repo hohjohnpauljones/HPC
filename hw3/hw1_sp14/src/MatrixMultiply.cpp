@@ -41,33 +41,35 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	scottgs::FloatMatrix tMatrix = scottgs::MatrixMultiply::transpose(rhs);
 	
 	//set up direct access to matrix data as a 1D array
-	float * rst = &result(0,0);
-	const float * lhsp = &lhs(0,0);
-	const float * rhsp = &tMatrix(0,0);
-	//const float * rhsp = &rhs(0,0);
+	float * rst = &result.data()[0];
+	const float * lhsp = &lhs.data()[0];
+	const float * rhsp = &tMatrix.data()[0];
+	//const float * rhsp = &rhs.data()[0];
 	
 	
 	
 	//perform multiplication 
-	/*
 	for ( i = 0; i < lhs1; ++i)
 	{
+	#pragma omp parallel for schedule(dynamic) private(temp)
 		for (j = 0; j < rhs2; ++j)
 		{
 			temp = 0;
 			for (k = 0; k < rhs1; ++k)
 			{
 				//temp += lhs(i, k) * rhs(k,j);
-				temp += lhsp[k + i * lhs2] * rhsp[j + k * rhs2];
+				//temp += lhsp[k + i * lhs2] * rhsp[j + k * rhs2];
+				temp += lhsp[k + i * lhs2] * rhsp[k + j * rhs1];
 			}
 			//result(i,j) = temp;
 			rst[j + i * rhs2] = temp;
 		}
 	}
-	*/
+	
 	
 	//perform multiplication on transposed rhs
-	
+	/*
+	#pragma omp parallel for
 	for ( i = 0; i < lhs1; ++i)
 	{
 		for (j = 0; j < rhs2; ++j)
@@ -82,7 +84,7 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 			rst[j + i * rhs2] = temp;
 		}
 	}
-	
+	*/
 	
 	/*	Original algorithm
 	//transpose one matrix
@@ -119,16 +121,24 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::multiply(const scottgs::FloatMatri
 
 scottgs::FloatMatrix scottgs::MatrixMultiply::transpose(const scottgs::FloatMatrix& matrix) const
 {
-	//create new matrix
-	scottgs::FloatMatrix tMatrix(matrix.size2(), matrix.size1());
 	int i, j;
+	const int m1 = matrix.size1();
+	const int m2 = matrix.size2();
+	//create new matrix
+	scottgs::FloatMatrix tMatrix(m2, m1);
+	
+	
+	float * tMatrixp = &tMatrix(0,0);
+	const float * lhsp = &matrix(0,0);
 	
 	//move data from old matrix to new in transposed format
-	for (i = 0; i < matrix.size1(); ++i)
+	#pragma omp parallel for
+	for (i = 0; i < m1; ++i)
 	{
-		for (j = 0; j < matrix.size2(); ++j)
+		for (j = 0; j < m2; ++j)
 		{
-			tMatrix(j, i) = matrix(i, j);
+			//tMatrix(j, i) = matrix(i, j);
+			tMatrixp[i + j * m1] = lhsp[j + i * m2];
 		}
 	}
 	

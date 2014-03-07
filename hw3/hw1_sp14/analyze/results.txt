@@ -9,28 +9,30 @@ sys     0m0.037s
 1.1 added transpose
 Program Execution Times
 
-real    0m7.977s
-user    0m7.930s
-sys     0m0.043s
+Program Execution Times
+
+real    0m8.004s
+user    0m7.978s
+sys     0m0.022s
+
+1.2 Parallelized transpose and multiplication outer loop (i)
+
+Program Execution Times
+
+real    0m7.626s
+user    0m25.000s
+sys     0m0.664s
+
 
 
 2. added #pragma omp parallel for to first for loop (i)
+
 Program Execution Times
 
-real    0m6.638s
-user    0m17.911s
-sys     0m0.026s
+real    0m6.878s
+user    0m19.601s
+sys     0m0.008s
 
-3. from 1: added omp parallel for to second for loop (j)
-Program Execution Times
 
-real    0m6.580s
-user    0m18.088s
-sys     0m0.094s
+from here: arrange data for optimal access?
 
-4. from 1: added omp parallel for third for loop (k)
-Program Execution Times
-
-real    1m34.945s
-user    11m52.780s
-sys     0m8.812s
