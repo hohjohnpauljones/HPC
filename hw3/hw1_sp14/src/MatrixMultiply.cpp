@@ -50,9 +50,10 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	
 	
 	//perform multiplication 
-	#pragma omp parallel for schedule(dynamic) private(temp)
+	
 	for ( i = 0; i < lhs1; ++i)
 	{
+	#pragma omp parallel for schedule(dynamic, 20) private(temp)
 		for (j = 0; j < rhs2; ++j)
 		{
 			temp = 0;
