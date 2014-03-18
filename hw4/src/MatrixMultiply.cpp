@@ -53,12 +53,12 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 	pthread_t threadID[D];
 	void * retVal;
 	
-	//params[0].lhsp = &lhs.data()[0];
-	//params[0].rhsp = &rhs.data()[0];
-	//params[0].result = &tMatrix.data()[0];
+	params[0].lhsp = &lhs.data()[0];
+	params[0].rhsp = &tMatrix.data()[0];
+	params[0].result = &result.data()[0];
 	params[0].lhs = &lhs;
 	params[0].rhs = &tMatrix;
-	params[0].result = &result;
+	//params[0].result = &result;
 	params[0].rhs1 = rhs1;
 	params[0].rhs2 = rhs2;
 	params[0].lhs1 = lhs1;
@@ -68,33 +68,30 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 	
 	for ( i = 0; i < lhs1;i += D)
 	{
-		int m;
-		for (m = 0; m < D; ++m)
+		int m = 0;
+		//for (m = 0; m < D; ++m)
 		{
-			params[m].i = i + m;
-			printf("hi\n");
-			pthread_create(&threadID[m], NULL,(void* (*)(void*)) &mabcb7::MatrixMultiply::ComputeRow, &(params[m]));
+			params[m].i = i;
+			pthread_create(&threadID[m], NULL,(void* (*)(void*)) &mabcb7::MatrixMultiply::ComputeRow, &params[m]);
 		}
 		
-		for(m = 0; m < D; ++m)
+		//for(m = 0; m < D; ++m)
 		{
-			pthread_join(threadID[m], NULL);
+		//	pthread_join(threadID[m], NULL);
 		}
 	}
 
 	return result;
 }
 
-void * mabcb7::MatrixMultiply::ComputeRow(void * d) const
+void mabcb7::MatrixMultiply::ComputeRow(calcRowParam * d) const
 {
-	calcRowParam * data = (calcRowParam *)d;
+	calcRowParam data = *d;
 	int j, k;
 	float temp;
-	printf("load the pointers\n");
-	float * rst = &((*(*data).result).data()[0]);
-	printf("one\n");
-	const float * lhsp = &(*(*data).lhs).data()[0];
-	const float * rhsp = &(*(*data).rhs).data()[0];
+	//float * rst = &((*(*data).result).data()[0]);
+	//const float * lhsp = &(*(*data).lhs).data()[0];
+	//const float * rhsp = &(*(*data).rhs).data()[0];
 
 /*
 	for (j = 0; j < data.rhs2; ++j)
@@ -108,20 +105,28 @@ void * mabcb7::MatrixMultiply::ComputeRow(void * d) const
 	}
 */
 
-	for (j = 0; j < (*data).rhs2; ++j)
+	for (j = 0; j < data.rhs2; ++j)
 	{
-		printf("inner loop %d\n", j);
 		temp = 0;
-		for(k = 0; k < (*data).rhs1; ++k)
+		for(k = 0; k < data.rhs1; ++k)
 		{
-			temp += lhsp[k + (*data).i * (*data).lhs2] * rhsp[k + j * (*data).rhs1];
+			temp += data.lhsp[k + data.i * data.lhs2] * data.rhsp[k + j * data.rhs1];
 		}
-		rst[j + (*data).i * (*data).rhs2] = temp;
+		data.result[j + data.i * data.rhs2] = temp;
 	}
+	/*
+	for (j = 0; j < rhs2; ++j)
+	{
+		temp = 0;
+		for (k = 0; k < rhs1; ++k)
+		{
+			temp += lhsp[k + i * lhs2] * rhsp[k + j * rhs1];
+		}
+		rst[j + i * rhs2] = temp;
+	}
+	*/
 	
-	
-	void * ret;
-	return ret;
+	return;
 }
 
 
