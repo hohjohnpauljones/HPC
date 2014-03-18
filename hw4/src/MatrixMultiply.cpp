@@ -1,5 +1,7 @@
 #include "MatrixMultiply.hpp"
 
+#include <pthread.h>
+#include <stdio.h>
 #include <exception>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
@@ -28,7 +30,7 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 	
 	//loop counters
 	int i, j, k;
-	int D;		//number of threads
+	int D = 1;		//number of threads
 	//matrix boundaries 1 = rows 2 = columns
 	const int lhs1 = lhs.size1();
 	const int lhs2 = lhs.size2();
@@ -48,10 +50,15 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 	//const float * rhsp = &rhs.data()[0];
 	
 	calcRowParam params[D];
+	pthread_t threadID[D];
+	void * retVal;
 	
-	params[0].lhsp = &lhs.data()[0];
-	params[0].rhsp = &rhs.data()[0];
-	params[0].result = &tMatrix.data()[0];
+	//params[0].lhsp = &lhs.data()[0];
+	//params[0].rhsp = &rhs.data()[0];
+	//params[0].result = &tMatrix.data()[0];
+	params[0].lhs = &lhs;
+	params[0].rhs = &tMatrix;
+	params[0].result = &result;
 	params[0].rhs1 = rhs1;
 	params[0].rhs2 = rhs2;
 	params[0].lhs1 = lhs1;
@@ -59,44 +66,62 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 	
 	//perform multiplication
 	
-	for ( i = 0; i < lhs1; ++i)
+	for ( i = 0; i < lhs1;i += D)
 	{
-		params[0].i = i;
-		/*for (j = 0; j < rhs2; ++j)
+		int m;
+		for (m = 0; m < D; ++m)
 		{
-			temp = 0;
-			for (k = 0; k < rhs1; ++k)
-			{
-				temp += lhsp[k + i * lhs2] * rhsp[k + j * rhs1];
-			}
-			rst[j + i * rhs2] = temp;
-		}*/
+			params[m].i = i + m;
+			printf("hi\n");
+			pthread_create(&threadID[m], NULL,(void* (*)(void*)) &mabcb7::MatrixMultiply::ComputeRow, &(params[m]));
+		}
 		
-		mabcb7::MatrixMultiply::ComputeRow(params[0]);
+		for(m = 0; m < D; ++m)
+		{
+			pthread_join(threadID[m], NULL);
+		}
 	}
 
 	return result;
 }
 
-void mabcb7::MatrixMultiply::ComputeRow(calcRowParam data) const
+void * mabcb7::MatrixMultiply::ComputeRow(void * d) const
 {
-	
+	calcRowParam * data = (calcRowParam *)d;
 	int j, k;
 	float temp;
-	float * r = data.result;
+	printf("load the pointers\n");
+	float * rst = &((*(*data).result).data()[0]);
+	printf("one\n");
+	const float * lhsp = &(*(*data).lhs).data()[0];
+	const float * rhsp = &(*(*data).rhs).data()[0];
 
+/*
 	for (j = 0; j < data.rhs2; ++j)
 	{
 		temp = 0;
-		for(k = 0; k < data.rhs1; ++k)
+		for (k = 0; k < data.rhs1; ++k);
 		{
-			//temp += data.lhsp[k + data.i * data.lhs2] * data.rhsp[k + j * data.rhs1];
+			temp += data.lhs(data.i, k) * rhs(j, k);
 		}
-		//data.result[j + data.i * data.rhs2] = temp;
-		*(r[0]) = 5;
+		result(i, j) = temp;
+	}
+*/
+
+	for (j = 0; j < (*data).rhs2; ++j)
+	{
+		printf("inner loop %d\n", j);
+		temp = 0;
+		for(k = 0; k < (*data).rhs1; ++k)
+		{
+			temp += lhsp[k + (*data).i * (*data).lhs2] * rhsp[k + j * (*data).rhs1];
+		}
+		rst[j + (*data).i * (*data).rhs2] = temp;
 	}
 	
-	return;
+	
+	void * ret;
+	return ret;
 }
 
 

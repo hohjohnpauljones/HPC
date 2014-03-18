@@ -7,9 +7,12 @@ namespace mabcb7
 {
 
 struct calcRowParam {
-	const float * lhsp;
-	const float * rhsp;
-	float * result;
+	//const float * lhsp;
+	//const float * rhsp;
+	//float * result;
+	const mabcb7::FloatMatrix * lhs;
+	const mabcb7::FloatMatrix * rhs;
+	mabcb7::FloatMatrix * result;
 	int rhs1, rhs2, lhs1, lhs2; 
 	int i;
 } ;
@@ -34,7 +37,7 @@ public:
 	/// \returns the result of the matrix multiplication
 	mabcb7::FloatMatrix multiply(const mabcb7::FloatMatrix& lhs, const mabcb7::FloatMatrix& rhs) const;
 
-	void ComputeRow(calcRowParam) const;
+	void * ComputeRow(void *) const;
 	
 	mabcb7::FloatMatrix transpose(const mabcb7::FloatMatrix&) const;
 	
