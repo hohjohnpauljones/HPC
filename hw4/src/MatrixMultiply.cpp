@@ -50,8 +50,8 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 	calcRowParam params[D];
 	
 	params[0].lhsp = &lhs.data()[0];
-	params[0].rhsp = &rhs.data()[0];
-	params[0].result = &tMatrix.data()[0];
+	params[0].rhsp = &tMatrix.data()[0];
+	params[0].result = &result.data()[0];
 	params[0].rhs1 = rhs1;
 	params[0].rhs2 = rhs2;
 	params[0].lhs1 = lhs1;
@@ -90,10 +90,10 @@ void mabcb7::MatrixMultiply::ComputeRow(calcRowParam data) const
 		temp = 0;
 		for(k = 0; k < data.rhs1; ++k)
 		{
-			//temp += data.lhsp[k + data.i * data.lhs2] * data.rhsp[k + j * data.rhs1];
+			temp += data.lhsp[k + data.i * data.lhs2] * data.rhsp[k + j * data.rhs1];
 		}
-		//data.result[j + data.i * data.rhs2] = temp;
-		*(r[0]) = 5;
+		data.result[j + data.i * data.rhs2] = temp;
+		//*(r[0]) = 5;
 	}
 	
 	return;
