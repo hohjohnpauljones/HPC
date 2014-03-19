@@ -15,7 +15,12 @@ int main(int argc, char * argv[])
 	int m;
 	
 	std::cout << "Homework 4" << std::endl 
-		  << "Michael Brush (mabcb7)" << std::endl; 
+		  << "Michael Brush (mabcb7)" << std::endl;
+		  
+  	if (selfTest(P) == 1)
+  	{
+  		return 1;
+  	}
 
 // ---------------------------------------------
 	// BEGIN: Timing Analysis
@@ -31,9 +36,6 @@ int main(int argc, char * argv[])
 	// Build up a set of test matrix-pair sizes
 	// ---------------------------------------------
 	std::vector<std::pair<std::pair<unsigned short,unsigned short>, std::pair<unsigned short,unsigned short> > > testList;
-	
-	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(10,20),
-					   std::pair<unsigned short,unsigned short>(20,5)) );
 	
 	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(450,250),
 					   std::pair<unsigned short,unsigned short>(250,500)) );
@@ -62,8 +64,9 @@ int main(int argc, char * argv[])
 		initRandomMatrix(l);
 		initRandomMatrix(r);
 		
+		FloatMatrix rT = transpose(&r);
 		
-		float * res = (float *)malloc(sizeof(float) * lp.first * rp.second);
+		FloatMatrix res(lp.first, rp.second);//(float *)malloc(sizeof(float) * lp.first * rp.second);
 		int * C = (int *)malloc(sizeof(int));
 		//*C = l.size1() * r.size2();
 		*C = 0;
@@ -79,8 +82,8 @@ int main(int argc, char * argv[])
 			threadParam[m].cells = C;
 			
 			threadParam[m].data.lhs = &l;
-			threadParam[m].data.rhs = &r;
-			threadParam[m].data.result = res;
+			threadParam[m].data.rhs = &rT;
+			threadParam[m].data.result = &res;
 		}
 		
 		
@@ -185,7 +188,7 @@ int main(int argc, char * argv[])
 			  << "      Approximate ops: " << opsMaybe << std::endl
 			  << "      Computed elements: " << elements << std::endl;
 		
-		free(res);
+		//free(res);
 		free(C);
 		
 	}
