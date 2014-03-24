@@ -173,14 +173,14 @@ void threadPoolMM(threadData * tData)
 	pthread_mutex_lock(&mutex);
 	//std::cout << "Thread " << tNum << " value: " << *tData->cells << std::endl;
 	c = *tData->cells;
-	*tData->cells = c + 1;
+	*tData->cells = *tData->cells + 1;
 	pthread_mutex_unlock(&mutex);
 	
 	while (c < C)
 	{
 		
-		row = c / rhs1;
-		col = c % rhs1;
+		row = c / rhs2;
+		col = c % rhs2;
 		
 		
 		//calcCell(row, col, rhs1, rhs2, lhs2, lhsp, rhsp, rst);
@@ -236,19 +236,13 @@ int selfTest(int tNum)
 	
 	threadData data;
 	
-	int * C = (int *)malloc(sizeof(int));
-	*C = 0;
-	
-	
 	data.threadNum = 0;
 	data.stepSize = 1;
-	data.cells = C;
 	data.data.lhs = &l42;
 	data.data.rhs = &r23T;
 	data.data.result = &res;
 	
 	rowInterleavedMM(&data);
-	
 	
 	std::cout << "Result of Interleaved" << std::endl << l42 << std::endl
 		  << "   times  " << std::endl << r23 << std::endl
@@ -258,7 +252,6 @@ int selfTest(int tNum)
 	{
 		std::cerr << "Self Test Expected Result: " << er << std::endl
 			  << "           ... but found : " << res << std::endl;
-		free(C);
 		return 1;
 	}
 	
@@ -272,7 +265,6 @@ int selfTest(int tNum)
 	{
 		std::cerr << "Self Test Expected Result: " << er << std::endl
 			  << "           ... but found : " << res << std::endl;
-		free(C);
 		return 1;
 	}
 	
@@ -286,7 +278,6 @@ int selfTest(int tNum)
 	{
 		std::cerr << "Self Test Expected Result: " << er << std::endl
 			  << "           ... but found : " << res << std::endl;
-		free(C);
 		return 1;
 	}
 	
@@ -295,9 +286,7 @@ int selfTest(int tNum)
 
 	// ---------------------------------------------
 	// END: Self Test Portion
-	// ---------------------------------------------	
-	
-	free(C);
+	// ---------------------------------------------
 	
 	return 0;
 	

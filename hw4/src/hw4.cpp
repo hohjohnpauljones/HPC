@@ -39,7 +39,15 @@ int main(int argc, char * argv[])
 	er(3,0) = 61; er(3,1) = 78; er(3,2) = 95;
 
 	mabcb7::MatrixMultiply mm;
-	mabcb7::FloatMatrix result = mm(l42,r23);
+	//mabcb7::FloatMatrix result = mm(l42,r23);
+	float * res = mm(l42, r23);
+	
+	mabcb7::FloatMatrix result(4,3);
+	result(0,0) = res[0]; result(0,1) = res[1]; result(0,2) = res[3];
+	result(1,0) = res[4]; result(1,1) = res[5]; result(1,2) = res[6];
+	result(2,0) = res[7]; result(2,1) = res[8]; result(3,2) = res[9];
+	result(3,0) = res[10]; result(3,1) = res[11]; result(3,2) = res[12];
+	
 	std::cout << "Result of " << std::endl << l42 << std::endl
 		  << "   times  " << std::endl << r23 << std::endl
 		  << "  equals  " << std::endl << result << std::endl;

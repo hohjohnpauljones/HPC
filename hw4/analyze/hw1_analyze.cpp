@@ -111,7 +111,7 @@ int main(int argc, char * argv[])
                 std::chrono::high_resolution_clock::time_point start = c.now();
 		for (unsigned int i = 0; i < ITR; ++i)
 		{
-			mabcb7::FloatMatrix p = mm(l,r);
+			float * p = mm(l,r);
 		}
                 std::chrono::high_resolution_clock::time_point stop = c.now();
 		double avgMs = (double) std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / (1000000 * ITR);

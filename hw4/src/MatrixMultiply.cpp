@@ -1,3 +1,6 @@
+#include <iostream>
+#include <cstdlib>
+
 #include "MatrixMultiply.hpp"
 
 #include <exception>
@@ -15,20 +18,21 @@ mabcb7::MatrixMultiply::~MatrixMultiply()
 	;
 }
 
-mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix& lhs, const mabcb7::FloatMatrix& rhs) const
+float * mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix& lhs, const mabcb7::FloatMatrix& rhs) const
 {
 	// Verify acceptable dimensions
 	if (lhs.size2() != rhs.size1())
 		throw std::logic_error("matrix incompatible lhs.size2() != rhs.size1()");
 
-	mabcb7::FloatMatrix result(lhs.size1(),rhs.size2());
+	mabcb7::FloatMatrix ret(lhs.size1(),rhs.size2());
 
+	float * result = (float *)malloc(sizeof(float) * (lhs.size1() * rhs.size2()));
 
 	// YOUR ALGORIHM WITH COMMENTS GOES HERE:
 	
 	//loop counters
 	int i, j, k;
-	int D;		//number of threads
+	int D = 1;		//number of threads
 	//matrix boundaries 1 = rows 2 = columns
 	const int lhs1 = lhs.size1();
 	const int lhs2 = lhs.size2();
@@ -42,24 +46,25 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 	mabcb7::FloatMatrix tMatrix = mabcb7::MatrixMultiply::transpose(rhs);
 	
 	//set up direct access to matrix data as a 1D array
-	float * rst = &result.data()[0];
+	float * rst = result;
 	const float * lhsp = &lhs.data()[0];
 	const float * rhsp = &tMatrix.data()[0];
 	//const float * rhsp = &rhs.data()[0];
 	
 	calcRowParam params[D];
+	pthread_t threadID[D];
 	
 	params[0].lhsp = &lhs.data()[0];
 	params[0].rhsp = &tMatrix.data()[0];
-	params[0].result = &result.data()[0];
+	params[0].result = result;
 	params[0].rhs1 = rhs1;
 	params[0].rhs2 = rhs2;
 	params[0].lhs1 = lhs1;
 	params[0].lhs2 = lhs2;
 	
 	//perform multiplication
-	
-	for ( i = 0; i < lhs1; ++i)
+	//lhs1
+	for ( i = 0; i < 1; ++i)
 	{
 		params[0].i = i;
 		/*for (j = 0; j < rhs2; ++j)
@@ -71,31 +76,47 @@ mabcb7::FloatMatrix mabcb7::MatrixMultiply::operator()(const mabcb7::FloatMatrix
 			}
 			rst[j + i * rhs2] = temp;
 		}*/
-		
-		mabcb7::MatrixMultiply::ComputeRow(params[0]);
+		pthread_create(&threadID[0], NULL, (void *(*)(void*)) &mabcb7::MatrixMultiply::ComputeRow, &params[0]);
+		//mabcb7::MatrixMultiply::ComputeRow(&params[0]);
+		pthread_join(threadID[0], NULL);
 	}
 
 	return result;
 }
 
-void mabcb7::MatrixMultiply::ComputeRow(calcRowParam data) const
+void mabcb7::MatrixMultiply::ComputeRow(calcRowParam * d) const
 {
-	
+	std::cout << "1\n";
+	calcRowParam data = *d;
+	std::cout << "1a\n";
 	int j, k;
+	std::cout << "lb\n";
 	float temp;
+	std::cout << "lc\n";
 	float * r = data.result;
-
-	for (j = 0; j < data.rhs2; ++j)
+	std::cout << "2\n";
+	//data.rhs2
+	for (j = 0; j < 1; ++j)
 	{
+		std::cout << "3\n";
 		temp = 0;
+		std::cout << "4\n";
 		for(k = 0; k < data.rhs1; ++k)
 		{
+			std::cout << temp << std::endl;
 			temp += data.lhsp[k + data.i * data.lhs2] * data.rhsp[k + j * data.rhs1];
+			//std::cout << temp << std::endl;
 		}
-		data.result[j + data.i * data.rhs2] = temp;
-		//*(r[0]) = 5;
+		
+		//std::cout << "after\n";
+		//std::cout << "Storing result " << temp << std::endl;
+		//<< " in place of value " << data.result[j + data.i * data.rhs2] 
+		//<< " into result[" << j + data.i * data.rhs2 << "]\n";
+		
+		//data.result[j + data.i * data.rhs2] = temp;
 	}
 	
+	//std::cout << temp << "\n";
 	return;
 }
 

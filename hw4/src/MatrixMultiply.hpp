@@ -25,7 +25,7 @@ public:
 	/// \param lhs The left-hand operand to the multiplication
 	/// \param rhs The right-hand operand to the multiplication
 	/// \returns the result of the matrix multiplication
-	mabcb7::FloatMatrix operator()(const mabcb7::FloatMatrix& lhs, const mabcb7::FloatMatrix& rhs) const;
+	float * operator()(const mabcb7::FloatMatrix& lhs, const mabcb7::FloatMatrix& rhs) const;
 
 	///
 	/// \brief Use boost built-in matrix multiplication
@@ -34,7 +34,7 @@ public:
 	/// \returns the result of the matrix multiplication
 	mabcb7::FloatMatrix multiply(const mabcb7::FloatMatrix& lhs, const mabcb7::FloatMatrix& rhs) const;
 
-	void ComputeRow(calcRowParam) const;
+	void ComputeRow(calcRowParam *) const;
 	
 	mabcb7::FloatMatrix transpose(const mabcb7::FloatMatrix&) const;
 	

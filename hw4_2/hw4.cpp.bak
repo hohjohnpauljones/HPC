@@ -1,6 +1,6 @@
 #include "hw4.hpp"
 
-#define P 8
+#define P 2
 
 int main(int argc, char * argv[])
 {
@@ -37,20 +37,20 @@ int main(int argc, char * argv[])
 	// ---------------------------------------------
 	std::vector<std::pair<std::pair<unsigned short,unsigned short>, std::pair<unsigned short,unsigned short> > > testList;
 
-	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(4500,2500),
-					   std::pair<unsigned short,unsigned short>(2500,5000)) );
+	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(450,250),
+					   std::pair<unsigned short,unsigned short>(250,500)) );
 
-	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(12500,11000),
-					   std::pair<unsigned short,unsigned short>(11000,9000)) );
+	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(1250,1100),
+					   std::pair<unsigned short,unsigned short>(1100,900)) );
 
-	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(23000,24500),
-					   std::pair<unsigned short,unsigned short>(24500,13000)) );
+	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(2300,2450),
+					   std::pair<unsigned short,unsigned short>(2450,1300)) );
 
-	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(33000,35300),
-					   std::pair<unsigned short,unsigned short>(35300,40000)) );
+	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(3300,3530),
+					   std::pair<unsigned short,unsigned short>(3530,4000)) );
 
-	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(44000,52000),
-					   std::pair<unsigned short,unsigned short>(52000,30000)) );
+	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(4500,5200),
+					   std::pair<unsigned short,unsigned short>(5200,3000)) );
 
 
 	for (std::vector<std::pair<std::pair<unsigned short,unsigned short>, std::pair<unsigned short,unsigned short> > >::const_iterator t=testList.begin();
@@ -68,10 +68,8 @@ int main(int argc, char * argv[])
 		
 		FloatMatrix rT = transpose(r);
 		
-		int * C = (int *)malloc(sizeof(int));
-		FloatMatrix res(lp.first, rp.second);//(float *)malloc(sizeof(float) * lp.first * rp.second);
-		//*C = l.size1() * r.size2();
-		*C = 0;
+		FloatMatrix res(lp.first, rp.second);
+
 		
 		const unsigned long opsMaybe = l.size1() * r.size2() * l.size2() + l.size1() + r.size2();
 		const unsigned long elements = l.size1() * r.size2();
@@ -81,7 +79,6 @@ int main(int argc, char * argv[])
 		{
 			threadParam[m].threadNum = m;
 			threadParam[m].stepSize = P;
-			threadParam[m].cells = C;
 			
 			threadParam[m].data.lhs = &l;
 			threadParam[m].data.rhs = &rT;
@@ -121,7 +118,7 @@ int main(int argc, char * argv[])
 			  << "      Approximate ops: " << opsMaybe << std::endl
 			  << "      Computed elements: " << elements << std::endl;
 		
-		*/
+		
 		
 		//Method 2
 		
@@ -154,11 +151,9 @@ int main(int argc, char * argv[])
 			  << "      Method:Average Time (s): " << avgMs << std::endl
 			  << "      Approximate ops: " << opsMaybe << std::endl
 			  << "      Computed elements: " << elements << std::endl;
-		
+		*/
 		
 		//Method 3
-		/*
-		*C = 0;
 		
 		start = c.now();
 		
@@ -189,9 +184,6 @@ int main(int argc, char * argv[])
 			  << "      Method:Average Time (s): " << avgMs << std::endl
 			  << "      Approximate ops: " << opsMaybe << std::endl
 			  << "      Computed elements: " << elements << std::endl;
-		*/
-		free(C);
-		
 		
 	}
 	
