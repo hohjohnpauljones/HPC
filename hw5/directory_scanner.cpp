@@ -13,6 +13,11 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -64,11 +69,11 @@ std::map<std::string,path_list_type> getFiles(boost::filesystem::path dir)
 		msg << "Error: " << dirPath.file_string() << " is not a directory " << std::endl;
 		throw std::runtime_error(msg.str());
 	}
-
-#ifdef GJS_DEBUG_PRINT				
+/*
+#ifdef <strong>GJS_DEBUG_PRINT</strong>			
 	std::cout << "Processing directory: " << dirPath.directory_string() << std::endl;
 #endif	
-
+*/
 	// A director iterator... is just that, 
 	// an iterator through a directory... crazy!
 	boost::filesystem::directory_iterator end_iter;
@@ -119,40 +124,108 @@ std::map<std::string,path_list_type> getFiles(boost::filesystem::path dir)
 main (int argc, char * argv[])
 {
 
+	int current_worker = 1;
+	//char * filenames[500] = "";
+	//string filenames[100];
+	std::string filename;
+
 	if (argc == 1)
 	{
 		std::cout << "Usage: " << argv[0] << " <directory> " << std::endl;
 		return 1;
 	}
 
-	// Define a template type, and its iterator	
-	typedef std::map<std::string,scottgs::path_list_type> content_type;
-	typedef content_type::const_iterator content_type_citr;
-	
-	// Get the file list from the directory
-	content_type directoryContents = scottgs::getFiles(argv[1]);
+	// Initialize the MPI environment
+	MPI_Init(NULL, NULL);
+	// Find out rank, size
+	int world_rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+	int world_size;
+	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
-	// For each type of file found in the directory, 
-	// List all files of that type
-	for (content_type_citr f = directoryContents.begin(); 
-		f!=directoryContents.end();
-		++f)
+	// We are assuming at least 2 processes for this task
+	if (world_size < 2) 
 	{
-		const scottgs::path_list_type file_list(f->second);
+		fprintf(stderr, "World size must be greater than 1 for %s\n", argv[0]);
+		MPI_Abort(MPI_COMM_WORLD, 1); 
+	}
+
+	//std::cout << "I am Process " << world_rank;
+
+	if (world_rank == 0)
+	{
+		// Define a template type, and its iterator	
+		typedef std::map<std::string,scottgs::path_list_type> content_type;
+		typedef content_type::const_iterator content_type_citr;
 		
-		std::cout << "Showing: " << f->first << " type files (" << file_list.size() << ")" << std::endl;
-		for (scottgs::path_list_type::const_iterator i = file_list.begin();
-			i!=file_list.end(); ++i)
+		// Get the file list from the directory
+		content_type directoryContents = scottgs::getFiles(argv[1]);
+	
+		// For each type of file found in the directory, 
+		// List all files of that type
+		for (content_type_citr f = directoryContents.begin(); 
+			f!=directoryContents.end();
+			++f)
 		{
-			//boost::filesystem::path file_path(boost::filesystem::system_complete(*i));
-			boost::filesystem::path file_path(*i);
-			std::cout << "\t" << file_path.file_string() << std::endl;
-		}
+			const scottgs::path_list_type file_list(f->second);
 			
+			std::cout << "Showing: " << f->first << " type files (" << file_list.size() << ")" << std::endl;
+			for (scottgs::path_list_type::const_iterator i = file_list.begin();
+				i!=file_list.end(); ++i)
+			{
+				//boost::filesystem::path file_path(boost::filesystem::system_complete(*i));
+				boost::filesystem::path file_path(*i);
+				//std::cout << "\t" << file_path.file_string() << std::endl;
+				//filename = file_path.file_string().data();
+				//strcpy(&filename, file_path.file_string().data());
+				filename = file_path.file_string();
+				MPI_Send(&filename, 500, MPI_CHAR, current_worker, world_rank, MPI_COMM_WORLD);
+				current_worker = (current_worker + 1) % world_size;
+			}
+				
+		}
+		int ret = 1;
+		for (int i = 1; i < world_size; i++)
+		{
+			MPI_Send(&ret, 1, MPI_INT, i, world_rank, MPI_COMM_WORLD);
+		}
+	}
+	else
+	{
+		//non blocking recieve for end
+		int ret;
+		MPI::Request end_request;
+		MPI::Request work_request;
+		//bool retBool = false;
+		//bool workBool = false;
+		
+		end_request = MPI::COMM_WORLD.Irecv(&ret, 1, MPI::INT, 0, 1);
+		work_request = MPI::COMM_WORLD.Irecv(&filename, 500, MPI::CHAR, 0, 0);
+		
+		//MPI_Irecv(&ret, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, &end_request);
+		//MPI_Irecv(&filename, 500, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &work_request);
+		
+		//while end hasn't recieved
+		while (!end_request.Test())
+		{
+			//MPI_Test(&work_request, &workBool, MPI_STATUS_IGNORE);
+			
+			if (work_request.Test())
+			{
+				//MPI_Irecv(&filename, 500, MPI_CHAR, 0, 0, MPI_COMM_WORLD, work_request);
+				MPI::COMM_WORLD.Irecv(&filename, 500, MPI::CHAR, 0, 0);
+    			//printf("Process %d received name %s from process 0\n", world_rank, filename);
+    			std::cout << "Process " << world_rank << " recieved name " << filename << " from proces 0\n";
+			}
+    		//MPI_Test(&end_request, &retBool,  MPI_STATUS_IGNORE);
+		}
+		
+		MPI_Finalize();
+		
+		return ret;
 	}
 	
+	 MPI_Finalize();
 	
 	return 0;
 }
-
-
