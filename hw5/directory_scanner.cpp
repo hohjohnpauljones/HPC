@@ -121,13 +121,16 @@ std::map<std::string,path_list_type> getFiles(boost::filesystem::path dir)
 
 }; // end scottgs namespace
 
+
+/*
 main (int argc, char * argv[])
 {
 
 	int current_worker = 1;
 	//char * filenames[500] = "";
-	//string filenames[100];
-	std::string filename;
+	string filename[100];
+	int n_file = 0;
+	//std::string filename;
 
 	if (argc == 1)
 	{
@@ -178,16 +181,20 @@ main (int argc, char * argv[])
 				//std::cout << "\t" << file_path.file_string() << std::endl;
 				//filename = file_path.file_string().data();
 				//strcpy(&filename, file_path.file_string().data());
-				filename = file_path.file_string();
-				MPI_Send(&filename, 500, MPI_CHAR, current_worker, world_rank, MPI_COMM_WORLD);
-				current_worker = (current_worker + 1) % world_size;
+				filename[n_file] = file_path.file_string();
+				n_file++;
+				//MPI_Send(&filename, 500, MPI_CHAR, current_worker, world_rank, MPI_COMM_WORLD);
+				
+				//current_worker = (current_worker + 1) % world_size;
 			}
 				
 		}
-		int ret = 1;
+		
+		
+		//int ret = 1;
 		for (int i = 1; i < world_size; i++)
 		{
-			MPI_Send(&ret, 1, MPI_INT, i, world_rank, MPI_COMM_WORLD);
+			MPI_Send(filename, 100, MPI::, i, world_rank, MPI_COMM_WORLD);
 		}
 	}
 	else
@@ -229,3 +236,4 @@ main (int argc, char * argv[])
 	
 	return 0;
 }
+*/
