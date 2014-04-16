@@ -38,7 +38,7 @@ using namespace std;
 using namespace scottgs;
 
 #define NUMFILES 79;
-#define RESULTSSIZE 10;
+#define RESULTSSIZE 100;
 
 typedef std::vector<float> data_v;
 
@@ -138,6 +138,7 @@ lineType parseFile(const char* filename)
 	  {
 		while ( getline (myfile,line) )
 		{
+			//getline(myfile,line);
 			++count;
 			vector<float> tokens = splitFloat(line, ",");
 			//x = tokens[0];
@@ -198,7 +199,10 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 		results.push_back(temp);
 	}
 	std::sort(results.begin(), results.end());
-	results.resize(d);
+	if (results.size > d)
+	{
+		results.resize(d);
+	}
 	//std::chrono::high_resolution_clock::time_point end_time = std::chrono::high_resolution_clock::now();
 	
 	//std::chrono::duration<double, std::milli> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(end_time - start_time);
@@ -209,16 +213,34 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 	
 }
 
-/*
-void parse_file (name, n)
+
+void parallel_compute(char * filename, int N, int p, int p_degree)
 {
-	vector<Row> rows;
-	sem_available = 0;
-	count_c = 0;
-	
-	spawn producer
-	spawn n consumers;
-	wait producer;
-	wait consumer;
+	lineType lines = parseFile(param.filenames[i]);
+	std::vector<result> result_tmp;
+	std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
+	for (j = 0; j < lines.size(); j++)
+	{
+		result_tmp.erase(result_tmp.begin(), result_tmp.end());
+		result_tmp = circularSubvectorMatch(s_vector, lines[j], 0, 360, N, 1);
+		sort(result_tmp.begin(), result_tmp.end());
+		if (result_tmp.size() > N)
+		{
+			result_tmp.resize(N);
+		}
+		
+		results.insert(results.end(), result_tmp.begin(), result_tmp.end());
+		sort(results.begin(), results.end());
+		if (results.size() > N)
+		{
+			results.resize(N);
+		}
+			
+		
+		
+		for(k = 0; k < result_tmp.size(); k++)
+		{
+			//std::cout << "\t" << "line " << j << " result " << k << ": " << "(" << result_tmp[k].x << ", " << result_tmp[k].y << ") => " << result_tmp[k].distance << std::endl;
+		}
+	}
 }
-*/

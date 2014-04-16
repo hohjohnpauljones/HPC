@@ -6,7 +6,7 @@ int main(int argc, char * argv[])
 {
 	
 	int current_worker = 1;
-	int i, j;
+	int i, j, k;
 	
 	// Initialize the MPI environment
 	MPI_Init(NULL, NULL);
@@ -141,6 +141,7 @@ int main(int argc, char * argv[])
 		
 		//process data
 		for (i = start; i < end; i++)
+		//for (i = 0; i < 1; i++)
 		{
 			//if (world_rank == 1)
 			{
@@ -149,21 +150,40 @@ int main(int argc, char * argv[])
 				//parse line
 				lineType lines = parseFile(param.filenames[i]);
 				std::vector<result> result_tmp;
+				std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
+				
 				for (j = 0; j < lines.size(); j++)
 				{
+					result_tmp.erase(result_tmp.begin(), result_tmp.end());
 					result_tmp = circularSubvectorMatch(s_vector, lines[j], 0, 360, N, 1);
+					sort(result_tmp.begin(), result_tmp.end());
+					if (result_tmp.size() > N)
+					{
+						result_tmp.resize(N);
+					}
+					
 					results.insert(results.end(), result_tmp.begin(), result_tmp.end());
 					sort(results.begin(), results.end());
-					results.resize(N);
+					if (results.size() > N)
+					{
+						results.resize(N);
+					}
+						
+					
+					
+					for(k = 0; k < result_tmp.size(); k++)
+					{
+						//std::cout << "\t" << "line " << j << " result " << k << ": " << "(" << result_tmp[k].x << ", " << result_tmp[k].y << ") => " << result_tmp[k].distance << std::endl;
+					}
 				}
-				std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
-				for(j = 0; j < N; j++)
-				{
-					std::cout << "\t" << param.filenames[i] << "-" << j << ": " << "(" << results[i].x << ", " << results[i].y << ") => " << results[i].distance << std::endl;
-				}
-				
 			}
 		}
+		std::cout << "Process " << world_rank << " Result set:" << std::endl;
+		for(k = 0; k < results.size(); k++)
+		{
+			std::cout << "\t" << k << ": " << "(" << results[k].x << ", " << results[k].y << ") => " << results[k].distance << std::endl;
+		}
+	}
 		
 		
 		
@@ -197,7 +217,6 @@ int main(int argc, char * argv[])
 		}
 		*/
 		
-	}
 	
 	//Finalize MPI
 	MPI_Type_free(&worker_param_type);

@@ -1,0 +1,321 @@
+Process 2 parsed file /cluster/content/hpc/distributed_data/xalp_ac.data
+Process 21 parsed file /cluster/content/hpc/distributed_data/xajp_ad.data
+Process 1 parsed file /cluster/content/hpc/distributed_data/xakp_ad.data
+Process 12 parsed file /cluster/content/hpc/distributed_data/xaop_ac.data
+Process 15 parsed file /cluster/content/hpc/distributed_data/xaap_ad.data
+Process 14 parsed file /cluster/content/hpc/distributed_data/xahp_aa.data
+Process 8 parsed file /cluster/content/hpc/distributed_data/xafp_ad.data
+Process 17 parsed file /cluster/content/hpc/distributed_data/xakp_aa.data
+Process 19 parsed file /cluster/content/hpc/distributed_data/xamp_aa.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xabp_aa.data
+Process 13 parsed file /cluster/content/hpc/distributed_data/xagp_aa.data
+Process 7 parsed file /cluster/content/hpc/distributed_data/xasp_ab.data
+Process 11 parsed file /cluster/content/hpc/distributed_data/xarp_ab.data
+Process 20 parsed file /cluster/content/hpc/distributed_data/xaqp_ac.data
+Process 6 parsed file /cluster/content/hpc/distributed_data/xaap_ac.data
+Process 4 parsed file /cluster/content/hpc/distributed_data/xaip_ab.data
+Process 18 parsed file /cluster/content/hpc/distributed_data/xaep_ac.data
+Process 10 parsed file /cluster/content/hpc/distributed_data/xatp_ac.data
+Process 9 parsed file /cluster/content/hpc/distributed_data/xahp_ab.data
+Process 5 parsed file /cluster/content/hpc/distributed_data/xafp_ab.data
+Process 2 parsed file /cluster/content/hpc/distributed_data/xamp_ad.data
+Process 3 parsed file /cluster/content/hpc/distributed_data/xalp_aa.data
+Process 1 parsed file /cluster/content/hpc/distributed_data/xaip_aa.data
+Process 16 parsed file /cluster/content/hpc/distributed_data/xasp_aa.data
+Process 21 parsed file /cluster/content/hpc/distributed_data/xahp_ad.data
+Process 12 parsed file /cluster/content/hpc/distributed_data/xacp_ad.data
+Process 15 parsed file /cluster/content/hpc/distributed_data/xaip_ad.data
+Process 14 parsed file /cluster/content/hpc/distributed_data/xaqp_ab.data
+Process 20 parsed file /cluster/content/hpc/distributed_data/xafp_ac.data
+Process 11 parsed file /cluster/content/hpc/distributed_data/xapp_ab.data
+Process 8 parsed file /cluster/content/hpc/distributed_data/xaip_ac.data
+Process 6 parsed file /cluster/content/hpc/distributed_data/xahp_ac.data
+Process 13 parsed file /cluster/content/hpc/distributed_data/xamp_ab.data
+Process 7 parsed file /cluster/content/hpc/distributed_data/xacp_ab.data
+Process 17 parsed file /cluster/content/hpc/distributed_data/xaqp_ad.data
+Process 19 parsed file /cluster/content/hpc/distributed_data/xabp_ad.data
+Process 18 parsed file /cluster/content/hpc/distributed_data/xacp_aa.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xaop_ad.data
+Process 10 parsed file /cluster/content/hpc/distributed_data/xanp_ab.data
+Process 9 parsed file /cluster/content/hpc/distributed_data/xajp_ac.data
+Process 5 parsed file /cluster/content/hpc/distributed_data/xaap_ab.data
+Process 2 parsed file /cluster/content/hpc/distributed_data/xanp_aa.data
+Process 2 Result set:
+	0: (36.2491, 71.3782) => 9.53216
+	1: (36.2488, 71.3777) => 9.69513
+	2: (36.2494, 71.3788) => 9.70792
+	3: (36.2491, 71.3779) => 9.74866
+	4: (36.2491, 71.3785) => 9.849
+	5: (36.2488, 71.3774) => 9.87669
+	6: (36.2488, 71.3779) => 10.0042
+	7: (36.2494, 71.3785) => 10.0802
+	8: (36.2485, 71.3771) => 10.0944
+	9: (36.2485, 71.3768) => 10.1422
+Process 4 parsed file /cluster/content/hpc/distributed_data/xaap_aa.data
+Process 16 parsed file /cluster/content/hpc/distributed_data/xagp_ad.data
+Process 1 parsed file /cluster/content/hpc/distributed_data/xanp_ac.data
+Process 21 parsed file /cluster/content/hpc/distributed_data/xajp_ab.data
+Process 1 Result set:
+	0: (36.2224, 71.5032) => 11.1391
+	1: (36.2224, 71.5035) => 11.1884
+	2: (36.3307, 71.551) => 11.2391
+	3: (36.2177, 71.5138) => 11.2737
+	4: (36.2177, 71.5149) => 11.3279
+	5: (36.2249, 71.5138) => 11.3477
+	6: (36.2177, 71.514) => 11.3699
+	7: (36.2177, 71.5152) => 11.4214
+	8: (36.2177, 71.5146) => 11.4245
+	9: (36.218, 71.5132) => 11.4329
+Process 21 Result set:
+	0: (36.8171, 71.5718) => 11.2453
+	1: (36.8171, 71.5715) => 11.2562
+	2: (36.8171, 71.5713) => 11.2783
+	3: (36.7924, 71.4735) => 11.2784
+	4: (36.858, 71.4396) => 11.288
+	5: (36.8171, 71.5721) => 11.3018
+	6: (36.858, 71.4399) => 11.3097
+	7: (36.8169, 71.5707) => 11.3178
+	8: (36.8169, 71.571) => 11.3296
+	9: (36.8169, 71.5704) => 11.3443
+Process 12 parsed file /cluster/content/hpc/distributed_data/xagp_ac.data
+Process 15 parsed file /cluster/content/hpc/distributed_data/xapp_ac.data
+Process 14 parsed file /cluster/content/hpc/distributed_data/xakp_ab.data
+Process 12 Result set:
+	0: (36.0007, 71.3554) => 10.8892
+	1: (36.0007, 71.3557) => 10.9643
+	2: (36.0007, 71.3563) => 10.9942
+	3: (36.0007, 71.3551) => 11.0041
+	4: (36.0007, 71.356) => 11.0076
+	5: (36.041, 71.3246) => 11.0948
+	6: (36.0374, 71.3443) => 11.1169
+	7: (36.0007, 71.3565) => 11.1205
+	8: (37.7457, 71.3143) => 11.1629
+	9: (37.7457, 71.3146) => 11.1654
+Process 15 Result set:
+	0: (35.8444, 71.5649) => 10.7774
+	1: (36.881, 71.3379) => 11.143
+	2: (35.8674, 71.5635) => 11.2218
+	3: (36.8944, 71.3476) => 11.2622
+	4: (38.053, 71.2988) => 11.2838
+	5: (35.868, 71.5524) => 11.342
+	6: (38.0321, 71.2896) => 11.3445
+	7: (38.0471, 71.3154) => 11.3548
+	8: (36.8999, 71.359) => 11.3549
+	9: (36.9007, 71.3446) => 11.3691
+Process 20 parsed file /cluster/content/hpc/distributed_data/xatp_aa.data
+Process 11 parsed file /cluster/content/hpc/distributed_data/xafp_aa.data
+Process 13 parsed file /cluster/content/hpc/distributed_data/xadp_ab.data
+Process 8 parsed file /cluster/content/hpc/distributed_data/xaep_ad.data
+Process 6 parsed file /cluster/content/hpc/distributed_data/xarp_ad.data
+Process 20 Result set:
+	0: (35.3596, 71.4557) => 11.2102
+	1: (37.7205, 71.5615) => 11.2124
+	2: (35.6049, 71.3399) => 11.3725
+	3: (37.7196, 71.5082) => 11.3736
+	4: (37.7196, 71.5085) => 11.397
+	5: (35.3596, 71.4554) => 11.4145
+	6: (37.7196, 71.5088) => 11.4266
+	7: (37.7196, 71.5079) => 11.44
+	8: (37.7196, 71.509) => 11.4643
+	9: (35.4394, 71.3204) => 11.4848
+Process 19 parsed file /cluster/content/hpc/distributed_data/xamp_ac.data
+Process 7 parsed file /cluster/content/hpc/distributed_data/xarp_aa.data
+Process 17 parsed file /cluster/content/hpc/distributed_data/xaqp_aa.data
+Process 11 Result set:
+	0: (35.9296, 71.5352) => 10.9677
+	1: (35.9296, 71.5354) => 11.0365
+	2: (35.9296, 71.5349) => 11.0368
+	3: (35.7863, 71.4799) => 11.2531
+	4: (35.9296, 71.5346) => 11.2899
+	5: (35.6699, 71.5263) => 11.301
+	6: (35.7394, 71.4727) => 11.3337
+	7: (35.8049, 71.4921) => 11.3409
+	8: (35.9296, 71.5357) => 11.3674
+	9: (35.8946, 71.4924) => 11.3751
+Process 13 Result set:
+	0: (38.031, 71.4624) => 10.8661
+	1: (36.3302, 71.3232) => 10.9958
+	2: (36.3302, 71.3229) => 11.0824
+	3: (38.0485, 71.474) => 11.1831
+	4: (36.3302, 71.3235) => 11.2887
+	5: (37.731, 71.414) => 11.2914
+	6: (38.0319, 71.4513) => 11.2969
+	7: (38.0046, 71.4685) => 11.3236
+	8: (38.0157, 71.449) => 11.3591
+	9: (36.3444, 71.3085) => 11.3715
+Process 8 Result set:
+	0: (36.8716, 71.3193) => 11.6105
+	1: (36.9244, 71.3377) => 11.6364
+	2: (36.8966, 71.3207) => 11.645
+	3: (36.8966, 71.321) => 11.7051
+	4: (36.9488, 71.3352) => 11.7249
+	5: (36.8719, 71.319) => 11.7351
+	6: (36.7352, 71.2785) => 11.7806
+	7: (36.9432, 71.3074) => 11.8045
+	8: (36.8963, 71.3218) => 11.8202
+	9: (36.7352, 71.2788) => 11.8251
+Process 6 Result set:
+	0: (38.0313, 71.2785) => 10.8234
+	1: (38.0496, 71.2763) => 10.9737
+	2: (38.0349, 71.2743) => 11.2272
+	3: (38.1577, 71.2552) => 11.2494
+	4: (38.3507, 71.2799) => 11.2868
+	5: (38.0516, 71.2868) => 11.2884
+	6: (38.1502, 71.2796) => 11.3938
+	7: (38.1044, 71.2599) => 11.3982
+	8: (38.3396, 71.2771) => 11.4095
+	9: (38.1596, 71.2568) => 11.4166
+Process 19 Result set:
+	0: (36.1316, 71.2479) => 10.9374
+	1: (38.0577, 71.5132) => 11.0121
+	2: (38.3752, 71.5696) => 11.1241
+	3: (38.3046, 71.5499) => 11.144
+	4: (38.381, 71.5602) => 11.1481
+	5: (38.2991, 71.5549) => 11.1688
+	6: (38.0646, 71.541) => 11.1708
+	7: (36.3002, 71.356) => 11.172
+	8: (38.3752, 71.5699) => 11.1792
+	9: (36.308, 71.3582) => 11.1834
+Process 7 Result set:
+	0: (37.9921, 71.2615) => 10.3653
+	1: (38.0196, 71.2752) => 10.6175
+	2: (37.9921, 71.2613) => 10.6764
+	3: (37.9919, 71.2621) => 10.692
+	4: (37.9946, 71.2638) => 10.7121
+	5: (37.9944, 71.2643) => 10.7671
+	6: (38.0313, 71.2785) => 10.8234
+	7: (37.9946, 71.264) => 10.854
+	8: (35.7041, 71.4977) => 10.9714
+	9: (38.0496, 71.2763) => 10.9741
+Process 17 Result set:
+	0: (35.6655, 71.2299) => 11.0539
+	1: (35.7194, 71.2407) => 11.1146
+	2: (35.7319, 71.2271) => 11.1876
+	3: (35.6652, 71.2301) => 11.2092
+	4: (35.6649, 71.2307) => 11.2801
+	5: (35.7099, 71.2521) => 11.3029
+	6: (35.7194, 71.2874) => 11.3331
+	7: (35.7213, 71.241) => 11.3453
+	8: (35.6794, 71.2604) => 11.3954
+	9: (35.6649, 71.2304) => 11.407
+Process 10 parsed file /cluster/content/hpc/distributed_data/xabp_ac.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xaop_ab.data
+Process 18 parsed file /cluster/content/hpc/distributed_data/xatp_ab.data
+Process 9 parsed file /cluster/content/hpc/distributed_data/xalp_ab.data
+Process 10 Result set:
+	0: (38.3141, 71.4799) => 10.7314
+	1: (36.2782, 71.4771) => 10.8541
+	2: (36.2813, 71.4671) => 11.0253
+	3: (38.2863, 71.5029) => 11.0277
+	4: (38.2863, 71.5032) => 11.0314
+	5: (38.2863, 71.5027) => 11.0408
+	6: (38.2863, 71.5035) => 11.0413
+	7: (38.2863, 71.5038) => 11.0473
+	8: (38.2866, 71.501) => 11.0531
+	9: (38.2863, 71.5024) => 11.0645
+Process 18 Result set:
+	0: (37.958, 71.2088) => 10.8978
+	1: (37.958, 71.209) => 11.1595
+	2: (37.9616, 71.2174) => 11.2856
+	3: (37.9585, 71.2102) => 11.3766
+	4: (37.9871, 71.2165) => 11.3985
+	5: (37.9582, 71.2096) => 11.4234
+	6: (37.9582, 71.2093) => 11.4418
+	7: (37.9588, 71.2104) => 11.4581
+	8: (37.9588, 71.2107) => 11.4629
+	9: (37.9591, 71.2113) => 11.5248
+Process 5 parsed file /cluster/content/hpc/distributed_data/xajp_aa.data
+Process 5 Result set:
+	0: (38.153, 71.2363) => 10.8251
+	1: (38.0985, 71.2038) => 10.9365
+	2: (38.0985, 71.204) => 10.9834
+	3: (38.153, 71.236) => 10.9852
+	4: (38.0532, 71.2038) => 11.031
+	5: (38.0985, 71.2035) => 11.0653
+	6: (38.0535, 71.2038) => 11.075
+	7: (38.1532, 71.2257) => 11.092
+	8: (38.0985, 71.2043) => 11.1346
+	9: (38.0538, 71.204) => 11.2623
+Process 4 parsed file /cluster/content/hpc/distributed_data/xaop_aa.data
+Process 14 Result set:
+	0: (35.6391, 71.2696) => 10.8256
+	1: (35.5505, 71.2707) => 10.9798
+	2: (35.5952, 71.3188) => 11.0446
+	3: (35.6388, 71.2704) => 11.1966
+	4: (35.6307, 71.3113) => 11.2048
+	5: (37.1169, 71.3863) => 11.247
+	6: (35.6307, 71.311) => 11.2606
+	7: (37.1169, 71.3865) => 11.2756
+	8: (37.1169, 71.386) => 11.2799
+	9: (37.1169, 71.3857) => 11.2883
+Process 16 parsed file /cluster/content/hpc/distributed_data/xapp_ad.data
+Process 4 Result set:
+	0: (38.361, 71.1804) => 10.6269
+	1: (38.1769, 71.1571) => 11.0366
+	2: (38.203, 71.1702) => 11.0453
+	3: (36.0435, 71.246) => 11.1609
+	4: (35.8738, 71.1863) => 11.1661
+	5: (38.2027, 71.1699) => 11.1714
+	6: (35.7319, 71.2271) => 11.1876
+	7: (38.1169, 71.1554) => 11.2141
+	8: (35.8738, 71.1865) => 11.2345
+	9: (35.9005, 71.2279) => 11.2837
+Process 16 Result set:
+	0: (35.6224, 71.2043) => 10.697
+	1: (35.7019, 71.1913) => 10.9249
+	2: (35.6455, 71.1552) => 10.9537
+	3: (35.6691, 71.1779) => 10.9977
+	4: (35.7019, 71.191) => 11.0226
+	5: (35.7019, 71.1915) => 11.068
+	6: (35.7019, 71.1907) => 11.1712
+	7: (35.5019, 71.1513) => 11.2175
+	8: (35.7019, 71.1918) => 11.2351
+	9: (35.6735, 71.1818) => 11.2594
+Process 9 Result set:
+	0: (36.486, 71.4724) => 10.8673
+	1: (36.4863, 71.4724) => 11.2009
+	2: (36.9996, 71.506) => 11.2717
+	3: (36.4413, 71.4777) => 11.3033
+	4: (36.4641, 71.4985) => 11.3068
+	5: (37.0085, 71.5443) => 11.3264
+	6: (37.0085, 71.5446) => 11.3324
+	7: (36.4538, 71.4921) => 11.3481
+	8: (36.9166, 71.5349) => 11.3511
+	9: (36.426, 71.4379) => 11.3682
+Process 22 parsed file /cluster/content/hpc/distributed_data/xasp_ad.data
+Process 3 parsed file /cluster/content/hpc/distributed_data/xapp_aa.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xakp_ac.data
+Process 3 parsed file /cluster/content/hpc/distributed_data/xagp_ab.data
+Process 3 Result set:
+	0: (36.4396, 71.4124) => 10.8758
+	1: (36.4394, 71.4124) => 10.9135
+	2: (36.4474, 71.4093) => 10.9972
+	3: (36.4388, 71.4127) => 11.0408
+	4: (36.4391, 71.4124) => 11.0554
+	5: (35.9307, 71.4493) => 11.1301
+	6: (36.4391, 71.4127) => 11.1319
+	7: (36.4385, 71.4127) => 11.1448
+	8: (36.4396, 71.4121) => 11.1536
+	9: (36.4388, 71.4124) => 11.2153
+Process 22 parsed file /cluster/content/hpc/distributed_data/xadp_aa.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xasp_ac.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xalp_ad.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xaep_ab.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xabp_ab.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xadp_ac.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xacp_ac.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xaep_aa.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xanp_ad.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xarp_ac.data
+Process 22 parsed file /cluster/content/hpc/distributed_data/xadp_ad.data
+Process 22 Result set:
+	0: (38.0863, 71.4035) => 10.4074
+	1: (35.8999, 71.2693) => 10.6114
+	2: (36.0313, 71.2074) => 10.645
+	3: (38.093, 71.3743) => 10.6494
+	4: (36.0313, 71.2071) => 10.6634
+	5: (38.333, 71.4557) => 10.6817
+	6: (35.9852, 71.1943) => 10.6992
+	7: (38.333, 71.4554) => 10.7324
+	8: (38.0977, 71.4413) => 10.7416
+	9: (38.0977, 71.4415) => 10.7609
