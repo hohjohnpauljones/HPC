@@ -1,5 +1,29 @@
 
-#include "hw5.hpp"
+//#include "hw5.hpp"
+
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <sstream>
+#include <iostream>
+#include <mpi.h>
+#include <stdlib.h>
+#include <exception>
+#include <stdexcept>
+#include <map>
+#include <list>
+#include <string>
+#include <omp.h>
+
+#include <string.h>
+#include <fstream>
+#include <algorithm>
+#include <iterator>
+#include <chrono>
+
+#include <boost/filesystem.hpp>
+#include "boost/filesystem/operations.hpp"
+#include "boost/filesystem/path.hpp"
 
 
 int main(int argc, char * argv[])
@@ -16,40 +40,6 @@ int main(int argc, char * argv[])
 	int world_size;
 	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 	
-	//Custome MPI data type variables
-	worker_param param;
-	int type_count;
-	type_count = 3;		//in
-	
-	//define types
-	MPI_Datatype types[type_count];
-	types[0] = MPI_INT;
-	types[1] = MPI_FLOAT;
-	types[2] = MPI_CHAR;
-	
-	//define block lengths
-	int block_lengths[type_count];
-	block_lengths[0] = 1;
-	block_lengths[1] = 29;
-	block_lengths[2] = 100 * 60;
-	
-	//define block displacements
-	MPI_Aint displacements[type_count];
-	MPI_Aint addr1, addr2, addr3, addr4;
-	MPI_Get_address(&param, &addr1);
-	MPI_Get_address(&param.N, &addr2);
-	MPI_Get_address(&param.s_vector, &addr3);
-	MPI_Get_address(&param.filenames, &addr4);
-	displacements[0] = addr2 - addr1;
-	displacements[1] = addr3 - addr2;
-	displacements[2] = addr4 - addr3;
-	
-	//define datatype
-	MPI_Datatype worker_param_type;
-	MPI_Type_create_struct(type_count, block_lengths, displacements, types, &worker_param_type);
-	MPI_Type_commit(&worker_param_type);
-	
-	
 	// We are assuming at least 2 processes for this task
 	if (world_size < 2) 
 	{
@@ -61,7 +51,7 @@ int main(int argc, char * argv[])
 	//Master
 	if (world_rank == 0)
 	{
-		int n_file = 0;
+		/*int n_file = 0;
 		
 		// Define a template type, and its iterator	
 		typedef std::map<std::string,scottgs::path_list_type> content_type;
@@ -102,12 +92,13 @@ int main(int argc, char * argv[])
 		for (j = 0; j < 29; j++)
 		{
 			param.s_vector[j] = svector[j];
-		}
+		}*/
 		
 		for (current_worker = 1; current_worker < world_size; current_worker++)
 		{
 			
-			MPI::COMM_WORLD.Send(&param, 1, worker_param_type, current_worker, 0);
+			//MPI::COMM_WORLD.Send(&param, 1, worker_param_type, current_worker, 0);
+			MPI::COMM_WORLD.Send(&current_worker, 1, MPI::INT, current_worker, 0);
 		}
 		
 		for (int i = 1; i < world_size; i++)
@@ -119,7 +110,16 @@ int main(int argc, char * argv[])
 	//Worker
 	else
 	{
+		int current_worker;
 		
+		MPI::COMM_WORLD.Recv(&current_worker, 1, MPI::INT, 0, 0);
+		
+		#pragma omp parallel for
+		for (i = 0; i < 10; i++)
+		{
+			std::cout << "Process " << world_rank << " thread " << omp_get_thread_num() << " recieved " << i + current_worker << std::endl; 
+		}
+		/*
 		std::vector<result> results;
 		//results.erase(results.begin(), results.end());
 		int N = RESULTSSIZE;
@@ -152,7 +152,7 @@ int main(int argc, char * argv[])
 				std::vector<result> result_tmp;
 				std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
 				
-				#pragma omp parallel for shared(results) private(result_tmp)
+				#pragma omp parallel for private(result_tmp)
 				for (j = 0; j < lines.size(); j++)
 				{
 					result_tmp.erase(result_tmp.begin(), result_tmp.end());
@@ -163,18 +163,16 @@ int main(int argc, char * argv[])
 						result_tmp.resize(N);
 					}
 					
-					#pragma omp critical
+					results.insert(results.end(), result_tmp.begin(), result_tmp.end());
+					sort(results.begin(), results.end());
+					if (results.size() > N)
 					{
-						results.insert(results.end(), result_tmp.begin(), result_tmp.end());
-						sort(results.begin(), results.end());
-						if (results.size() > N)
-						{
-							results.resize(N);
-						}
-					}	
+						results.resize(N);
+					}
+						
 					
 					
-					//for(k = 0; k < result_tmp.size(); k++)
+					for(k = 0; k < result_tmp.size(); k++)
 					{
 						//std::cout << "\t" << "line " << j << " result " << k << ": " << "(" << result_tmp[k].x << ", " << result_tmp[k].y << ") => " << result_tmp[k].distance << std::endl;
 					}
@@ -186,6 +184,7 @@ int main(int argc, char * argv[])
 		{
 			std::cout << "\t" << k << ": " << "(" << results[k].x << ", " << results[k].y << ") => " << results[k].distance << std::endl;
 		}
+		*/
 	}
 		
 		
@@ -222,7 +221,7 @@ int main(int argc, char * argv[])
 		
 	
 	//Finalize MPI
-	MPI_Type_free(&worker_param_type);
+	//MPI_Type_free(&worker_param_type);
 	MPI_Finalize();
 	
 	return 0;	

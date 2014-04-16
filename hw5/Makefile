@@ -1,6 +1,6 @@
 CC=mpic++
-CFLAGS=-c -m64 -std=c++0x -O3 -ffast-math -funroll-loops -march=native -mtune=native -DNDEBUG -DNBOOST_DEBUG -Wall 
-LFLAGS=-o hw5 -lboost_filesystem-mt -lboost_system
+CFLAGS=-c -fopenmp -m64 -std=c++0x -O3 -ffast-math -funroll-loops -march=native -mtune=native -DNDEBUG -DNBOOST_DEBUG -Wall 
+LFLAGS=-o hw5 -fopenmp -lboost_filesystem-mt -lboost_system
 
 all: hw5
 

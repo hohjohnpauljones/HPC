@@ -38,12 +38,12 @@ using namespace std;
 using namespace scottgs;
 
 #define NUMFILES 79;
-#define RESULTSSIZE 100;
+#define RESULTSSIZE 10000;
 
 typedef std::vector<float> data_v;
 
-typedef std::map<std::pair<float,float>, vector<float>> line_map;
-typedef std::vector<std::vector<float>> lineType;
+typedef std::map<std::pair<float,float>, vector<float> > line_map;
+typedef std::vector<std::vector<float> > lineType;
 
 lineType parseFile(const char* filename);
 
@@ -128,7 +128,7 @@ lineType parseFile(const char* filename)
 	string line;												//temporary line pointer
 	float x;													
 	float y;
-	std::vector<std::vector<float>> lines;
+	std::vector<std::vector<float> > lines;
 	
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	
@@ -199,7 +199,7 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 		results.push_back(temp);
 	}
 	std::sort(results.begin(), results.end());
-	if (results.size > d)
+	if (results.size() > d)
 	{
 		results.resize(d);
 	}
@@ -212,7 +212,7 @@ std::vector<result> circularSubvectorMatch(const std::vector<float>& svector, co
 	return results;
 	
 }
-
+/*
 
 void parallel_compute(char * filename, int N, int p, int p_degree)
 {
@@ -244,3 +244,4 @@ void parallel_compute(char * filename, int N, int p, int p_degree)
 		}
 	}
 }
+*/
