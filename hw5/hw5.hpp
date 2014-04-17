@@ -38,7 +38,7 @@ using namespace std;
 using namespace scottgs;
 
 #define NUMFILES 79;
-#define RESULTSSIZE 10000;
+#define RESULTSSIZE 10;
 
 typedef std::vector<float> data_v;
 

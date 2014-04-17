@@ -1,0 +1,5 @@
+mpirun: killing job...
+
+=>> PBS: job killed: walltime 2742 exceeded limit 2700
+mpirun: abort is already in progress...hit ctrl-c again to forcibly terminate
+

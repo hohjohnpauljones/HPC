@@ -4,7 +4,7 @@
 
 int main(int argc, char * argv[])
 {
-	
+	std::chrono::high_resolution_clock::time_point wall_start = std::chrono::high_resolution_clock::now();
 	int current_worker = 1;
 	int i, j, k;
 	
@@ -110,16 +110,24 @@ int main(int argc, char * argv[])
 			MPI::COMM_WORLD.Send(&param, 1, worker_param_type, current_worker, 0);
 		}
 		
+		int ret;
+		
 		for (int i = 1; i < world_size; i++)
 		{
+			//MPI::COMM_WORLD.Recv(&ret, 1, MPI::INT, i, 0);
 			//MPI::COMM_WORLD.Irecv(&ret[i - 1], 1, MPI::INT, i, 0);
 			//MPI::COMM_WORLD.Send(&ret, 1, MPI::INT, i, 1);
 		}
+		
+		std::chrono::high_resolution_clock::time_point wall_end = std::chrono::high_resolution_clock::now();
+		
+		std::chrono::duration<double> time_span_wall = std::chrono::duration_cast<std::chrono::duration<double> >(wall_end - wall_start);
+		std::cout << "Wall Time:  " << time_span_wall.count() << " seconds." << std::endl;
 	}
 	//Worker
 	else
 	{
-		
+		std::chrono::high_resolution_clock::time_point worker_start = std::chrono::high_resolution_clock::now();
 		std::vector<result> results;
 		//results.erase(results.begin(), results.end());
 		int N = RESULTSSIZE;
@@ -140,6 +148,7 @@ int main(int argc, char * argv[])
 		}
 		
 		//process data
+		
 		for (i = start; i < end; i++)
 		//for (i = 0; i < 1; i++)
 		{
@@ -150,9 +159,9 @@ int main(int argc, char * argv[])
 				//parse line
 				lineType lines = parseFile(param.filenames[i]);
 				std::vector<result> result_tmp;
-				std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
+				//std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
 				
-				#pragma omp parallel for shared(results) private(result_tmp)
+				#pragma omp parallel for shared(results) private(j, k, result_tmp)
 				for (j = 0; j < lines.size(); j++)
 				{
 					result_tmp.erase(result_tmp.begin(), result_tmp.end());
@@ -181,45 +190,19 @@ int main(int argc, char * argv[])
 				}
 			}
 		}
+		/*
 		std::cout << "Process " << world_rank << " Result set:" << std::endl;
 		for(k = 0; k < results.size(); k++)
 		{
 			std::cout << "\t" << k << ": " << "(" << results[k].x << ", " << results[k].y << ") => " << results[k].distance << std::endl;
 		}
+		*/
+		std::chrono::high_resolution_clock::time_point worker_end = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> time_span_worker = std::chrono::duration_cast<std::chrono::duration<double> >(worker_end - worker_start);
+		std::cout << "Worker " << world_rank << " Time:  " << time_span_worker.count() << " seconds." << std::endl;
+		int ret = 1;
+		//MPI::COMM_WORLD.Send(&ret, 1, MPI::INT, current_worker, 0);
 	}
-		
-		
-		
-		
-		
-		
-		
-		
-		//merge results
-		
-		//return results
-		//MPI::COMM_WORLD.Send(&filename[end], 1, MPI::INT, 0, world_rank);
-		
-		/*
-		for (i = 0; i < 29; i++)
-		{
-			if (world_rank == 1)
-			std::cout << "Process " << world_rank << " recieved " << param.s_vector[i] << std::endl;
-		}
-		*/
-		/*
-		if (world_rank == 1)
-		{
-			for (i = 0; i < NUMFILES; i++)
-			{
-			//param.filenames[i] = "filename " + i;
-			//strncpy(param.filenames[i], "filename " + i, 20);
-			cout << "Process " << world_rank << " recieved " << param.filenames[i] << std::endl;
-			//printf("Process %d recieved %60s\n", world_rank, param.filenames[i]);
-			}
-		}
-		*/
-		
 	
 	//Finalize MPI
 	MPI_Type_free(&worker_param_type);
