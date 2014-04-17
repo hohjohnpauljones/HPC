@@ -129,6 +129,8 @@ int main(int argc, char * argv[])
 	{
 		std::chrono::high_resolution_clock::time_point worker_start = std::chrono::high_resolution_clock::now();
 		std::vector<result> results;
+		int ret = 1;
+		
 		//results.erase(results.begin(), results.end());
 		int N = RESULTSSIZE;
 		std::vector<float> s_vector;
@@ -138,6 +140,7 @@ int main(int argc, char * argv[])
 		int numfiles = NUMFILES;
 		s_vector.assign(param.s_vector, param.s_vector + 29);
 		
+		/*
 		int offset = numfiles / (world_size - 1); 
 		int start = offset * (world_rank - 1);
 		int end = start + offset;
@@ -145,6 +148,17 @@ int main(int argc, char * argv[])
 		if (world_rank == world_size - 1)
 		{
 			end += numfiles % (world_size - 1);	
+		}
+		
+		*/
+		
+		int offset = numfiles / (world_size - 2);		// minus one for master and minus one for the remainder node
+		int start = offset * (world_rank - 2);
+		int end = start + offset;
+		
+		if (world_rank == world_size - 1)
+		{
+			end = numfiles % (world_size - 2);
 		}
 		
 		//process data
@@ -165,7 +179,7 @@ int main(int argc, char * argv[])
 				for (j = 0; j < lines.size(); j++)
 				{
 					result_tmp.erase(result_tmp.begin(), result_tmp.end());
-					result_tmp = circularSubvectorMatch(s_vector, lines[j], 0, 360, N, 1);
+					//result_tmp = circularSubvectorMatch(s_vector, lines[j], 0, 360, N, 1);
 					sort(result_tmp.begin(), result_tmp.end());
 					if (result_tmp.size() > N)
 					{
@@ -199,9 +213,9 @@ int main(int argc, char * argv[])
 		*/
 		std::chrono::high_resolution_clock::time_point worker_end = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> time_span_worker = std::chrono::duration_cast<std::chrono::duration<double> >(worker_end - worker_start);
-		std::cout << "Worker " << world_rank << " Time:  " << time_span_worker.count() << " seconds." << std::endl;
-		int ret = 1;
+		std::cout << "Worker " << world_rank << " Time:  " << time_span_worker.count() << " seconds on " << (end - start) << " nodes." << std::endl;
 		//MPI::COMM_WORLD.Send(&ret, 1, MPI::INT, current_worker, 0);
+		
 	}
 	
 	//Finalize MPI
