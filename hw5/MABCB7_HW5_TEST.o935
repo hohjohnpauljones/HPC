@@ -1,0 +1,12 @@
+0 of 6 workers has chunk size: 14 remainder: 1
+Process 1 start: 0 end: 13
+1 of 6 workers has chunk size: 13 remainder: 1
+Process 2 start: 14 end: 26
+3 of 6 workers has chunk size: 13 remainder: 1
+Process 4 start: 40 end: 52
+2 of 6 workers has chunk size: 13 remainder: 1
+Process 3 start: 27 end: 39
+4 of 6 workers has chunk size: 13 remainder: 1
+Process 5 start: 53 end: 65
+5 of 6 workers has chunk size: 13 remainder: 1
+Process 6 start: 66 end: 79

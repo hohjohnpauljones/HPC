@@ -126,22 +126,42 @@ int main(int argc, char * argv[])
 		std::vector<float> s_vector;
 		MPI::COMM_WORLD.Recv(&param, 1, worker_param_type, 0, 0);
 		
+		
 		//calculate bounds of data to be processed.
 		int numfiles = NUMFILES;
+		int number_of_workers = world_size - 1;
+		int worker_rank = world_rank - 1;
+		int start;
+		int end;
+		
+		
+		int chunk = numfiles / number_of_workers;
+		int remainder = numfiles - (chunk * number_of_workers);
+		
+		if (worker_rank < remainder)
+		{
+			chunk++;
+		}
+		
+		if (worker_rank < remainder)
+		{
+			start = worker_rank * chunk;
+			end = (worker_rank + 1) * chunk;
+		}
+		else
+		{
+			start = worker_rank * chunk + remainder;
+			end = (worker_rank + 1) * chunk + remainder;
+		}
+		
+		std::cout << worker_rank << " of " << number_of_workers << " workers has chunk size: " << chunk << " remainder: " << remainder << std::endl;
+		
 		s_vector.assign(param.s_vector, param.s_vector + 29);
 		
-		int offset = numfiles / (world_size - 1); 
-		int start = offset * (world_rank - 1);
-		int end = start + offset;
-		
-		if (world_rank == world_size - 1)
-		{
-			end += numfiles % (world_size - 1);	
-		}
+		std::cout << "Process " << world_rank << " start: " << start << " end: " << end << std::endl;
 		
 		//process data
 		for (i = start; i < end; i++)
-		//for (i = 0; i < 1; i++)
 		{
 			//if (world_rank == 1)
 			{
@@ -155,6 +175,8 @@ int main(int argc, char * argv[])
 				#pragma omp parallel for shared(results) private(result_tmp)
 				for (j = 0; j < lines.size(); j++)
 				{
+					//std::cout << "Process " << world_rank << " thread " << omp_get_thread_num() << std::endl; 
+					
 					result_tmp.erase(result_tmp.begin(), result_tmp.end());
 					result_tmp = circularSubvectorMatch(s_vector, lines[j], 0, 360, N, 1);
 					sort(result_tmp.begin(), result_tmp.end());
@@ -179,48 +201,18 @@ int main(int argc, char * argv[])
 						//std::cout << "\t" << "line " << j << " result " << k << ": " << "(" << result_tmp[k].x << ", " << result_tmp[k].y << ") => " << result_tmp[k].distance << std::endl;
 					}
 				}
+				
 			}
 		}
 		std::cout << "Process " << world_rank << " Result set:" << std::endl;
+		//j = 0;
 		for(k = 0; k < results.size(); k++)
 		{
+			//j += k
 			std::cout << "\t" << k << ": " << "(" << results[k].x << ", " << results[k].y << ") => " << results[k].distance << std::endl;
 		}
 	}
 		
-		
-		
-		
-		
-		
-		
-		
-		//merge results
-		
-		//return results
-		//MPI::COMM_WORLD.Send(&filename[end], 1, MPI::INT, 0, world_rank);
-		
-		/*
-		for (i = 0; i < 29; i++)
-		{
-			if (world_rank == 1)
-			std::cout << "Process " << world_rank << " recieved " << param.s_vector[i] << std::endl;
-		}
-		*/
-		/*
-		if (world_rank == 1)
-		{
-			for (i = 0; i < NUMFILES; i++)
-			{
-			//param.filenames[i] = "filename " + i;
-			//strncpy(param.filenames[i], "filename " + i, 20);
-			cout << "Process " << world_rank << " recieved " << param.filenames[i] << std::endl;
-			//printf("Process %d recieved %60s\n", world_rank, param.filenames[i]);
-			}
-		}
-		*/
-		
-	
 	//Finalize MPI
 	MPI_Type_free(&worker_param_type);
 	MPI_Finalize();

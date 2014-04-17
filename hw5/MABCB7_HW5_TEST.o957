@@ -1,0 +1,60 @@
+0 of 20 workers has chunk size: 4 remainder: 19
+Process 1 start: 0 end: 3
+Process 1 Result set:
+1 of 20 workers has chunk size: 4 remainder: 19
+Process 2 start: 4 end: 7
+Process 2 Result set:
+3 of 20 workers has chunk size: 4 remainder: 19
+Process 4 start: 12 end: 15
+Process 4 Result set:
+2 of 20 workers has chunk size: 4 remainder: 19
+Process 3 start: 8 end: 11
+Process 3 Result set:
+5 of 20 workers has chunk size: 4 remainder: 19
+Process 6 start: 20 end: 23
+Process 6 Result set:
+4 of 20 workers has chunk size: 4 remainder: 19
+Process 5 start: 16 end: 19
+Process 5 Result set:
+8 of 20 workers has chunk size: 4 remainder: 19
+Process 9 start: 32 end: 35
+Process 9 Result set:
+9 of 20 workers has chunk size: 4 remainder: 19
+Process 10 start: 36 end: 39
+Process 10 Result set:
+7 of 20 workers has chunk size: 4 remainder: 19
+Process 8 start: 28 end: 31
+Process 8 Result set:
+6 of 20 workers has chunk size: 4 remainder: 19
+Process 7 start: 24 end: 27
+Process 7 Result set:
+10 of 20 workers has chunk size: 4 remainder: 19
+Process 11 start: 40 end: 43
+Process 11 Result set:
+11 of 20 workers has chunk size: 4 remainder: 19
+Process 12 start: 44 end: 47
+Process 12 Result set:
+13 of 20 workers has chunk size: 4 remainder: 19
+Process 14 start: 52 end: 55
+Process 14 Result set:
+14 of 20 workers has chunk size: 4 remainder: 19
+Process 15 start: 56 end: 59
+Process 15 Result set:
+12 of 20 workers has chunk size: 4 remainder: 19
+Process 13 start: 48 end: 51
+Process 13 Result set:
+16 of 20 workers has chunk size: 4 remainder: 19
+Process 17 start: 64 end: 67
+Process 17 Result set:
+17 of 20 workers has chunk size: 4 remainder: 19
+Process 18 start: 68 end: 71
+Process 18 Result set:
+15 of 20 workers has chunk size: 4 remainder: 19
+Process 16 start: 60 end: 63
+Process 16 Result set:
+18 of 20 workers has chunk size: 4 remainder: 19
+Process 19 start: 72 end: 75
+Process 19 Result set:
+19 of 20 workers has chunk size: 3 remainder: 19
+Process 20 start: 76 end: 79
+Process 20 Result set:
