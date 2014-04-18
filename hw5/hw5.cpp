@@ -4,7 +4,7 @@
 
 int main(int argc, char * argv[])
 {
-	
+	std::chrono::high_resolution_clock::time_point wall_start = std::chrono::high_resolution_clock::now();
 	int current_worker = 1;
 	int i, j, k;
 	
@@ -48,6 +48,32 @@ int main(int argc, char * argv[])
 	MPI_Datatype worker_param_type;
 	MPI_Type_create_struct(type_count, block_lengths, displacements, types, &worker_param_type);
 	MPI_Type_commit(&worker_param_type);
+	
+	//define data type for return values
+	result return_var;
+	int ret_type_count = 2;
+	
+	MPI_Datatype ret_types[ret_type_count];
+	ret_types[0] = MPI_INT;
+	ret_types[1] = MPI_FLOAT;
+	
+	//define block lengths
+	int ret_block_lengths[ret_type_count];
+	ret_block_lengths[0] = 1;
+	ret_block_lengths[1] = 3;
+	
+	//define block displacements
+	MPI_Aint ret_displacements[ret_type_count];
+	MPI_Get_address(&return_var, &addr1);
+	MPI_Get_address(&return_var.offset, &addr2);
+	MPI_Get_address(&return_var.x, &addr3);
+	ret_displacements[0] = addr2 - addr1;
+	ret_displacements[1] = addr3 - addr2;
+	
+	//define datatype
+	MPI_Datatype worker_return_type;
+	MPI_Type_create_struct(ret_type_count, ret_block_lengths, ret_displacements, ret_types, &worker_return_type);
+	MPI_Type_commit(&worker_return_type);
 	
 	
 	// We are assuming at least 2 processes for this task
@@ -110,16 +136,39 @@ int main(int argc, char * argv[])
 			MPI::COMM_WORLD.Send(&param, 1, worker_param_type, current_worker, 0);
 		}
 		
+		int ret;
+		int N = RESULTSSIZE;
+		result worker_results[world_size - 1][N];
+		double times[world_size - 1];
+		
 		for (int i = 1; i < world_size; i++)
 		{
+			//MPI::COMM_WORLD.Recv(&ret, 1, MPI::INT, i, 1);
+			//MPI::COMM_WORLD.Recv(&worker_results[i][0], 1, worker_return_type, i, 1);
+			//std::cout << "Recieved worker " << i << " results: " << worker_results[i][0].x << ", " << worker_results[i][0].y << " - " << worker_results[i][0].offset << " => " << worker_results[i][0].distance << std::endl;
+			MPI::COMM_WORLD.Recv(worker_results[i], N, worker_return_type, i, 1);
+			std::cout << "Recieved worker " << i << " results: " << worker_results[i][0].x << ", " << worker_results[i][0].y << " - " << worker_results[i][0].offset << " => " << worker_results[i][0].distance << std::endl;
+			std::cout << "Recieved worker " << i << " results: " << worker_results[i][1].x << ", " << worker_results[i][1].y << " - " << worker_results[i][1].offset << " => " << worker_results[i][1].distance << std::endl;
+			MPI::COMM_WORLD.Recv(&times[i], 1, MPI::DOUBLE, i , 2);
+			std::cout << "Node " << i << " took " << times[i] << " seconds" << std::endl;
 			//MPI::COMM_WORLD.Irecv(&ret[i - 1], 1, MPI::INT, i, 0);
 			//MPI::COMM_WORLD.Send(&ret, 1, MPI::INT, i, 1);
 		}
+
+		std::vector<result> g_results;
+		g_results.assign(&worker_results[0][0], &worker_results[0][0] + (world_size - 1) * N);
+		
+		std::cout << "Global results of size: " << g_results.size() << std::endl;
+
+		std::chrono::high_resolution_clock::time_point wall_end = std::chrono::high_resolution_clock::now();
+
+		std::chrono::duration<double> time_span_wall = std::chrono::duration_cast<std::chrono::duration<double> >(wall_end - wall_start);
+		std::cout << "Wall Time:  " << time_span_wall.count() << " seconds." << std::endl;
 	}
 	//Worker
 	else
 	{
-		
+		std::chrono::high_resolution_clock::time_point worker_start = std::chrono::high_resolution_clock::now();
 		std::vector<result> results;
 		//results.erase(results.begin(), results.end());
 		int N = RESULTSSIZE;
@@ -154,11 +203,11 @@ int main(int argc, char * argv[])
 			end = (worker_rank + 1) * chunk + remainder;
 		}
 		
-		std::cout << worker_rank << " of " << number_of_workers << " workers has chunk size: " << chunk << " remainder: " << remainder << std::endl;
+		//std::cout << worker_rank << " of " << number_of_workers << " workers has chunk size: " << chunk << " remainder: " << remainder << std::endl;
 		
 		s_vector.assign(param.s_vector, param.s_vector + 29);
 		
-		std::cout << "Process " << world_rank << " start: " << start << " end: " << end << std::endl;
+		//std::cout << "Process " << world_rank << " start: " << start << " end: " << end << std::endl;
 		
 		//process data
 		for (i = start; i < end; i++)
@@ -170,7 +219,7 @@ int main(int argc, char * argv[])
 				//parse line
 				lineType lines = parseFile(param.filenames[i]);
 				std::vector<result> result_tmp;
-				std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
+				//std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
 				
 				#pragma omp parallel for shared(results) private(result_tmp)
 				for (j = 0; j < lines.size(); j++)
@@ -204,17 +253,33 @@ int main(int argc, char * argv[])
 				
 			}
 		}
-		std::cout << "Process " << world_rank << " Result set:" << std::endl;
+		//std::cout << "Process " << world_rank << " Result set:" << std::endl;
 		//j = 0;
 		for(k = 0; k < results.size(); k++)
 		{
 			//j += k
-			std::cout << "\t" << k << ": " << "(" << results[k].x << ", " << results[k].y << ") => " << results[k].distance << std::endl;
+			//std::cout << "\t" << k << ": " << "(" << results[k].x << ", " << results[k].y << ") => " << results[k].distance << std::endl;
 		}
+		int ret = 1;
+		std::chrono::high_resolution_clock::time_point worker_end = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> time_span_worker = std::chrono::duration_cast<std::chrono::duration<double> >(worker_end - worker_start);
+		std::cout << "Worker " << world_rank << " Time:  " << time_span_worker.count() << " seconds on " << (end - start) << " files." << std::endl;
+		
+		//results[0].time = time_span_worker.count();
+		double timer = time_span_worker.count();
+		
+		result * returnValue = &results[0];
+		//result returnValue = results[0];
+		
+		MPI::COMM_WORLD.Send(returnValue, N, worker_return_type, 0, 1);
+		MPI::COMM_WORLD.Send(&timer, 1, MPI::DOUBLE, 0, 2);
+		//MPI::COMM_WORLD.Send(&returnValue, 1, worker_return_type, 0, 1);
+		//MPI::COMM_WORLD.Send(&ret, 1, MPI::INT, 0, 1);
 	}
 		
 	//Finalize MPI
 	MPI_Type_free(&worker_param_type);
+	MPI_Type_free(&worker_return_type);
 	MPI_Finalize();
 	
 	return 0;	

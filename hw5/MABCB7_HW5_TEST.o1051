@@ -1,0 +1,41 @@
+Worker 20 Time:  395.729 seconds on 3 files.
+Worker 19 Time:  494.28 seconds on 4 files.
+Worker 14 Time:  495.566 seconds on 4 files.
+Worker 10 Time:  495.783 seconds on 4 files.
+Worker 8 Time:  495.828 seconds on 4 files.
+Worker 13 Time:  496.3 seconds on 4 files.
+Worker 9 Time:  496.698 seconds on 4 files.
+Worker 15 Time:  497.098 seconds on 4 files.
+Worker 3 Time:  566.99 seconds on 4 files.
+Worker 7 Time:  575.364 seconds on 4 files.
+Worker 16 Time:  642.021 seconds on 4 files.
+Worker 1 Time:  651.449 seconds on 4 files.
+Recieved worker 1 results: 36.5807, 71.5518 - 355 => 10.692
+Worker 4 Time:  664.088 seconds on 4 files.
+Worker 5 Time:  674.009 seconds on 4 files.
+Worker 6 Time:  681.26 seconds on 4 files.
+Worker 2 Time:  682.867 seconds on 4 files.
+Recieved worker 2 results: 36.2491, 71.3782 - 325 => 9.53216
+Recieved worker 3 results: 38.361, 71.1804 - 340 => 10.6269
+Recieved worker 4 results: 38.0313, 71.2785 - 190 => 10.8234
+Recieved worker 5 results: 37.9921, 71.2615 - 5 => 10.3653
+Recieved worker 6 results: 35.7041, 71.4977 - 30 => 10.9714
+Recieved worker 7 results: 36.486, 71.4724 - 60 => 10.8673
+Recieved worker 8 results: 38.3141, 71.4799 - 195 => 10.7314
+Recieved worker 9 results: 36.0007, 71.3554 - 160 => 10.8892
+Recieved worker 10 results: 38.031, 71.4624 - 340 => 10.8661
+Worker 12 Time:  684.57 seconds on 4 files.
+Worker 17 Time:  697.678 seconds on 4 files.
+Recieved worker 11 results: 35.6391, 71.2696 - 190 => 10.8256
+Recieved worker 12 results: 35.6224, 71.2043 - 315 => 10.697
+Recieved worker 13 results: 35.6655, 71.2299 - 210 => 11.0539
+Recieved worker 14 results: 37.958, 71.2088 - 320 => 10.8978
+Recieved worker 15 results: 36.3002, 71.356 - 0 => 11.172
+Recieved worker 16 results: 38.093, 71.3743 - 310 => 10.6494
+Recieved worker 17 results: 35.8999, 71.2693 - 120 => 10.6114
+Worker 11 Time:  726.357 seconds on 4 files.
+Worker 18 Time:  785.223 seconds on 4 files.
+Recieved worker 18 results: 36.0674, 71.156 - 215 => 11.1654
+Recieved worker 19 results: 38.0863, 71.4035 - 200 => 10.4074
+Recieved worker 20 results: 36.0313, 71.2074 - 155 => 10.645
+Wall Time:  785.519 seconds.

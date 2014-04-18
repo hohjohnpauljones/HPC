@@ -67,6 +67,11 @@ struct result
 	
 };
 
+struct result2
+{
+	float offset;
+};
+
 struct Row {
 	float X;
 	float Y;
