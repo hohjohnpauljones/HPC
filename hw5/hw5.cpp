@@ -138,7 +138,7 @@ int main(int argc, char * argv[])
 		
 		int ret;
 		int N = RESULTSSIZE;
-		result worker_results[world_size - 1][N];
+		result worker_results[world_size][N];
 		double times[world_size - 1];
 		
 		for (int i = 1; i < world_size; i++)
@@ -146,9 +146,9 @@ int main(int argc, char * argv[])
 			//MPI::COMM_WORLD.Recv(&ret, 1, MPI::INT, i, 1);
 			//MPI::COMM_WORLD.Recv(&worker_results[i][0], 1, worker_return_type, i, 1);
 			//std::cout << "Recieved worker " << i << " results: " << worker_results[i][0].x << ", " << worker_results[i][0].y << " - " << worker_results[i][0].offset << " => " << worker_results[i][0].distance << std::endl;
-			MPI::COMM_WORLD.Recv(worker_results[i], N, worker_return_type, i, 1);
-			std::cout << "Recieved worker " << i << " results: " << worker_results[i][0].x << ", " << worker_results[i][0].y << " - " << worker_results[i][0].offset << " => " << worker_results[i][0].distance << std::endl;
-			std::cout << "Recieved worker " << i << " results: " << worker_results[i][1].x << ", " << worker_results[i][1].y << " - " << worker_results[i][1].offset << " => " << worker_results[i][1].distance << std::endl;
+			MPI::COMM_WORLD.Recv(&worker_results[i][0], N, worker_return_type, i, 1);
+			//std::cout << "Recieved worker " << i << " results: " << worker_results[i][0].x << ", " << worker_results[i][0].y << " - " << worker_results[i][0].offset << " => " << worker_results[i][0].distance << std::endl;
+			//std::cout << "Recieved worker " << i << " results: " << worker_results[i][1].x << ", " << worker_results[i][1].y << " - " << worker_results[i][1].offset << " => " << worker_results[i][1].distance << std::endl;
 			MPI::COMM_WORLD.Recv(&times[i], 1, MPI::DOUBLE, i , 2);
 			std::cout << "Node " << i << " took " << times[i] << " seconds" << std::endl;
 			//MPI::COMM_WORLD.Irecv(&ret[i - 1], 1, MPI::INT, i, 0);
@@ -156,10 +156,24 @@ int main(int argc, char * argv[])
 		}
 
 		std::vector<result> g_results;
-		g_results.assign(&worker_results[0][0], &worker_results[0][0] + (world_size - 1) * N);
+		
+		g_results.assign(&worker_results[1][0], &worker_results[1][0] + (world_size - 1) * N);
 		
 		std::cout << "Global results of size: " << g_results.size() << std::endl;
+		
+		sort(g_results.begin(), g_results.end());
+		if (g_results.size() > N)
+		{
+			g_results.resize(N);
+		}
 
+		std::cout << "Final results of size: " << g_results.size() << std::endl;
+		
+		for (k = 0; k < g_results.size(); k++)
+		{
+			std::cout << "\t" << k << ": " << "(" << g_results[k].x << ", " << g_results[k].y << ") => " << g_results[k].distance << std::endl;
+		}
+		
 		std::chrono::high_resolution_clock::time_point wall_end = std::chrono::high_resolution_clock::now();
 
 		std::chrono::duration<double> time_span_wall = std::chrono::duration_cast<std::chrono::duration<double> >(wall_end - wall_start);

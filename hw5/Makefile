@@ -15,6 +15,12 @@ producer.o: producer.cpp hw5.hpp
 
 consumer.o: consumer.cpp hw5.hpp
 	$(CC) $(CFLAGS) consumer.cpp
+	
+run: hw5
+	./runtests.sh
 
 clean:
 	rm *.o hw5
+	
+cleanres:
+	rm -r MABCB7_*
