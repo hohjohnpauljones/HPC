@@ -132,8 +132,6 @@ lineType parseFile(const char* filename)
 	int count = 0;												//counter for number of lines read and processed
 	ifstream myfile;									//file stream
 	string line;												//temporary line pointer
-	float x;													
-	float y;
 	std::vector<std::vector<float> > lines;
 	
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
