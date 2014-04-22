@@ -1,6 +1,6 @@
 #!/bin/sh
 #PBS -N MABCB7_11_NODE_100
-#PBS -l nodes=11,walltime=01:00:00
+#PBS -l nodes=11,walltime=00:30:00
 #PBS -M mabcb7@mizzou.edu
 #PBS -m abe
 export OMP_NUM_THREADS=8

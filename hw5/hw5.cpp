@@ -207,6 +207,7 @@ int main(int argc, char * argv[])
 	{
 		std::vector<result> results;
 		std::vector<float> s_vector;
+		std::vector<lineType> lines;
 		
 		for (k = 0; k < numtests; k++)
 		{
@@ -245,6 +246,15 @@ int main(int argc, char * argv[])
 				end = (worker_rank + 1) * chunk + remainder;
 			}
 			
+			if (k == 0)
+			{
+				for (i = start; i < end; i++)
+				{
+					lineType tmp = parseFile(param.filenames[i]);
+					lines.push_back(tmp); 
+				}
+			}
+			
 			//std::cout << worker_rank << " of " << number_of_workers << " workers has chunk size: " << chunk << " remainder: " << remainder << std::endl;
 			
 			
@@ -254,17 +264,18 @@ int main(int argc, char * argv[])
 			for (i = start; i < end; i++)
 			{
 				//parse line
-				lineType lines = parseFile(param.filenames[i]);
+				//lineType lines = parseFile(param.filenames[i]);
 				std::vector<result> result_tmp;
+				int inew = i - start;
 				//std::cout << "Process " << world_rank << " parsed file " << param.filenames[i] << std::endl;
 				
 				#pragma omp parallel for shared(results) private(result_tmp)
-				for (j = 0; j < lines.size(); j++)
+				for (j = 0; j < lines[inew].size(); j++)
 				{
 					//std::cout << "Process " << world_rank << " thread " << omp_get_thread_num() << std::endl; 
 					
 					result_tmp.erase(result_tmp.begin(), result_tmp.end());
-					result_tmp = circularSubvectorMatch(s_vector, lines[j], 0, 360, N, 1);
+					result_tmp = circularSubvectorMatch(s_vector, lines[inew][j], 0, 360, N, 1);
 					sort(result_tmp.begin(), result_tmp.end());
 					if (result_tmp.size() > N)
 					{

@@ -1,0 +1,22 @@
+[csic-n10.cs.missouri.edu:4892] *** An error occurred in MPI_Send
+[csic-n10.cs.missouri.edu:4892] *** on communicator MPI_COMM_WORLD
+[csic-n10.cs.missouri.edu:4892] *** MPI_ERR_BUFFER: invalid buffer pointer
+[csic-n10.cs.missouri.edu:4892] *** MPI_ERRORS_ARE_FATAL: your MPI job will now abort
+--------------------------------------------------------------------------
+mpirun has exited due to process rank 2 with PID 4892 on
+node csic-n10.cs.missouri.edu exiting improperly. There are two reasons this could occur:
+
+1. this process did not call "init" before exiting, but others in
+the job did. This can cause a job to hang indefinitely while it waits
+for all processes to call "init". By rule, if one process calls "init",
+then ALL processes must call "init" prior to termination.
+
+2. this process called "init", but exited without calling "finalize".
+By rule, all processes that call "init" MUST call "finalize" prior to
+exiting or it will be considered an "abnormal termination"
+
+This may have caused other processes in the application to be
+terminated by signals sent by mpirun (as reported here).
+--------------------------------------------------------------------------
+[csic-n12.cs.missouri.edu:04946] 3 more processes have sent help message help-mpi-errors.txt / mpi_errors_are_fatal
+[csic-n12.cs.missouri.edu:04946] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
