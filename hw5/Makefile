@@ -23,4 +23,7 @@ clean:
 	rm *.o hw5
 	
 cleanres:
-	rm -r MABCB7_*
+	rm -r MABCB7_* *.csv
+
+analyze: run
+	./analyze

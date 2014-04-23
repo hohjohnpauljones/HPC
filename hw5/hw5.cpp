@@ -104,7 +104,7 @@ int main(int argc, char * argv[])
 		for (j = 0; j < numtests; j++)
 		{
 			n_file = 0;
-
+			cout << "Nodes: " << world_size << std::endl;
 			// Get the file list from the directory
 			content_type directoryContents = scottgs::getFiles(argv[1]);
 		
@@ -286,7 +286,7 @@ int main(int argc, char * argv[])
 			}
 			std::chrono::high_resolution_clock::time_point worker_end = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<double> time_span_worker = std::chrono::duration_cast<std::chrono::duration<double> >(worker_end - worker_start);
-			std::cout << "Worker " << world_rank << " Time:  " << time_span_worker.count() << " seconds on " << (end - start) << " files." << std::endl;
+			//std::cout << "Worker " << world_rank << " Time:  " << time_span_worker.count() << " seconds on " << (end - start) << " files." << std::endl;
 			
 			double timer = time_span_worker.count();
 			
