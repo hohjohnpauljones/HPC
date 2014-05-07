@@ -19,6 +19,7 @@ int main (int argc, char *argv[]) {
     FILE *fp = fopen(argv[1],"r");
     fgets(magic_number, 4, fp);
     magic_number[2] = '\0';
+	//read up to 10 characters or new line
     fgets(input, 10, fp);
     height = atoi(input);
     fgets(input, 10, fp);
@@ -27,7 +28,7 @@ int main (int argc, char *argv[]) {
     gray_scale = atoi(input);
 
     std::vector<uint8_t> mat(height * width);
-    //Populates the arrays
+    //Populates the arrays grabing each pixel from the image and storing it into the vector.
     for (int i= 0; i < height * width; i++)
         mat[i] = fgetc(fp);
 
@@ -37,12 +38,14 @@ int main (int argc, char *argv[]) {
     uint8_t *d_input, *d_output;
     cudaMalloc((void **) &d_input, height * width * sizeof(uint8_t));
     cudaMalloc((void **) &d_output, height * width * sizeof(uint8_t));
+	//copy the image that we read, into d_input and send it over to the GPU's memory
     cudaMemcpy(d_input, &mat[0], height * width * sizeof(uint8_t), cudaMemcpyHostToDevice);
 
     // TODO - Fill median.
 	
 	for (int i = 0; i < height * width; i++)
-		median.push_back(mat[i]);
+		d_output[i] = d_input[i];
+		//median.push_back(d_input[i]);
 		//median[i] = mat[i];
 	
     cudaMemcpy(&median[0], d_output, height * width * sizeof(uint8_t), cudaMemcpyDeviceToHost);

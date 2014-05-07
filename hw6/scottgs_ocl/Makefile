@@ -2,7 +2,7 @@ all: imageProcess
 
 LD_OCL= -lOpenCL
 LD_SCOTTGS= 
-LD_BOOST= -lboost_filesystem -lboost_system-mt
+LD_BOOST= -lboost_filesystem -lboost_system
 
 # Use pkg-config to determine the CFLAGS and linker flags
 LD_OPENCV=$(shell pkg-config --libs opencv)
@@ -12,10 +12,10 @@ OCL_INCLUDE_PATH=-I /opt/nvidia/cuda/include/
 
 # Example 4, Image Process / Filter an image
 imageProcess: imageProcessing.o oclutil.o kernel_selections.o
-	g++ -o $@ $^ ${LD_OCL} ${LD_SCOTTGS} ${LD_OPENCV}
+	g++ -o $@ $^ ${LD_OCL} ${LD_SCOTTGS} ${LD_OPENCV} ${LD_BOOST}
 
 imageProcessing.o: imageProcessing.cpp
-	g++ -O2 -c $^ ${OCL_INCLUDE_PATH} ${CFLAGS_OPENCV}
+	g++ -O2 -c $^ ${OCL_INCLUDE_PATH} ${CFLAGS_OPENCV} ${LD_BOOST}
 
 
 
