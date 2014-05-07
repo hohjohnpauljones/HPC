@@ -1,0 +1,61 @@
+Worker 15 Time:  465.801 seconds on 5 files.
+Worker 11 Time:  466.673 seconds on 5 files.
+Worker 12 Time:  468.858 seconds on 5 files.
+Worker 10 Time:  472.067 seconds on 5 files.
+Worker 2 Time:  576.013 seconds on 6 files.
+Worker 3 Time:  583.658 seconds on 6 files.
+Worker 14 Time:  597.008 seconds on 5 files.
+Worker 7 Time:  599.054 seconds on 5 files.
+Worker 6 Time:  612.094 seconds on 5 files.
+Worker 5 Time:  662.51 seconds on 5 files.
+Worker 1 Time:  667.212 seconds on 6 files.
+Recieved worker 1 results: 36.2491, 71.3782 - 325 => 9.53216
+Recieved worker 1 results: 36.2488, 71.3777 - 325 => 9.69513
+Node 1 took 667.212 seconds
+Recieved worker 2 results: 38.361, 71.1804 - 340 => 10.6269
+Recieved worker 2 results: 36.4396, 71.4124 - 60 => 10.8758
+Node 2 took 576.013 seconds
+Recieved worker 3 results: 38.0313, 71.2785 - 190 => 10.8234
+Recieved worker 3 results: 38.153, 71.2363 - 185 => 10.8251
+Node 3 took 583.658 seconds
+Worker 9 Time:  669.224 seconds on 5 files.
+Worker 8 Time:  670.413 seconds on 5 files.
+Worker 4 Time:  694.495 seconds on 6 files.
+Recieved worker 4 results: 37.9921, 71.2615 - 5 => 10.3653
+Recieved worker 4 results: 38.0196, 71.2752 - 130 => 10.6175
+Node 4 took 694.495 seconds
+Recieved worker 5 results: 36.2782, 71.4771 - 140 => 10.8541
+Recieved worker 5 results: 36.486, 71.4724 - 60 => 10.8673
+Node 5 took 662.51 seconds
+Recieved worker 6 results: 38.3141, 71.4799 - 195 => 10.7314
+Recieved worker 6 results: 36.0007, 71.3554 - 160 => 10.8892
+Node 6 took 612.094 seconds
+Recieved worker 7 results: 38.031, 71.4624 - 340 => 10.8661
+Recieved worker 7 results: 36.3302, 71.3232 - 340 => 10.9958
+Node 7 took 599.054 seconds
+Recieved worker 8 results: 35.6391, 71.2696 - 190 => 10.8256
+Recieved worker 8 results: 35.5505, 71.2707 - 125 => 10.9798
+Node 8 took 670.413 seconds
+Recieved worker 9 results: 35.6224, 71.2043 - 315 => 10.697
+Recieved worker 9 results: 35.8444, 71.5649 - 135 => 10.7774
+Node 9 took 669.224 seconds
+Recieved worker 10 results: 37.958, 71.2088 - 320 => 10.8978
+Recieved worker 10 results: 35.6655, 71.2299 - 210 => 11.0539
+Node 10 took 472.067 seconds
+Recieved worker 11 results: 36.1316, 71.2479 - 345 => 10.9374
+Recieved worker 11 results: 38.0577, 71.5132 - 355 => 11.0121
+Node 11 took 466.673 seconds
+Recieved worker 12 results: 38.093, 71.3743 - 310 => 10.6494
+Recieved worker 12 results: 38.228, 71.3843 - 160 => 11.0124
+Node 12 took 468.858 seconds
+Recieved worker 13 results: 35.8999, 71.2693 - 120 => 10.6114
+Recieved worker 13 results: 35.9002, 71.2696 - 120 => 10.9441
+Node 13 took 785.48 seconds
+Recieved worker 14 results: 38.0863, 71.4035 - 200 => 10.4074
+Recieved worker 14 results: 38.333, 71.4557 - 245 => 10.6817
+Node 14 took 597.008 seconds
+Recieved worker 15 results: 36.0313, 71.2074 - 155 => 10.645
+Recieved worker 15 results: 36.0313, 71.2071 - 155 => 10.6634
+Node 15 took 465.801 seconds
+Wall Time:  790.177 seconds.
+Worker 13 Time:  785.48 seconds on 5 files.

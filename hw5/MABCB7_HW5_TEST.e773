@@ -1,0 +1,4 @@
+*** glibc detected *** hw5: malloc(): memory corruption: 0x0000000001f46460 ***
+--------------------------------------------------------------------------
+mpirun noticed that process rank 1 with PID 10516 on node csic-n13.cs.missouri.edu exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------

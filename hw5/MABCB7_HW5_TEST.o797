@@ -1,0 +1,20 @@
+Process Process 2Process 2 thread 1 recieved 2 thread 2 thread 3 recieved 20 recieved 2Process 
+
+Process 2 thread 0 recieved 2
+Process 
+Process 2 thread 1 recieved 2
+Process 2 thread 1 recieved 2
+2 thread 2 recieved 22 thread 0 recieved 2
+Process 2 thread 2 recieved 2
+Process 2 thread 2 recieved 2
+
+Process Process 1 thread 1 recieved 1Process 
+Process 1 thread 1 recieved 1
+Process 1 thread 1 recieved 1
+1 thread 3 recieved 1
+Process 1 thread 0 recieved 1
+Process 1 thread 0 recieved 1
+Process 1 thread 0 recieved 1
+1 thread 2 recieved 1
+Process 1 thread 2 recieved 1
+Process 1 thread 2 recieved 1

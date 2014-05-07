@@ -1,0 +1,24 @@
+1 of 12 workers has chunk size: 7 remainder: 7
+Process 2 start: 7 end: 13
+2 of 12 workers has chunk size: 7 remainder: 7
+Process 3 start: 14 end: 20
+3 of 12 workers has chunk size: 7 remainder: 7
+Process 4 start: 21 end: 27
+4 of 12 workers has chunk size: 7 remainder: 7
+Process 5 start: 28 end: 34
+0 of 12 workers has chunk size: 7 remainder: 7
+Process 1 start: 0 end: 6
+5 of 12 workers has chunk size: 7 remainder: 7
+Process 6 start: 35 end: 41
+6 of 12 workers has chunk size: 7 remainder: 7
+Process 7 start: 42 end: 48
+7 of 12 workers has chunk size: 6 remainder: 7
+Process 8 start: 49 end: 54
+8 of 12 workers has chunk size: 6 remainder: 7
+Process 9 start: 55 end: 60
+9 of 12 workers has chunk size: 6 remainder: 7
+Process 10 start: 61 end: 66
+10 of 12 workers has chunk size: 6 remainder: 7
+Process 11 start: 67 end: 72
+11 of 12 workers has chunk size: 6 remainder: 7
+Process 12 start: 73 end: 79

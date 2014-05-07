@@ -1,0 +1,8 @@
+0 of 4 workers has chunk size: 20 remainder: 3
+Process 1 start: 0 end: 19
+1 of 4 workers has chunk size: 20 remainder: 3
+Process 2 start: 20 end: 39
+2 of 4 workers has chunk size: 20 remainder: 3
+Process 3 start: 40 end: 59
+3 of 4 workers has chunk size: 19 remainder: 3
+Process 4 start: 60 end: 79
