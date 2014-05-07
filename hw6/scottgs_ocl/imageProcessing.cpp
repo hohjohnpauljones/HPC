@@ -84,9 +84,9 @@ int main(int argc, char *argv[])
 	//  4) Verify against OpenCV
 	// --------------------------------------------
 	
-	scottgs::Timing timer;
-	timer.start();
-	double timerSeconds=timer.getTotalElapsedTime();
+	//scottgs::Timing timer;
+	//timer.start();
+	double timerSeconds=0;//timer.getTotalElapsedTime();
 	
 	// see: http://opencv.willowgarage.com/documentation/cpp/reading_and_writing_images_and_video.html#cv-imread
 	cv::Mat imageData(cv::imread(inputFile.c_str(), -1 )); 	// Zero flag for grayscale, but that truncates to 1-byte
@@ -135,9 +135,9 @@ int main(int argc, char *argv[])
 		std::cout << "The float copy is verified to be not all zero!" << std::endl;
 
 	// Timing check
-	timerSeconds = timer.getSplitElapsedTime();
+	timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Image Data Read Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 
 	// -----------------------
 	// OpenCL context variables
@@ -158,9 +158,9 @@ int main(int argc, char *argv[])
 	}
 			
 	// Timing check 
-        timerSeconds = timer.getSplitElapsedTime();
+        timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Context Setup Time: ",timerSeconds);
-        timer.split();
+        //timer.split();
 
 	// Setup kernel program
 	if (!setupOpenClProgram(kernelSelector, &program, &kernel, &context, &device_id))
@@ -171,9 +171,9 @@ int main(int argc, char *argv[])
 	}
 
 	// Timing check
-	timerSeconds = timer.getSplitElapsedTime();
+	timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Kernel/Program Build Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 
 	// Allocate device memories
 	cl_mem inputImage;			// device memory used for the input array
@@ -234,9 +234,9 @@ int main(int argc, char *argv[])
 	}
 		
 	// Timing Check
-        timerSeconds = timer.getSplitElapsedTime();
+        timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Memory Allocation/Population Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 
 	// Set the arguments to the compute kernel
 	err = 0;
@@ -298,9 +298,9 @@ int main(int argc, char *argv[])
 		  << "Work-group dimensions = (" << local[0] << "x" << local[1] << ")" << std::endl;
 		
 	// Timer check
-        timerSeconds = timer.getSplitElapsedTime();
+        timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Kernel Args / Workgroup Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 
 	// Execute the kernel over the vector using the 
 	// maximum number of work group items for this device
@@ -325,9 +325,9 @@ int main(int argc, char *argv[])
 	clFinish(commands);
 
 	// Timing check
-        timerSeconds = timer.getSplitElapsedTime();
+        timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Kernel Execution Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 
 
 	// Read back the results from the device to verify the output
@@ -353,9 +353,9 @@ int main(int argc, char *argv[])
 	}
 
 	// Timing check
-	timerSeconds = timer.getSplitElapsedTime();
+	timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Results Read From Device Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 	
 	// Write out the result
 	cv::Mat outputMatCatcher(mRows, mCols, CV_32FC1, imageDataBuffer_postFilter);
@@ -376,17 +376,17 @@ int main(int argc, char *argv[])
 		std::cout << "Wrote output: " << outputFile << std::endl;
 		
 		// Timing check
-	timerSeconds = timer.getSplitElapsedTime();
+	timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Result File Write Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 
 	delete imageDataBuffer_postFilter;
 
 
 	// Timing check
-	timerSeconds = timer.getSplitElapsedTime();
+	timerSeconds = 0;//timer.getSplitElapsedTime();
         OUTPUT_TIMING("Total Time : ",timerSeconds);
-        timer.split();
+        //timer.split();
 	
 
 	clReleaseMemObject(inputImage);
