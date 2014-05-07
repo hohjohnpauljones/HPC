@@ -18,10 +18,10 @@
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
-#undef BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
