@@ -1,0 +1,60 @@
+OpenCL Example Code, Part A
+
+To build the code:
+make clean && make
+
+To test the code:
+make test
+
+--------------------------------------------
+Example Output from Test (which also builds)
+--------------------------------------------
+$ make test
+g++ -O2 -c vectorSquare.cpp 
+g++ -O2 -c oclutil.cpp 
+g++ -o vectorSquare vectorSquare.o oclutil.o -lOpenCL -lscottgs
+./vectorSquare
+Context Setup Time: 0.18869 (s) 
+Program Created from source
+Kernel/Program Build Time : 0.0227079 (s) 
+Memory Allocation/Population Time : 0.0274839 (s) 
+Kernel Args / Workgroup Time : 1.50204e-05 (s) 
+Kernel Execution Time : 0.00418901 (s) 
+Output Fetch From Device Time : 0.00184512 (s) 
+Golden (Naive) Time : 0.00249195 (s) 
+Computed 1269760/1269760 correct values
+Computed 100% correct values
+Total Time : 0.047297 (s) 
+g++ -O2 -c vectorAdd.cpp 
+g++ -o vectorAdd vectorAdd.o oclutil.o -lOpenCL -lscottgs
+./vectorAdd
+Context Setup Time: 0.18755 (s) 
+Program Created from source
+Kernel/Program Build Time : 0.0236671 (s) 
+Memory Allocation/Population Time : 0.0512619 (s) 
+Kernel Args / Workgroup Time : 1.71661e-05 (s) 
+Kernel Execution Time : 0.00630593 (s) 
+Output Fetch From Device Time : 0.00192499 (s) 
+Golden (Naive) Time : 0.00312519 (s) 
+Computed 1269760/1269760 correct values
+Computed 100% correct values
+Total Time : 0.049763 (s) 
+g++ -O2 -c vector4Add.cpp 
+g++ -o vector4Add vector4Add.o oclutil.o -lOpenCL -lscottgs
+./vector4Add
+Context Setup Time: 0.188034 (s) 
+Program Created from source
+Kernel/Program Build Time : 0.0177958 (s) 
+Memory Allocation/Population Time : 0.0521061 (s) 
+Kernel Args / Workgroup Time : 1.69277e-05 (s) 
+Kernel Execution Time : 0.00604892 (s) 
+Output Fetch From Device Time : 0.00185394 (s) 
+Golden (Naive) Time : 0.00267005 (s) 
+Compared: 317440
+Computed 1269760/1269760 correct values
+correct.x = 317440/317440 correct values
+correct.y = 317440/317440 correct values
+correct.z = 317440/317440 correct values
+correct.w = 317440/317440 correct values
+Computed 100% correct values
+Total Time : 0.0477931 (s) 
