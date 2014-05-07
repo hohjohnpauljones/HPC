@@ -12,10 +12,10 @@ __global__ void kernel( uint8_t *d_input, uint8_t *d_output ) {
 	int y = blockIdx.y;
 	int offset = x + y * gridDim.x;
 
-	int offset2 = gridDim.x*(y+1) - x - 1;
+	int offset2 = gridDim.y*(x+1) - y - 1;
 	//int offset2 = x + (gridDim.y - y);
 	//int offset2 = y + x * gridDim.y;
-	d_output[offset] = d_input[offset2];
+	d_output[offset2] = d_input[offset];
 	//d_output[offset] = d_input[offset2];
 	//int offset2 = y + (gridDim.x * (gridDim.y - x - 1));
 	//d_output[offset] = d_input[offset2];
