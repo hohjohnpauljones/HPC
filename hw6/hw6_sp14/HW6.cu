@@ -13,6 +13,9 @@ __global__ void kernel( uint8_t *d_input, uint8_t *d_output ) {
 	int offset = x + y * gridDim.x;
 	int offset2 = x + (gridDim.y - y - 1);
 	d_output[offset] = d_input[offset2];
+
+	//int offset2 = y + (gridDim.x * (gridDim.y - x - 1));
+	//d_output[offset] = d_input[offset2];
 	
 }
 
