@@ -25,7 +25,7 @@
 #include <opencv2/gpu/gpu.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include <scottgs/Timing.hpp>
+//#include <scottgs/Timing.hpp>
 
 // Get the scottgs::kernelSelector object
 #include "kernel_selections.hpp"
