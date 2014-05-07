@@ -6,6 +6,20 @@
 
 typedef unsigned char uint8_t;
 
+__global__ void kernel( uint8_t *d_input, uint8_t *d_output ) {
+	// map from threadIdx/BlockIdx to pixel position
+	int x = blockIdx.x;
+	int y = blockIdx.y;
+	int offset = x + y * gridDim.x;
+	d_output[offset] = d_input[offset];
+	// now calculate the value at that position
+	/*
+ 	d_input[offset*4 + 0] = 255 * 13;
+ 	d_input[offset*4 + 1] = 0;
+ 	d_input[offset*4 + 2] = 0;
+ 	d_input[offset*4 + 3] = 255;*/
+}
+
 int main (int argc, char *argv[]) {
 
     if (argc != 3) // Change me per specs
@@ -48,6 +62,9 @@ int main (int argc, char *argv[]) {
 		//median.push_back(d_input[i]);
 		//median[i] = mat[i];
 	*/
+	dim3 grid(height, width);
+
+	kernel<<<grid,1>>>(d_input, d_output);
     cudaMemcpy(&median[0], d_output, height * width * sizeof(uint8_t), cudaMemcpyDeviceToHost);
     cudaFree(d_input);
     cudaFree(d_output);
@@ -61,3 +78,4 @@ int main (int argc, char *argv[]) {
 
     return 0;
 }
+
