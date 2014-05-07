@@ -42,7 +42,7 @@ int main (int argc, char *argv[]) {
     // TODO - Fill median.
 	
 	for (int i = 0; i < height * width; i++)
-		median[i] = 55;
+		median.push_back(55);
 		//median[i] = mat[i];
 	
     cudaMemcpy(&median[0], d_output, height * width * sizeof(uint8_t), cudaMemcpyDeviceToHost);
