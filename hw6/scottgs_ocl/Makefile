@@ -2,7 +2,7 @@ all: imageProcess
 
 LD_OCL= -lOpenCL
 LD_SCOTTGS= 
-LD_BOOST= -lboost_filesystem -lboost_system
+LD_BOOST= -lboost_filesystem -lboost_system-mt
 
 # Use pkg-config to determine the CFLAGS and linker flags
 LD_OPENCV=$(shell pkg-config --libs opencv)
