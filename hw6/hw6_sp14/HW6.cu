@@ -11,13 +11,9 @@ __global__ void kernel( uint8_t *d_input, uint8_t *d_output ) {
 	int x = blockIdx.x;
 	int y = blockIdx.y;
 	int offset = x + y * gridDim.x;
-	d_output[offset] = d_input[offset];
-	// now calculate the value at that position
-	/*
- 	d_input[offset*4 + 0] = 255 * 13;
- 	d_input[offset*4 + 1] = 0;
- 	d_input[offset*4 + 2] = 0;
- 	d_input[offset*4 + 3] = 255;*/
+	int offset2 = x + (gridDim.y - y - 1);
+	d_output[offset2] = d_input[offset];
+	
 }
 
 int main (int argc, char *argv[]) {
