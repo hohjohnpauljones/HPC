@@ -42,12 +42,12 @@ int main (int argc, char *argv[]) {
     cudaMemcpy(d_input, &mat[0], height * width * sizeof(uint8_t), cudaMemcpyHostToDevice);
 
     // TODO - Fill median.
-	
+	/*
 	for (int i = 0; i < height * width; i++)
 		d_output[i] = d_input[i];
 		//median.push_back(d_input[i]);
 		//median[i] = mat[i];
-	
+	*/
     cudaMemcpy(&median[0], d_output, height * width * sizeof(uint8_t), cudaMemcpyDeviceToHost);
     cudaFree(d_input);
     cudaFree(d_output);
