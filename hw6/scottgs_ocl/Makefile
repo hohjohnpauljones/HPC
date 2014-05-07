@@ -17,8 +17,6 @@ imageProcess: imageProcessing.o oclutil.o kernel_selections.o
 imageProcessing.o: imageProcessing.cpp
 	g++ -O2 -c $^ ${OCL_INCLUDE_PATH} ${CFLAGS_OPENCV} ${LD_BOOST}
 
-
-
 # Utility code from ClusterChimps.org's OCL Tools Package
 oclutil.o: oclutil.cpp
 	g++ -O2 -c $^ ${OCL_INCLUDE_PATH} 
