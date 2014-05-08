@@ -90,11 +90,13 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[0] = d_input[yPrev + x - 1];
         	neighborhood[1] = d_input[yPrev + x];
         	neighborhood[2] = d_input[yPrev + x + 1];
+        	
         	neighborhood[3] = d_input[yOffset + x - 1];
 
         	neighborhood[4] = d_input[yOffset + x];
 
         	neighborhood[5] = d_input[yOffset + x + 1];
+        	
         	neighborhood[6] = d_input[yNext + x - 1];
         	neighborhood[7] = d_input[yNext + x];
         	neighborhood[8] = d_input[yNext + x + 1];
@@ -102,16 +104,16 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	else
 	{
 		neighborhood[0] = 0;
-                neighborhood[1] = 0;
-                neighborhood[2] = 0;
-                neighborhood[3] = 0;
-
-                neighborhood[4] = d_input[yOffset + x];
-
-                neighborhood[5] = 255;
-                neighborhood[6] = 255;
-                neighborhood[7] = 255;
-                neighborhood[8] = 255;
+		neighborhood[1] = 0;
+		neighborhood[2] = 0;
+		neighborhood[3] = 0;
+		
+		neighborhood[4] = d_input[yOffset + x];
+		
+		neighborhood[5] = 255;
+		neighborhood[6] = 255;
+		neighborhood[7] = 255;
+		neighborhood[8] = 255;
 	}
 
 	//sort neighborhood
@@ -128,10 +130,17 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
         int x = blockIdx.x;
         int y = blockIdx.y;
         int dim = 7;
-
+	
 	const int yOffset = y * gridDim.x;
-	const int yPrev = yOffset - gridDim.x;
-	const int yNext = yOffset + gridDim.x;
+	
+	const int yOffset1 = yOffset - gridDim.x * 3;
+	const int yOffset2 = yOffset - gridDim.x * 2;
+	const int yOffset3 = yOffset - gridDim.x * 1;
+	const int yOffset5 = yOffset + gridDim.x * 1;
+	const int yOffset6 = yOffset + gridDim.x * 2;
+	const int yOffset7 = yOffset + gridDim.x * 3;
+	
+	
 	
 	int yOffsets[7];
 	
@@ -149,63 +158,63 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
 	{
 
-        	neighborhood[0] = d_input[yOffsets[0] + x - 3];
-        	neighborhood[1] = d_input[yOffsets[0] + x - 2];
-        	neighborhood[2] = d_input[yOffsets[0] + x - 1];
-        	neighborhood[3] = d_input[yOffsets[0] + x - 0];
-        	neighborhood[4] = d_input[yOffsets[0] + x + 1];
-        	neighborhood[5] = d_input[yOffsets[0] + x + 2];
-        	neighborhood[6] = d_input[yOffsets[0] + x + 3];
+        	neighborhood[0] = d_input[yOfffset1 + x - 3];
+        	neighborhood[1] = d_input[yOfffset1 + x - 2];
+        	neighborhood[2] = d_input[yOfffset1 + x - 1];
+        	neighborhood[3] = d_input[yOfffset1 + x - 0];
+        	neighborhood[4] = d_input[yOfffset1 + x + 1];
+        	neighborhood[5] = d_input[yOfffset1 + x + 2];
+        	neighborhood[6] = d_input[yOfffset1 + x + 3];
         	
-		neighborhood[7] = d_input[yOffsets[1] + x - 3];
-        	neighborhood[8] = d_input[yOffsets[1] + x - 2];
-        	neighborhood[9] = d_input[yOffsets[1] + x - 1];
-        	neighborhood[10] = d_input[yOffsets[1] + x - 0];
-        	neighborhood[11] = d_input[yOffsets[1] + x + 1];
-        	neighborhood[12] = d_input[yOffsets[1] + x + 2];
-        	neighborhood[13] = d_input[yOffsets[1] + x + 3];
+		neighborhood[7] = d_input[yOffsets2 + x - 3];
+        	neighborhood[8] = d_input[yOffsets2 + x - 2];
+        	neighborhood[9] = d_input[yOffsets2 + x - 1];
+        	neighborhood[10] = d_input[yOffset2 + x - 0];
+        	neighborhood[11] = d_input[yOffset2 + x + 1];
+        	neighborhood[12] = d_input[yOffset2 + x + 2];
+        	neighborhood[13] = d_input[yOffset2 + x + 3];
         	
-        	neighborhood[14] = d_input[yOffsets[2] + x - 3];
-        	neighborhood[15] = d_input[yOffsets[2] + x - 2];
-        	neighborhood[16] = d_input[yOffsets[2] + x - 1];
-        	neighborhood[17] = d_input[yOffsets[2] + x - 0];
-        	neighborhood[18] = d_input[yOffsets[2] + x + 1];
-        	neighborhood[19] = d_input[yOffsets[2] + x + 2];
-        	neighborhood[20] = d_input[yOffsets[2] + x + 3];
+        	neighborhood[14] = d_input[yOffset3 + x - 3];
+        	neighborhood[15] = d_input[yOffset3 + x - 2];
+        	neighborhood[16] = d_input[yOffset3 + x - 1];
+        	neighborhood[17] = d_input[yOffset3 + x - 0];
+        	neighborhood[18] = d_input[yOffset3 + x + 1];
+        	neighborhood[19] = d_input[yOffset3 + x + 2];
+        	neighborhood[20] = d_input[yOffset3 + x + 3];
         	
-        	neighborhood[21] = d_input[yOffsets[3] + x - 3];
-        	neighborhood[22] = d_input[yOffsets[3] + x - 2];
-        	neighborhood[23] = d_input[yOffsets[3] + x - 1];
+        	neighborhood[21] = d_input[yOffset + x - 3];
+        	neighborhood[22] = d_input[yOffset + x - 2];
+        	neighborhood[23] = d_input[yOffset + x - 1];
         	
-        	neighborhood[24] = d_input[yOffsets[3] + x - 0];
+        	neighborhood[24] = d_input[yOffset + x - 0];
         	
-        	neighborhood[25] = d_input[yOffsets[3] + x + 1];
-        	neighborhood[26] = d_input[yOffsets[3] + x + 2];
-        	neighborhood[27] = d_input[yOffsets[3] + x + 3];
+        	neighborhood[25] = d_input[yOffset + x + 1];
+        	neighborhood[26] = d_input[yOffset + x + 2];
+        	neighborhood[27] = d_input[yOffset + x + 3];
         	
-        	neighborhood[28] = d_input[yOffsets[4] + x - 3];
-        	neighborhood[29] = d_input[yOffsets[4] + x - 2];
-        	neighborhood[30] = d_input[yOffsets[4] + x - 1];
-        	neighborhood[31] = d_input[yOffsets[4] + x - 0];
-        	neighborhood[32] = d_input[yOffsets[4] + x + 1];
-        	neighborhood[33] = d_input[yOffsets[4] + x + 2];
-        	neighborhood[34] = d_input[yOffsets[4] + x + 3];
+        	neighborhood[28] = d_input[yOffset5 + x - 3];
+        	neighborhood[29] = d_input[yOffset5 + x - 2];
+        	neighborhood[30] = d_input[yOffset5 + x - 1];
+        	neighborhood[31] = d_input[yOffset5 + x - 0];
+        	neighborhood[32] = d_input[yOffset5 + x + 1];
+        	neighborhood[33] = d_input[yOffset5 + x + 2];
+        	neighborhood[34] = d_input[yOffset5 + x + 3];
         	
-        	neighborhood[35] = d_input[yOffsets[5] + x - 3];
-        	neighborhood[35] = d_input[yOffsets[5] + x - 2];
-        	neighborhood[37] = d_input[yOffsets[5] + x - 1];
-        	neighborhood[38] = d_input[yOffsets[5] + x - 0];
-        	neighborhood[39] = d_input[yOffsets[5] + x + 1];
-        	neighborhood[40] = d_input[yOffsets[5] + x + 2];
-        	neighborhood[41] = d_input[yOffsets[5] + x + 3];
+        	neighborhood[35] = d_input[yOffset6 + x - 3];
+        	neighborhood[35] = d_input[yOffset6 + x - 2];
+        	neighborhood[37] = d_input[yOffset6 + x - 1];
+        	neighborhood[38] = d_input[yOffset6 + x - 0];
+        	neighborhood[39] = d_input[yOffset6 + x + 1];
+        	neighborhood[40] = d_input[yOffset6 + x + 2];
+        	neighborhood[41] = d_input[yOffset6 + x + 3];
         	
-        	neighborhood[42] = d_input[yOffsets[6] + x - 3];
-        	neighborhood[43] = d_input[yOffsets[6] + x - 2];
-        	neighborhood[44] = d_input[yOffsets[6] + x - 1];
-        	neighborhood[45] = d_input[yOffsets[6] + x - 0];
-        	neighborhood[46] = d_input[yOffsets[6] + x + 1];
-        	neighborhood[47] = d_input[yOffsets[6] + x + 2];
-        	neighborhood[48] = d_input[yOffsets[6] + x + 3];
+        	neighborhood[42] = d_input[yOffset7 + x - 3];
+        	neighborhood[43] = d_input[yOffset7 + x - 2];
+        	neighborhood[44] = d_input[yOffset7 + x - 1];
+        	neighborhood[45] = d_input[yOffset7 + x - 0];
+        	neighborhood[46] = d_input[yOffset7 + x + 1];
+        	neighborhood[47] = d_input[yOffset7 + x + 2];
+        	neighborhood[48] = d_input[yOffset7 + x + 3];
         	
 	}
 	else
