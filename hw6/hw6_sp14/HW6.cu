@@ -162,7 +162,6 @@ int main (int argc, char *argv[]) {
     width = atoi(input);
     fgets(input, 10, fp);
     gray_scale = atoi(input);
-
     std::vector<uint8_t> mat(height * width);
     //Populates the arrays grabing each pixel from the image and storing it into the vector.
     for (int i= 0; i < height * width; i++)
