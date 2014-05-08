@@ -149,7 +149,8 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 			neighborhood[i] = 	d_input[yOffsets[i/dim] + x - 3];
 			neighborhood[i + 1] = 	d_input[yOffsets[i/dim] + x - 2];
 			neighborhood[i + 2] = 	d_input[yOffsets[i/dim] + x - 1];
-			neighborhood[i + 3] = 	d_input[yOffsets[i/dim] + x];	
+			neighborhood[i + 3] = 	d_input[yOffsets[i/dim] + x];
+			
 			neighborhood[i + 4] = 	d_input[yOffsets[i/dim] + x + 1];
 			neighborhood[i + 5] = 	d_input[yOffsets[i/dim] + x + 2];
 			neighborhood[i + 6] = 	d_input[yOffsets[i/dim] + x + 3];			
@@ -220,7 +221,11 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	QuickSort(neighborhood, 0, 7 * 7 - 1);
 	
 	// assign pixel to median
-
+	if(neighborhood[24] == NULL){	
+		printf("X at position is NULL\n");
+	}else{	
+		printf("X at position is NOT NULL\n");
+	}	
 	d_output[yOffsets[3] + x] = neighborhood[24];
 
 }
