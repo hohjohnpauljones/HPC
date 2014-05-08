@@ -135,13 +135,13 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	
 	int yOffsets[7];
 	
-	yOffsets[0] = yOfffset - ggridDim.x * 3
-	yOffsets[1] = yOfffset - ggridDim.x * 2
-	yOffsets[2] = yOfffset - ggridDim.x * 1
-	yOffsets[3] = yOfffset 
-	yOffsets[4] = yOfffset + ggridDim.x * 1
-	yOffsets[5] = yOfffset + ggridDim.x * 2
-	yOffsets[6] = yOfffset + ggridDim.x * 3
+	yOffsets[0] = yOffset - gridDim.x * 3;
+	yOffsets[1] = yOffset - gridDim.x * 2;
+	yOffsets[2] = yOffset - gridDim.x * 1;
+	yOffsets[3] = yOffset ;
+	yOffsets[4] = yOffset + gridDim.x * 1;
+	yOffsets[5] = yOffset + gridDim.x * 2;
+	yOffsets[6] = yOffset + gridDim.x * 3;
 	
 	uint8_t neighborhood[7 * 7];
 	
