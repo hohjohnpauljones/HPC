@@ -73,8 +73,8 @@ __device__ void QuickSort(uint8_t* array, int startIndex, int endIndex)
 
 __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
         // map from threadIdx/BlockIdx to pixel position^M
-        int x = blockIdx.x;
-        int y = blockIdx.y;
+        int x = threadIdx.x;
+        int y = threadIdx.y;
         int dim = 3;
 
 	const int yOffset = y * gridDim.x;
@@ -371,35 +371,36 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 
 __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
         // map from threadIdx/BlockIdx to pixel position^M
-        int x = blockIdx.x;
-        int y = blockIdx.y;
+        int x = blockIdx.x * blockDim.x + threadIdx.x; //threadIdx.x;
+        int y = blockIdx.y * blockDim.y + threadIdx.y; //blockIdx.y;
         int dim = 15;
 	
-	const int yOffset = y * gridDim.x;
+	const int rowSize = gridDim.x * blockDim.x;
+	//const int yOffset = rowsize * y;//y * gridDim.x;
 	
 	int yOffsets[15];
 	
-	yOffsets[0] = yOffset - gridDim.x * 7;
-	yOffsets[1] = yOffset - gridDim.x * 6;
-	yOffsets[2] = yOffset - gridDim.x * 5;
-	yOffsets[3] = yOffset - gridDim.x * 4;
-	yOffsets[4] = yOffset - gridDim.x * 3;
-	yOffsets[5] = yOffset - gridDim.x * 2;
-	yOffsets[6] = yOffset - gridDim.x * 1;
-	yOffsets[7] = yOffset;
-	yOffsets[8] = yOffset + gridDim.x * 1;
-	yOffsets[9] = yOffset + gridDim.x * 2;
-	yOffsets[10] = yOffset + gridDim.x * 3;
-	yOffsets[11] = yOffset + gridDim.x * 4;
-	yOffsets[12] = yOffset + gridDim.x * 5;
-	yOffsets[13] = yOffset + gridDim.x * 6;
-	yOffsets[14] = yOffset + gridDim.x * 7;
+	yOffsets[0] = rowSize*(y - 7);
+	yOffsets[1] = rowSize*(y - 6);
+	yOffsets[2] = rowSize*(y - 5);
+	yOffsets[3] = rowSize*(y - 4);
+	yOffsets[4] = rowSize*(y - 3);
+	yOffsets[5] = rowSize * (y - 2);
+	yOffsets[6] = rowSize * (y - 1);
+	yOffsets[7] = rowSize * y;
+	yOffsets[8] = rowSize*(y + 1);
+	yOffsets[9] = rowSize*(y + 2);
+	yOffsets[10] = rowSize*(y + 3);
+	yOffsets[11] = rowSize*(y + 4);
+	yOffsets[12] = rowSize*(y + 5);
+	yOffsets[13] = rowSize*(y + 6);
+	yOffsets[14] = rowSize*(y + 7);
 	
 	uint8_t neighborhood[15 * 15];
 	
 	
-	if (y > 6 && y < (gridDim.y - 7) && x > 6 && x < (gridDim.x - 7))
-	{
+	if (y > 6 && y < (gridDim.y * blockDim.y - 7) && x > 6 && x < (gridDim.x * blockDim.x - 7))
+	{/*
 		for(int i=0; i<dim; i++){
 		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 7];
 		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 6];
@@ -416,8 +417,8 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 5];
 		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 6];
 		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 7];
-		}
-		/*
+		}*/
+		
 		//Row 1
         	neighborhood[0] = d_input[yOffsets[0] + x - 7];
         	neighborhood[1] = d_input[yOffsets[0] + x - 6];
@@ -675,10 +676,10 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[223] = d_input[yOffsets[14] + x + 6];
         	neighborhood[224] = d_input[yOffsets[14] + x + 7];
         	
-        	*/
+        	
 	}
 	else
-	{
+	{/*
 		for(int i=0; i<dim; i++){
 		neighborhood[i*gridDim.x + 0] = 0;
 		neighborhood[i*gridDim.x + 0] = 0;
@@ -696,7 +697,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 		neighborhood[i*gridDim.x + 2] = 255;
 		neighborhood[i*gridDim.x + 2] = 255;
 		}
-		/*
+	*/	
         	//Row 1
         	neighborhood[0] = 0;
         	neighborhood[1] = 0;
@@ -953,7 +954,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[222] = 255;
         	neighborhood[223] = 255;
         	neighborhood[224] = 255;
-        	*/
+        	
 	}
 
 	//sort neighborhood
@@ -961,7 +962,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 	
 	// assign pixel to median
 
-	d_output[yOffset + x] = neighborhood[112];
+	d_output[y*rowSize + x] = neighborhood[112];
 
 }
 
@@ -1002,7 +1003,7 @@ int main (int argc, char *argv[]) {
 
     // TODO - Fill median.
 	dim3 grid(64, 64);
-    dim3 block(8, 8);
+    	dim3 block(8, 8);
     
 	if (dim == 3)
 	{
