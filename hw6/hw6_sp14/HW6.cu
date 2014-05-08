@@ -86,7 +86,13 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	
 	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
 	{
-
+		for(int i=0; i<dim; i++){
+			//for(int j=0; j<dim; j++){
+				neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 1];
+				neighborhood[i*gridDim.x + 1] = d_input[i*gridDim.x + x];
+				neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 1];			
+			//}
+		}
         	neighborhood[0] = d_input[yPrev + x - 1];
         	neighborhood[1] = d_input[yPrev + x];
         	neighborhood[2] = d_input[yPrev + x + 1];
@@ -141,6 +147,9 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	const int yOffset7 = yOffset + gridDim.x * 3;
 	
 	
+	
+	if (y >= gridDim.y || x >= gridDim.x)
+		return ;
 	
 	int yOffsets[7];
 	
@@ -311,28 +320,42 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	uint8_t neighborhood[11 * 11];
 	
 	
-	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	//if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	if(true)
 	{
 		//for (int i = 0; i < dim; i++)
-		{
+		
 			for (int j = 0; j < dim; j++)
 			{
 				for (int k = 0; k < dim / 2; k++)
 				{
-        				neighborhood[dim * (dim - j - 1) + k] = d_input[yOffsets[j] + x + k];
-        				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = d_input[yOffsets[j] + x - k];
+        				neighborhood[dim * (dim - j - 1) + k] = 45;//d_input[yOffsets[j] + x + k];
+        				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = 45;//d_input[yOffsets[j] + x - k];
 				}
 			}
 		}
+		/*
+        	neighborhood[0] = d_input[yPrev + x - 1];
+        	neighborhood[1] = d_input[yPrev + x];
+        	neighborhood[2] = d_input[yPrev + x + 1];
+        	neighborhood[3] = d_input[yOffset + x - 1];
+
+        	neighborhood[4] = d_input[yOffset + x];
+
+        	neighborhood[5] = d_input[yOffset + x + 1];
+        	neighborhood[6] = d_input[yNext + x - 1];
+        	neighborhood[7] = d_input[yNext + x];
+        	neighborhood[8] = d_input[yNext + x + 1];
+        	*/
 	}
 	else
 	{
-		for (int i = 0; i < 11 * 11 / 2; i++)
+		for (int i = 0; i < 60; i++)
 		{
 			neighborhood[i] = 0;
 		}
-		neighborhood[60] = d_input[yOffset + x];
-		for (int i = 61; i < 11*11; i++)
+		//neighborhood[60] = d_input[yOffset + x];
+		for (int i = 61; i < 121; i++)
 		{
 			neighborhood[i] = 255;
 		}
