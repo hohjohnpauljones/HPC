@@ -6,18 +6,82 @@
 
 typedef unsigned char uint8_t;
 
-__global__ void kernel( uint8_t *d_input, uint8_t *d_output) {
-	// map from threadIdx/BlockIdx to pixel position
-	int x = blockIdx.x;
-	int y = blockIdx.y;
-	int dim = 3;
-	//int mid = dim / 2 + 1;
-	//int offset = x + y * gridDim.x;
-	//int offset2 = offset;
-	//offset2 = x + (gridDim.y - y);
-	//offset2 = y + x * gridDim.y;
-	//offset2 = y + (gridDim.x * (gridDim.y - x - 1));
+/* This function swaps two numbers
+   Arguments :
+			 a, b - the numbers to be swapped
+   */
+void swap(int &a, int &b)
+{
+	int temp;
+	temp = a;
+	a = b;
+	b = temp;
+}
+
+/* This function does the quicksort
+   Arguments :
+			 array - the array to be sorted
+			 startIndex - index of the first element of the section
+			 endIndex - index of the last element of the section
+   */
+void QuickSort(uint8_t* array, int startIndex, int endIndex)
+{
+	int pivot = array[startIndex];	//pivot element is the leftmost element
+	int splitPoint;
 	
+	if(endIndex > startIndex)
+	{
+		splitPoint = SplitArray(array, pivot, startIndex, endIndex);
+		array[splitPoint] = pivot;
+		QuickSort(array, startIndex, splitPoint-1);   //Quick sort first half
+		QuickSort(array, splitPoint+1, endIndex);	 //Quick sort second half
+	}
+}
+
+/* This function splits the array around the pivot
+   Arguments :
+			 array - the array to be split
+			 pivot - pivot element whose position will be returned
+			 startIndex - index of the first element of the section
+			 endIndex - index of the last element of the section
+   Returns :
+		   the position of the pivot
+   */
+int SplitArray(uint8_t* array, int pivot, int startIndex, int endIndex)
+{
+	int leftBoundary = startIndex;
+	int rightBoundary = endIndex;
+	
+	while(leftBoundary < rightBoundary)			   //shuttle pivot until the boundaries meet
+	{
+		 while( pivot < array[rightBoundary]		  //keep moving until a lesser element is found
+				&& rightBoundary > leftBoundary)	  //or until the leftBoundary is reached
+		 {
+			  rightBoundary--;						//move left
+		 }
+		 swap(array[leftBoundary], array[rightBoundary]);
+		 
+		 while( pivot >= array[leftBoundary]		  //keep moving until a greater or equal element is found
+				&& leftBoundary < rightBoundary)	  //or until the rightBoundary is reached
+		 {
+			  leftBoundary++;						 //move right
+		 }
+		 swap(array[rightBoundary], array[leftBoundary]);
+	}
+	return leftBoundary;
+}
+
+__global__ void kernel( uint8_t *d_input, uint8_t *d_output) {
+        // map from threadIdx/BlockIdx to pixel position^M
+        int x = blockIdx.x;
+        int y = blockIdx.y;
+        int dim = 3;
+        //int mid = dim / 2 + 1;^M
+        //int offset = x + y * gridDim.x;^M
+        //int offset2 = offset;^M
+        //offset2 = x + (gridDim.y - y);^M
+        //offset2 = y + x * gridDim.y;^M
+        //offset2 = y + (gridDim.x * (gridDim.y - x - 1));^M
 	//d_output[offset] = d_input[offset2];
 
 	const int yOffset = y * gridDim.x;
