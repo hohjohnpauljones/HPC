@@ -400,6 +400,24 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 	
 	if (y > 6 && y < (gridDim.y - 7) && x > 6 && x < (gridDim.x - 7))
 	{
+		for(int i=0; i<dim; i++){
+		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 7];
+		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 6];
+		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 5];
+		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 4];
+		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 3];
+		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 2];
+		neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 1];
+		neighborhood[i*gridDim.x + 1] = d_input[i*gridDim.x + x];
+		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 1];
+		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 2];
+		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 3];
+		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 4];
+		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 5];
+		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 6];
+		neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 7];
+		}
+		/*
 		//Row 1
         	neighborhood[0] = d_input[yOffsets[0] + x - 7];
         	neighborhood[1] = d_input[yOffsets[0] + x - 6];
@@ -657,10 +675,28 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[223] = d_input[yOffsets[14] + x + 6];
         	neighborhood[224] = d_input[yOffsets[14] + x + 7];
         	
-        	
+        	*/
 	}
 	else
 	{
+		for(int i=0; i<dim; i++){
+		neighborhood[i*gridDim.x + 0] = 0;
+		neighborhood[i*gridDim.x + 0] = 0;
+		neighborhood[i*gridDim.x + 0] = 0;
+		neighborhood[i*gridDim.x + 0] = 0;
+		neighborhood[i*gridDim.x + 0] = 0;
+		neighborhood[i*gridDim.x + 0] = 0;
+		neighborhood[i*gridDim.x + 0] = 0;
+		neighborhood[i*gridDim.x + 1] = d_input[i*gridDim.x + x];
+		neighborhood[i*gridDim.x + 2] = 255;
+		neighborhood[i*gridDim.x + 2] = 255;
+		neighborhood[i*gridDim.x + 2] = 255;
+		neighborhood[i*gridDim.x + 2] = 255;
+		neighborhood[i*gridDim.x + 2] = 255;
+		neighborhood[i*gridDim.x + 2] = 255;
+		neighborhood[i*gridDim.x + 2] = 255;
+		}
+		/*
         	//Row 1
         	neighborhood[0] = 0;
         	neighborhood[1] = 0;
@@ -917,6 +953,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[222] = 255;
         	neighborhood[223] = 255;
         	neighborhood[224] = 255;
+        	*/
 	}
 
 	//sort neighborhood
