@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <chrono>
+
 typedef unsigned char uint8_t;
 
 /* This function swaps two numbers
@@ -91,9 +93,9 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	if (y > 0 && y < (gridDim.y * blockDim.y - 1) && x > 0 && x < (rowSize - 1))
 	{
 		for(int i=0; i<dim_1d; i+=dim){
-			neighborhood[i] = d_input[yOffsets[i/dim] + x - 1];
-			neighborhood[i + 1] = d_input[yOffsets[i/dim] + x];
-			neighborhood[i + 2] = d_input[yOffsets[i/dim] + x + 1];			
+			neighborhood[i] 		= d_input[yOffsets[i/dim] + x - 1];
+			neighborhood[i + 1] 	= d_input[yOffsets[i/dim] + x];
+			neighborhood[i + 2] 	= d_input[yOffsets[i/dim] + x + 1];			
 		}
 	}
 	else
@@ -144,13 +146,13 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	if (y > 2 && y < (gridDim.y * blockDim.y - 3) && x > 2 && x < (rowSize - 3))
 	{
 		for(int i=0; i<dim_1d; i+=dim){
-			neighborhood[i] = d_input[yOffsets[i/dim] + x - 3];
-			neighborhood[i + 1] = d_input[yOffsets[i/dim] + x - 2];
-			neighborhood[i + 2] = d_input[yOffsets[i/dim] + x - 1];
-			neighborhood[i + 3] = d_input[yOffsets[i/dim] + x];	
-			neighborhood[i + 4] = d_input[yOffsets[i/dim] + x + 1];
-			neighborhood[i + 5] = d_input[yOffsets[i/dim] + x + 2];
-			neighborhood[i + 6] = d_input[yOffsets[i/dim] + x + 3];			
+			neighborhood[i] = 	d_input[yOffsets[i/dim] + x - 3];
+			neighborhood[i + 1] = 	d_input[yOffsets[i/dim] + x - 2];
+			neighborhood[i + 2] = 	d_input[yOffsets[i/dim] + x - 1];
+			neighborhood[i + 3] = 	d_input[yOffsets[i/dim] + x];	
+			neighborhood[i + 4] = 	d_input[yOffsets[i/dim] + x + 1];
+			neighborhood[i + 5] = 	d_input[yOffsets[i/dim] + x + 2];
+			neighborhood[i + 6] = 	d_input[yOffsets[i/dim] + x + 3];			
 		}	
 	}
 	else
@@ -921,6 +923,9 @@ int main (int argc, char *argv[]) {
         mat[i] = fgetc(fp);
 
     fclose(fp);
+    
+    //start time
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
     std::vector<uint8_t> median(height * width);
     uint8_t *d_input, *d_output;
@@ -957,6 +962,12 @@ int main (int argc, char *argv[]) {
     	cudaMemcpy(&median[0], d_output, height * width * sizeof(uint8_t), cudaMemcpyDeviceToHost);
     	cudaFree(d_input);
     	cudaFree(d_output);
+    	
+    	//end time
+    	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    	
+    	std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(end - start);
+    	std::cout << "Time:  " << time_span_wall.count() << " seconds." << std::endl;
 
     //Writes the new pgm picture
     fp = fopen(argv[3], "w");
