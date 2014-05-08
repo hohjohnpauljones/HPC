@@ -13,7 +13,7 @@ run: hw6
 	./hw6 7 lena.pgm output.pgm
 
 rerun: hw6
-	./hw6 3 output.pgm output2.pgm
+	./hw6 7 output.pgm output2.pgm
 
 clean:
 	rm -f *.o hw6
