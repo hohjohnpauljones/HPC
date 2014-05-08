@@ -164,9 +164,8 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	uint8_t neighborhood[7 * 7];
 	
 	
-	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	if (y > 2 && y < (gridDim.y - 3) && x > 2 && x < (gridDim.x - 3))
 	{
-
         	neighborhood[0] = d_input[yOffset1 + x - 3];
         	neighborhood[1] = d_input[yOffset1 + x - 2];
         	neighborhood[2] = d_input[yOffset1 + x - 1];
@@ -399,7 +398,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 	uint8_t neighborhood[15 * 15];
 	
 	
-	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	if (y > 6 && y < (gridDim.y - 7) && x > 6 && x < (gridDim.x - 7))
 	{
 		//Row 1
         	neighborhood[0] = d_input[yOffsets[0] + x - 7];
