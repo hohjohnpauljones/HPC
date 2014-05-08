@@ -333,7 +333,7 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
         				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = 45;//d_input[yOffsets[j] + x - k];
 				}
 			}
-		}
+		
 		/*
         	neighborhood[0] = d_input[yPrev + x - 1];
         	neighborhood[1] = d_input[yPrev + x];
@@ -378,7 +378,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 	
 	const int yOffset = y * gridDim.x;
 	
-	int yOffsets[7];
+	int yOffsets[15];
 	
 	yOffsets[0] = yOffset - gridDim.x * 7;
 	yOffsets[1] = yOffset - gridDim.x * 6;
@@ -396,7 +396,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 	yOffsets[13] = yOffset + gridDim.x * 6;
 	yOffsets[14] = yOffset + gridDim.x * 7;
 	
-	uint8_t neighborhood[7 * 7];
+	uint8_t neighborhood[15 * 15];
 	
 	
 	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
@@ -869,21 +869,21 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[179] = 255;
         	
         	//Row 13
-        	neighborhood[180] = 255];
-        	neighborhood[181] = 255];
-        	neighborhood[182] = 255];
-        	neighborhood[183] = 255];
-        	neighborhood[184] = 255];
-        	neighborhood[185] = 255];
-        	neighborhood[186] = 255];
-        	neighborhood[187] = 255];
-        	neighborhood[188] = 255];
-        	neighborhood[189] = 255];
-        	neighborhood[190] = 255];
-        	neighborhood[191] = 255];
-        	neighborhood[192] = 255];
-        	neighborhood[193] = 255];
-        	neighborhood[194] = 255];
+        	neighborhood[180] = 255;
+        	neighborhood[181] = 255;
+        	neighborhood[182] = 255;
+        	neighborhood[183] = 255;
+        	neighborhood[184] = 255;
+        	neighborhood[185] = 255;
+        	neighborhood[186] = 255;
+        	neighborhood[187] = 255;
+        	neighborhood[188] = 255;
+        	neighborhood[189] = 255;
+        	neighborhood[190] = 255;
+        	neighborhood[191] = 255;
+        	neighborhood[192] = 255;
+        	neighborhood[193] = 255;
+        	neighborhood[194] = 255;
         	
         	//Row 14
 		neighborhood[195] = 255;
@@ -980,7 +980,9 @@ int main (int argc, char *argv[]) {
 		medianFilter11<<<grid,1>>>(d_input, d_output);
 	}
 	else if (dim == 15)
-	{}
+	{
+		medianFilter15<<<grid,1>>>(d_input, d_output);
+	}
 	else
 	{
 		std::cout << "Unsuported Filter Size" << std::endl;
