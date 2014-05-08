@@ -10,11 +10,12 @@ myProc: HW6.o
 HW6.o: HW6.cu
 	nvcc -c HW6.cu -arch=sm_20
 run: hw6
-	./hw6 15 lena.pgm output.pgm
+	./hw6 3 lena.pgm output.pgm
 
 rerun: hw6
-	./hw6 15 output.pgm output2.pgm
-	cp output2.pgm output.pgm
+	cp output.pgm output2.pgm
+	./hw6 3 output2.pgm output3.pgm
+	mv output3.pgm output2.pgm
 
 clean:
 	rm -f *.o hw6
