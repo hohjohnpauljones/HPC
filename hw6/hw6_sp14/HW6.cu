@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include <chrono>
+//#include <chrono>
 
 typedef unsigned char uint8_t;
 
@@ -93,7 +93,7 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	if (y > 0 && y < (gridDim.y * blockDim.y - 1) && x > 0 && x < (rowSize - 1))
 	{
 		for(int i=0; i<dim_1d; i+=dim){
-			neighborhood[i] 		= d_input[yOffsets[i/dim] + x - 1];
+			neighborhood[i]		= d_input[yOffsets[i/dim] + x - 1];
 			neighborhood[i + 1] 	= d_input[yOffsets[i/dim] + x];
 			neighborhood[i + 2] 	= d_input[yOffsets[i/dim] + x + 1];			
 		}
@@ -114,7 +114,7 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	}
 
 	//sort neighborhood
-	QuickSort(neighborhood, 0, 9);
+	QuickSort(neighborhood, 0, 3 * 3 - 1);
 	
 	// assign pixel to median
 
@@ -217,7 +217,7 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	}
 
 	//sort neighborhood
-	QuickSort(neighborhood, 0, 7 * 7);
+	QuickSort(neighborhood, 0, 7 * 7 - 1);
 	
 	// assign pixel to median
 
@@ -291,7 +291,7 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	}
 
 	//sort neighborhood
-	QuickSort(neighborhood, 0, 11*11);
+	QuickSort(neighborhood, 0, 11*11 - 1);
 	
 	// assign pixel to median
 
@@ -888,7 +888,7 @@ __global__ void medianFilter15( uint8_t *d_input, uint8_t *d_output) {
 	}
 
 	//sort neighborhood
-	QuickSort(neighborhood, 0, 15 * 15);
+	QuickSort(neighborhood, 0, 15 * 15 - 1);
 	
 	// assign pixel to median
 
@@ -925,7 +925,7 @@ int main (int argc, char *argv[]) {
     fclose(fp);
     
     //start time
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    //std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
     std::vector<uint8_t> median(height * width);
     uint8_t *d_input, *d_output;
@@ -964,10 +964,10 @@ int main (int argc, char *argv[]) {
     	cudaFree(d_output);
     	
     	//end time
-    	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    	//std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     	
-    	std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(end - start);
-    	std::cout << "Time:  " << time_span_wall.count() << " seconds." << std::endl;
+    	//std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(end - start);
+    	//std::cout << "Time:  " << time_span_wall.count() << " seconds." << std::endl;
 
     //Writes the new pgm picture
     fp = fopen(argv[3], "w");
@@ -977,5 +977,6 @@ int main (int argc, char *argv[]) {
     fclose(fp);
 
     return 0;
-}
 
+
+}
