@@ -1001,23 +1001,24 @@ int main (int argc, char *argv[]) {
     cudaMemcpy(d_input, &mat[0], height * width * sizeof(uint8_t), cudaMemcpyHostToDevice);
 
     // TODO - Fill median.
-	dim3 grid(15, 15);
-
+	dim3 grid(64, 64);
+    dim3 block(8, 8);
+    
 	if (dim == 3)
 	{
-		medianFilter3<<<grid,1>>>(d_input, d_output);
+		medianFilter3<<<grid,block>>>(d_input, d_output);
 	}
 	else if (dim == 7)
 	{
-		medianFilter7<<<grid,1>>>(d_input, d_output);
+		medianFilter7<<<grid,block>>>(d_input, d_output);
 	}
 	else if (dim == 11)
 	{
-		medianFilter11<<<grid,1>>>(d_input, d_output);
+		medianFilter11<<<grid,block>>>(d_input, d_output);
 	}
 	else if (dim == 15)
 	{
-		medianFilter15<<<grid,1>>>(d_input, d_output);
+		medianFilter15<<<grid,block>>>(d_input, d_output);
 	}
 	else
 	{
