@@ -10,7 +10,7 @@ typedef unsigned char uint8_t;
    Arguments :
 			 a, b - the numbers to be swapped
    */
-void swap(uint8_t &a, uint8_t &b)
+__device__ void swap(uint8_t &a, uint8_t &b)
 {
 	int temp;
 	temp = a;
@@ -27,7 +27,7 @@ void swap(uint8_t &a, uint8_t &b)
    Returns :
 		   the position of the pivot
    */
-int SplitArray(uint8_t* array, int pivot, int startIndex, int endIndex)
+__device__ int SplitArray(uint8_t* array, int pivot, int startIndex, int endIndex)
 {
 	int leftBoundary = startIndex;
 	int rightBoundary = endIndex;
@@ -57,7 +57,7 @@ int SplitArray(uint8_t* array, int pivot, int startIndex, int endIndex)
 			 startIndex - index of the first element of the section
 			 endIndex - index of the last element of the section
    */
-void QuickSort(uint8_t* array, int startIndex, int endIndex)
+__device__ void QuickSort(uint8_t* array, int startIndex, int endIndex)
 {
 	int pivot = array[startIndex];	//pivot element is the leftmost element
 	int splitPoint;
@@ -88,7 +88,7 @@ __global__ void kernel( uint8_t *d_input, uint8_t *d_output) {
 	const int yPrev = yOffset - gridDim.x;
 	const int yNext = yOffset + gridDim.x;
 	
-	float neighborhood[9];
+	uint8_t neighborhood[9];
 	
 	
 	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
@@ -122,19 +122,7 @@ __global__ void kernel( uint8_t *d_input, uint8_t *d_output) {
 	}
 
 	//sort neighborhood
-	
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = i; j < 8; j++)
-		{
-			if (neighborhood[i] > neighborhood[i + 1])
-			{
-				int temp = neighborhood[i];
-				neighborhood[i] = neighborhood[i+1];
-				neighborhood[i+1] = temp;
-			}
-		}
-	}
+	QuickSort(neighborhood, 0, 9);
 	
 	// assign pixel to median
 
