@@ -149,7 +149,7 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	
 	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
 	{
-		for (int i = 0; i < dim; i++)
+		//for (int i = 0; i < dim; i++)
 		{
 			for (int j = 0; j < dim; j++)
 			{
