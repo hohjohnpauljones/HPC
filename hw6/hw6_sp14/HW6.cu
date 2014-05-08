@@ -76,13 +76,6 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
         int x = blockIdx.x;
         int y = blockIdx.y;
         int dim = 3;
-        //int mid = dim / 2 + 1;^M
-        //int offset = x + y * gridDim.x;^M
-        //int offset2 = offset;^M
-        //offset2 = x + (gridDim.y - y);^M
-        //offset2 = y + x * gridDim.y;^M
-        //offset2 = y + (gridDim.x * (gridDim.y - x - 1));^M
-	//d_output[offset] = d_input[offset2];
 
 	const int yOffset = y * gridDim.x;
 	const int yPrev = yOffset - gridDim.x;
@@ -119,6 +112,81 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
                 neighborhood[6] = 255;
                 neighborhood[7] = 255;
                 neighborhood[8] = 255;
+	}
+
+	//sort neighborhood
+	QuickSort(neighborhood, 0, 9);
+	
+	// assign pixel to median
+
+	d_output[yOffset + x] = neighborhood[5];
+
+}
+
+__global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
+        // map from threadIdx/BlockIdx to pixel position^M
+        int x = blockIdx.x;
+        int y = blockIdx.y;
+        int dim = 11;
+
+	const int yOffsets[11];
+
+	
+	const int yoffsets[0] = yOffset - gridDim.x * 1;
+	const int yoffsets[1] = yOffset - gridDim.x * 2;
+	const int yoffsets[2] = yOffset - gridDim.x * 3;
+	const int yoffsets[3] = yOffset - gridDim.x * 4;
+	const int yoffsets[4] = yOffset - gridDim.x * 5;
+	const int yOffsets[5] = y * gridDim.x;
+	const int yOffsets[6] = yOffset + gridDim.x * 1;
+	const int yOffsets[7] = yOffset + gridDim.x * 2;
+	const int yOffsets[8] = yOffset + gridDim.x * 3;
+	const int yOffsets[9] = yOffset + gridDim.x * 4;
+	const int yOffsets[10] = yOffset + gridDim.x * 5;
+	
+	uint8_t neighborhood[11];
+	
+	
+	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	{
+		for (int i = 0; i < dim; i++)
+		{
+			for (int j = 0; j < dim; j++)
+			{
+				for (int k = 0; k < dim / 2, k++)
+				{
+        				neighborhood[dim * (dim - j - 1) + k] = d_input[offset[j] + x + k];
+        				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = d_input[offset[j] + x - k];
+				}
+			}
+		}
+		/*
+        	neighborhood[0] = d_input[yPrev + x - 1];
+        	neighborhood[1] = d_input[yPrev + x];
+        	neighborhood[2] = d_input[yPrev + x + 1];
+        	neighborhood[3] = d_input[yOffset + x - 1];
+
+        	neighborhood[4] = d_input[yOffset + x];
+
+        	neighborhood[5] = d_input[yOffset + x + 1];
+        	neighborhood[6] = d_input[yNext + x - 1];
+        	neighborhood[7] = d_input[yNext + x];
+        	neighborhood[8] = d_input[yNext + x + 1];
+        	*/
+	}
+	else
+	{
+		/*neighborhood[0] = 0;
+            neighborhood[1] = 0;
+		neighborhood[2] = 0;
+		neighborhood[3] = 0;
+		
+		neighborhood[4] = d_input[yOffset + x];
+		
+		neighborhood[5] = 255;
+		neighborhood[6] = 255;
+		neighborhood[7] = 255;
+		neighborhood[8] = 255;*/
 	}
 
 	//sort neighborhood
@@ -172,8 +240,6 @@ int main (int argc, char *argv[]) {
 	{
 		medianFilter3<<<grid,1>>>(d_input, d_output);
 	}
-	else if (dim == 5)
-	{}
 	else if (dim == 7)
 	{}
 	else if (dim == 11)
