@@ -129,20 +129,20 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
         int y = blockIdx.y;
         int dim = 11;
 
-	const int yOffsets[11];
-
+	int yOffsets[11];
+	const int yOffset = y * gridDim.x;
 	
-	const int yoffsets[0] = yOffset - gridDim.x * 1;
-	const int yoffsets[1] = yOffset - gridDim.x * 2;
-	const int yoffsets[2] = yOffset - gridDim.x * 3;
-	const int yoffsets[3] = yOffset - gridDim.x * 4;
-	const int yoffsets[4] = yOffset - gridDim.x * 5;
-	const int yOffsets[5] = y * gridDim.x;
-	const int yOffsets[6] = yOffset + gridDim.x * 1;
-	const int yOffsets[7] = yOffset + gridDim.x * 2;
-	const int yOffsets[8] = yOffset + gridDim.x * 3;
-	const int yOffsets[9] = yOffset + gridDim.x * 4;
-	const int yOffsets[10] = yOffset + gridDim.x * 5;
+	yOffsets[0] = yOffset - gridDim.x * 1;
+	yOffsets[1] = yOffset - gridDim.x * 2;
+	yOffsets[2] = yOffset - gridDim.x * 3;
+	yOffsets[3] = yOffset - gridDim.x * 4;
+	yOffsets[4] = yOffset - gridDim.x * 5;
+	yOffsets[5] = yOffset;
+	yOffsets[6] = yOffset + gridDim.x * 1;
+	yOffsets[7] = yOffset + gridDim.x * 2;
+	yOffsets[8] = yOffset + gridDim.x * 3;
+	yOffsets[9] = yOffset + gridDim.x * 4;
+	yOffsets[10] = yOffset + gridDim.x * 5;
 	
 	uint8_t neighborhood[11 * 11];
 	
@@ -153,10 +153,10 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 		{
 			for (int j = 0; j < dim; j++)
 			{
-				for (int k = 0; k < dim / 2, k++)
+				for (int k = 0; k < dim / 2; k++)
 				{
-        				neighborhood[dim * (dim - j - 1) + k] = d_input[offset[j] + x + k];
-        				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = d_input[offset[j] + x - k];
+        				neighborhood[dim * (dim - j - 1) + k] = d_input[yOffsets[j] + x + k];
+        				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = d_input[yOffsets[j] + x - k];
 				}
 			}
 		}
@@ -176,7 +176,7 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	}
 	else
 	{
-		for (int i = 0; i < 11 * 11 / 2; i++;)
+		for (int i = 0; i < 11 * 11 / 2; i++)
 		{
 			neighborhood[i] = 0;
 		}
