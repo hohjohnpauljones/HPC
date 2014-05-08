@@ -71,7 +71,7 @@ __device__ void QuickSort(uint8_t* array, int startIndex, int endIndex)
 	}
 }
 
-__global__ void kernel( uint8_t *d_input, uint8_t *d_output) {
+__global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
         // map from threadIdx/BlockIdx to pixel position^M
         int x = blockIdx.x;
         int y = blockIdx.y;
@@ -132,15 +132,16 @@ __global__ void kernel( uint8_t *d_input, uint8_t *d_output) {
 
 int main (int argc, char *argv[]) {
 
-    if (argc != 3) // Change me per specs
+    if (argc != 4) // Change me per specs
         return 1;
 
-    int height, width;
+    int dim = atoi(argv[1]);
+	int height, width;
     char magic_number[4], input[10];
     int gray_scale;
 
     //Reads from argv[1] the input pgm file
-    FILE *fp = fopen(argv[1],"r");
+    FILE *fp = fopen(argv[2],"r");
     fgets(magic_number, 4, fp);
     magic_number[2] = '\0';
 	//read up to 10 characters or new line
@@ -165,21 +166,31 @@ int main (int argc, char *argv[]) {
     cudaMemcpy(d_input, &mat[0], height * width * sizeof(uint8_t), cudaMemcpyHostToDevice);
 
     // TODO - Fill median.
-	/*
-	for (int i = 0; i < height * width; i++)
-		d_output[i] = d_input[i];
-		//median.push_back(d_input[i]);
-		//median[i] = mat[i];
-	*/
 	dim3 grid(height, width);
 
-	kernel<<<grid,1>>>(d_input, d_output);
-    cudaMemcpy(&median[0], d_output, height * width * sizeof(uint8_t), cudaMemcpyDeviceToHost);
-    cudaFree(d_input);
-    cudaFree(d_output);
+	if (dim == 3)
+	{
+		medianFilter3<<<grid,1>>>(d_input, d_output);
+	}
+	else if (dim == 5)
+	{}
+	else if (dim == 7)
+	{}
+	else if (dim == 11)
+	{}
+	else if (dim == 15)
+	{}
+	else
+	{
+		std::cout << "Unsuported Filter Size" << std::endl;
+		return 1;
+	}
+    	cudaMemcpy(&median[0], d_output, height * width * sizeof(uint8_t), cudaMemcpyDeviceToHost);
+    	cudaFree(d_input);
+    	cudaFree(d_output);
 
     //Writes the new pgm picture
-    fp = fopen(argv[2], "w");
+    fp = fopen(argv[3], "w");
     fprintf(fp, "%s\n%d\n%d\n%d\n", magic_number, height, width, gray_scale);
     for (int i=0;i<median.size();i++)
         fputc(median[i], fp);
