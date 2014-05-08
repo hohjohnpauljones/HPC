@@ -81,7 +81,7 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 
 	const int yOffset = y * rowSize;
 	const int yPrev = (y-1) * rowSize;
-	const int yNext = (y+1) * rowSize
+	const int yNext = (y+1) * rowSize;
 	
 	uint8_t neighborhood[9];
 	
