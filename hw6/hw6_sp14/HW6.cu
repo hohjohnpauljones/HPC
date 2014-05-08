@@ -85,7 +85,7 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	
 	uint8_t neighborhood[9];
 	
-	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	if (y > 0 && y < (gridDim.y * blockDim.y - 1) && x > 0 && x < (rowSize - 1))
 	{
 		/*for(int i=0; i<dim; i++){
 			//for(int j=0; j<dim; j++){
@@ -128,7 +128,7 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	
 	// assign pixel to median
 
-	d_output[yOffset + x] = neighborhood[5];
+	d_output[yOffset + x] = neighborhood[4];
 
 }
 
