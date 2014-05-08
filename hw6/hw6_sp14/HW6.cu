@@ -73,16 +73,17 @@ __device__ void QuickSort(uint8_t* array, int startIndex, int endIndex)
 
 __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
         // map from threadIdx/BlockIdx to pixel position^M
-        int x = threadIdx.x;
-        int y = threadIdx.y;
+        int x = blockIdx.x * blockDim.x + threadIdx.x; //threadIdx.x;
+        int y = blockIdx.y * blockDim.y + threadIdx.y; //blockIdx.y;
         int dim = 3;
+	
+	const int rowSize = gridDim.x * blockDim.x;
 
-	const int yOffset = y * gridDim.x;
-	const int yPrev = yOffset - gridDim.x;
-	const int yNext = yOffset + gridDim.x;
+	const int yOffset = y * rowSize;
+	const int yPrev = (y-1) * rowSize;
+	const int yNext = (y+1) * rowSize
 	
 	uint8_t neighborhood[9];
-	
 	
 	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
 	{
