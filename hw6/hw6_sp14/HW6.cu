@@ -965,7 +965,7 @@ int main (int argc, char *argv[]) {
     cudaMemcpy(d_input, &mat[0], height * width * sizeof(uint8_t), cudaMemcpyHostToDevice);
 
     // TODO - Fill median.
-	dim3 grid(height, width);
+	dim3 grid(5, 5);
 
 	if (dim == 3)
 	{
