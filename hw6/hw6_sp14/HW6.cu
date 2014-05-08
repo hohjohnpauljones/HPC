@@ -79,21 +79,22 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	
 	const int rowSize = gridDim.x * blockDim.x;
 
-	const int yOffset = y * rowSize;
-	const int yPrev = (y-1) * rowSize;
-	const int yNext = (y+1) * rowSize;
+	int yOffsets[3];
+	const int yOffsets[0] = (y-1) * rowSize;
+	const int yOffsets[1] = y * rowSize;
+	const int yOffsets[2] = (y+1) * rowSize;
 	
 	uint8_t neighborhood[9];
 	
 	if (y > 0 && y < (gridDim.y * blockDim.y - 1) && x > 0 && x < (rowSize - 1))
 	{
-		/*for(int i=0; i<dim; i++){
+		for(int i=0; i<9; i+=3){
 			//for(int j=0; j<dim; j++){
-				neighborhood[i*gridDim.x + 0] = d_input[i*gridDim.x + x - 1];
-				neighborhood[i*gridDim.x + 1] = d_input[i*gridDim.x + x];
-				neighborhood[i*gridDim.x + 2] = d_input[i*gridDim.x + x + 1];			
+				neighborhood[i] = d_input[yOffsets[i/3] + x - 1];
+				neighborhood[i + 1] = d_input[yOffsets[i/3] + x];
+				neighborhood[i + 2] = d_input[yOffsets[i/3] + x + 1];			
 			//}
-		}*/
+		}/*
         	neighborhood[0] = d_input[yPrev + x - 1];
         	neighborhood[1] = d_input[yPrev + x];
         	neighborhood[2] = d_input[yPrev + x + 1];
@@ -107,6 +108,7 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[6] = d_input[yNext + x - 1];
         	neighborhood[7] = d_input[yNext + x];
         	neighborhood[8] = d_input[yNext + x + 1];
+		*/
 	}
 	else
 	{
