@@ -10,32 +10,12 @@ typedef unsigned char uint8_t;
    Arguments :
 			 a, b - the numbers to be swapped
    */
-void swap(int &a, int &b)
+void swap(uint8_t &a, uint8_t &b)
 {
 	int temp;
 	temp = a;
 	a = b;
 	b = temp;
-}
-
-/* This function does the quicksort
-   Arguments :
-			 array - the array to be sorted
-			 startIndex - index of the first element of the section
-			 endIndex - index of the last element of the section
-   */
-void QuickSort(uint8_t* array, int startIndex, int endIndex)
-{
-	int pivot = array[startIndex];	//pivot element is the leftmost element
-	int splitPoint;
-	
-	if(endIndex > startIndex)
-	{
-		splitPoint = SplitArray(array, pivot, startIndex, endIndex);
-		array[splitPoint] = pivot;
-		QuickSort(array, startIndex, splitPoint-1);   //Quick sort first half
-		QuickSort(array, splitPoint+1, endIndex);	 //Quick sort second half
-	}
 }
 
 /* This function splits the array around the pivot
@@ -69,6 +49,26 @@ int SplitArray(uint8_t* array, int pivot, int startIndex, int endIndex)
 		 swap(array[rightBoundary], array[leftBoundary]);
 	}
 	return leftBoundary;
+}
+
+/* This function does the quicksort
+   Arguments :
+			 array - the array to be sorted
+			 startIndex - index of the first element of the section
+			 endIndex - index of the last element of the section
+   */
+void QuickSort(uint8_t* array, int startIndex, int endIndex)
+{
+	int pivot = array[startIndex];	//pivot element is the leftmost element
+	int splitPoint;
+	
+	if(endIndex > startIndex)
+	{
+		splitPoint = SplitArray(array, pivot, startIndex, endIndex);
+		array[splitPoint] = pivot;
+		QuickSort(array, startIndex, splitPoint-1);   //Quick sort first half
+		QuickSort(array, splitPoint+1, endIndex);	 //Quick sort second half
+	}
 }
 
 __global__ void kernel( uint8_t *d_input, uint8_t *d_output ) {
