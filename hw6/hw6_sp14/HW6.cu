@@ -133,6 +133,9 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	const int yPrev = yOffset - gridDim.x;
 	const int yNext = yOffset + gridDim.x;
 	
+	if (y >= gridDim.y || x >= gridDim.x)
+		return ;
+	
 	int yOffsets[7];
 	
 	yOffsets[0] = yOffset - gridDim.x * 3;
@@ -302,19 +305,20 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	uint8_t neighborhood[11 * 11];
 	
 	
-	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	//if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	if(true)
 	{
 		//for (int i = 0; i < dim; i++)
-		{
+		
 			for (int j = 0; j < dim; j++)
 			{
 				for (int k = 0; k < dim / 2; k++)
 				{
-        				neighborhood[dim * (dim - j - 1) + k] = d_input[yOffsets[j] + x + k];
-        				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = d_input[yOffsets[j] + x - k];
+        				neighborhood[dim * (dim - j - 1) + k] = 45;//d_input[yOffsets[j] + x + k];
+        				neighborhood[dim * (dim - j - 1) + k + (dim / 2)] = 45;//d_input[yOffsets[j] + x - k];
 				}
 			}
-		}
+		
 		/*
         	neighborhood[0] = d_input[yPrev + x - 1];
         	neighborhood[1] = d_input[yPrev + x];
@@ -331,12 +335,12 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	}
 	else
 	{
-		for (int i = 0; i < 11 * 11 / 2; i++)
+		for (int i = 0; i < 60; i++)
 		{
 			neighborhood[i] = 0;
 		}
-		neighborhood[60] = d_input[yOffset + x];
-		for (int i = 61; i < 11*11; i++)
+		//neighborhood[60] = d_input[yOffset + x];
+		for (int i = 61; i < 121; i++)
 		{
 			neighborhood[i] = 255;
 		}
@@ -399,7 +403,7 @@ int main (int argc, char *argv[]) {
     cudaMemcpy(d_input, &mat[0], height * width * sizeof(uint8_t), cudaMemcpyHostToDevice);
 
     // TODO - Fill median.
-	dim3 grid(height, width);
+	dim3 grid(5, 5);
 
 	if (dim == 3)
 	{
