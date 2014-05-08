@@ -6,18 +6,76 @@
 
 typedef unsigned char uint8_t;
 
-__global__ void kernel( uint8_t *d_input, uint8_t *d_output ) {
+__global__ void kernel( uint8_t *d_input, uint8_t *d_output) {
 	// map from threadIdx/BlockIdx to pixel position
 	int x = blockIdx.x;
 	int y = blockIdx.y;
-	int offset = x + y * gridDim.x;
-	int offset2 = x + (gridDim.y - y);
-	//int offset2 = y + x * gridDim.y;
-	d_output[offset] = d_input[offset2];
-	d_output[offset] = d_input[offset2];
-	//int offset2 = y + (gridDim.x * (gridDim.y - x - 1));
-	//d_output[offset] = d_input[offset2];
+	int dim = 3;
+	//int mid = dim / 2 + 1;
+	//int offset = x + y * gridDim.x;
+	//int offset2 = offset;
+	//offset2 = x + (gridDim.y - y);
+	//offset2 = y + x * gridDim.y;
+	//offset2 = y + (gridDim.x * (gridDim.y - x - 1));
 	
+	//d_output[offset] = d_input[offset2];
+
+	const int yOffset = y * gridDim.x;
+	const int yPrev = yOffset - gridDim.x;
+	const int yNext = yOffset + gridDim.x;
+	
+	float neighborhood[9];
+	
+	
+	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
+	{
+
+        	neighborhood[0] = d_input[yPrev + x - 1];
+        	neighborhood[1] = d_input[yPrev + x];
+        	neighborhood[2] = d_input[yPrev + x + 1];
+        	neighborhood[3] = d_input[yOffset + x - 1];
+
+        	neighborhood[4] = d_input[yOffset + x];
+
+        	neighborhood[5] = d_input[yOffset + x + 1];
+        	neighborhood[6] = d_input[yNext + x - 1];
+        	neighborhood[7] = d_input[yNext + x];
+        	neighborhood[8] = d_input[yNext + x + 1];
+	}
+	else
+	{
+		neighborhood[0] = 0;
+                neighborhood[1] = 0;
+                neighborhood[2] = 0;
+                neighborhood[3] = 0;
+
+                neighborhood[4] = d_input[yOffset + x];
+
+                neighborhood[5] = 255;
+                neighborhood[6] = 255;
+                neighborhood[7] = 255;
+                neighborhood[8] = 255;
+	}
+
+	//sort neighborhood
+	
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = i; j < 8; j++)
+		{
+			if (neighborhood[i] > neighborhood[i + 1])
+			{
+				int temp = neighborhood[i];
+				neighborhood[i] = neighborhood[i+1];
+				neighborhood[i+1] = temp;
+			}
+		}
+	}
+	
+	// assign pixel to median
+
+	d_output[yOffset + x] = neighborhood[5];
+
 }
 
 int main (int argc, char *argv[]) {
