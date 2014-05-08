@@ -144,7 +144,7 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	const int yOffsets[9] = yOffset + gridDim.x * 4;
 	const int yOffsets[10] = yOffset + gridDim.x * 5;
 	
-	uint8_t neighborhood[11];
+	uint8_t neighborhood[11 * 11];
 	
 	
 	if (y > 0 && y < (gridDim.y - 1) && x > 0 && x < (gridDim.x - 1))
@@ -176,6 +176,16 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	}
 	else
 	{
+		for (int i = 0; i < 11 * 11 / 2; i++;)
+		{
+			neighborhood[i] = 0;
+		}
+		neighborhood[60] = d_input[yOffset + x];
+		for (int i = 61; i < 11*11; i++)
+		{
+			neighborhood[i] = 255;
+		}
+		
 		/*neighborhood[0] = 0;
             neighborhood[1] = 0;
 		neighborhood[2] = 0;
@@ -190,11 +200,11 @@ __global__ void medianFilter11( uint8_t *d_input, uint8_t *d_output) {
 	}
 
 	//sort neighborhood
-	QuickSort(neighborhood, 0, 9);
+	QuickSort(neighborhood, 0, 11*11);
 	
 	// assign pixel to median
 
-	d_output[yOffset + x] = neighborhood[5];
+	d_output[yOffset + x] = neighborhood[60];
 
 }
 
