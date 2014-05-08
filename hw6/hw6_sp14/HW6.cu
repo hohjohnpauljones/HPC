@@ -72,43 +72,29 @@ __device__ void QuickSort(uint8_t* array, int startIndex, int endIndex)
 }
 
 __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
-        // map from threadIdx/BlockIdx to pixel position^M
-        int x = blockIdx.x * blockDim.x + threadIdx.x; //threadIdx.x;
-        int y = blockIdx.y * blockDim.y + threadIdx.y; //blockIdx.y;
-        int dim = 3;
+	
+	// map from threadIdx/BlockIdx to pixel position^M
+	int x = blockIdx.x * blockDim.x + threadIdx.x; //threadIdx.x;
+	int y = blockIdx.y * blockDim.y + threadIdx.y; //blockIdx.y;
+	int dim = 3;
+	int dim_1d = dim*dim; //turning 2d square into single row length
 	
 	const int rowSize = gridDim.x * blockDim.x;
 
-	int yOffsets[3];
+	int yOffsets[dim];
 	yOffsets[0] = (y-1) * rowSize;
 	yOffsets[1] = y * rowSize;
 	yOffsets[2] = (y+1) * rowSize;
 	
-	uint8_t neighborhood[9];
+	uint8_t neighborhood[dim_1d];
 	
 	if (y > 0 && y < (gridDim.y * blockDim.y - 1) && x > 0 && x < (rowSize - 1))
 	{
-		for(int i=0; i<9; i+=3){
-			//for(int j=0; j<dim; j++){
-				neighborhood[i] = d_input[yOffsets[i/3] + x - 1];
-				neighborhood[i + 1] = d_input[yOffsets[i/3] + x];
-				neighborhood[i + 2] = d_input[yOffsets[i/3] + x + 1];			
-			//}
-		}/*
-        	neighborhood[0] = d_input[yPrev + x - 1];
-        	neighborhood[1] = d_input[yPrev + x];
-        	neighborhood[2] = d_input[yPrev + x + 1];
-        	
-        	neighborhood[3] = d_input[yOffset + x - 1];
-
-        	neighborhood[4] = d_input[yOffset + x];
-
-        	neighborhood[5] = d_input[yOffset + x + 1];
-        	
-        	neighborhood[6] = d_input[yNext + x - 1];
-        	neighborhood[7] = d_input[yNext + x];
-        	neighborhood[8] = d_input[yNext + x + 1];
-		*/
+		for(int i=0; i<dim_1d; i+=dim){
+			neighborhood[i] = d_input[yOffsets[i/dim] + x - 1];
+			neighborhood[i + 1] = d_input[yOffsets[i/dim] + x];
+			neighborhood[i + 2] = d_input[yOffsets[i/dim] + x + 1];			
+		}
 	}
 	else
 	{
@@ -135,98 +121,37 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 }
 
 __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
-        // map from threadIdx/BlockIdx to pixel position^M
-        int x = blockIdx.x;
-        int y = blockIdx.y;
-        int dim = 7;
 	
-	const int yOffset = y * gridDim.x;
+	// map from threadIdx/BlockIdx to pixel position^M
+	int x = blockIdx.x * blockDim.x + threadIdx.x; //threadIdx.x;
+	int y = blockIdx.y * blockDim.y + threadIdx.y; //blockIdx.y;
+	int dim = 7;
+	int dim_1d = dim*dim; //turning 2d square into single row length
 	
-	const int yOffset1 = yOffset - gridDim.x * 3;
-	const int yOffset2 = yOffset - gridDim.x * 2;
-	const int yOffset3 = yOffset - gridDim.x * 1;
-	const int yOffset5 = yOffset + gridDim.x * 1;
-	const int yOffset6 = yOffset + gridDim.x * 2;
-	const int yOffset7 = yOffset + gridDim.x * 3;
+	const int rowSize = gridDim.x * blockDim.x;
+
+	int yOffsets[dim];
+	yOffsets[0] = (y-3) * rowSize;
+	yOffsets[1] = (y-2) * rowSize;
+	yOffsets[2] = (y-1) * rowSize;
+	yOffsets[3] = y * rowSize;
+	yOffsets[4] = (y+1)* rowSize;
+	yOffsets[5] = (y+2)* rowSize;
+	yOffsets[6] = (y+3)* rowSize;
 	
-	
-	
-	if (y >= gridDim.y || x >= gridDim.x)
-		return ;
-	
-	int yOffsets[7];
-	
-	yOffsets[0] = yOffset - gridDim.x * 3;
-	yOffsets[1] = yOffset - gridDim.x * 2;
-	yOffsets[2] = yOffset - gridDim.x * 1;
-	yOffsets[3] = yOffset;
-	yOffsets[4] = yOffset + gridDim.x * 1;
-	yOffsets[5] = yOffset + gridDim.x * 2;
-	yOffsets[6] = yOffset + gridDim.x * 3;
-	
-	uint8_t neighborhood[7 * 7];
-	
-	
-	if (y > 2 && y < (gridDim.y - 3) && x > 2 && x < (gridDim.x - 3))
+	uint8_t neighborhood[dim_1d];
+
+	if (y > 2 && y < (gridDim.y * blockDim.y - 3) && x > 2 && x < (rowSize - 3))
 	{
-        	neighborhood[0] = d_input[yOffset1 + x - 3];
-        	neighborhood[1] = d_input[yOffset1 + x - 2];
-        	neighborhood[2] = d_input[yOffset1 + x - 1];
-        	neighborhood[3] = d_input[yOffset1 + x - 0];
-        	neighborhood[4] = d_input[yOffset1 + x + 1];
-        	neighborhood[5] = d_input[yOffset1 + x + 2];
-        	neighborhood[6] = d_input[yOffset1 + x + 3];
-        	
-		neighborhood[7] = d_input[yOffset2 + x - 3];
-        	neighborhood[8] = d_input[yOffset2 + x - 2];
-        	neighborhood[9] = d_input[yOffset2 + x - 1];
-        	neighborhood[10] = d_input[yOffset2 + x - 0];
-        	neighborhood[11] = d_input[yOffset2 + x + 1];
-        	neighborhood[12] = d_input[yOffset2 + x + 2];
-        	neighborhood[13] = d_input[yOffset2 + x + 3];
-        	
-        	neighborhood[14] = d_input[yOffset3 + x - 3];
-        	neighborhood[15] = d_input[yOffset3 + x - 2];
-        	neighborhood[16] = d_input[yOffset3 + x - 1];
-        	neighborhood[17] = d_input[yOffset3 + x - 0];
-        	neighborhood[18] = d_input[yOffset3 + x + 1];
-        	neighborhood[19] = d_input[yOffset3 + x + 2];
-        	neighborhood[20] = d_input[yOffset3 + x + 3];
-        	
-        	neighborhood[21] = d_input[yOffset + x - 3];
-        	neighborhood[22] = d_input[yOffset + x - 2];
-        	neighborhood[23] = d_input[yOffset + x - 1];
-        	
-        	neighborhood[24] = d_input[yOffset + x - 0];
-        	
-        	neighborhood[25] = d_input[yOffset + x + 1];
-        	neighborhood[26] = d_input[yOffset + x + 2];
-        	neighborhood[27] = d_input[yOffset + x + 3];
-        	
-        	neighborhood[28] = d_input[yOffset5 + x - 3];
-        	neighborhood[29] = d_input[yOffset5 + x - 2];
-        	neighborhood[30] = d_input[yOffset5 + x - 1];
-        	neighborhood[31] = d_input[yOffset5 + x - 0];
-        	neighborhood[32] = d_input[yOffset5 + x + 1];
-        	neighborhood[33] = d_input[yOffset5 + x + 2];
-        	neighborhood[34] = d_input[yOffset5 + x + 3];
-        	
-        	neighborhood[35] = d_input[yOffset6 + x - 3];
-        	neighborhood[35] = d_input[yOffset6 + x - 2];
-        	neighborhood[37] = d_input[yOffset6 + x - 1];
-        	neighborhood[38] = d_input[yOffset6 + x - 0];
-        	neighborhood[39] = d_input[yOffset6 + x + 1];
-        	neighborhood[40] = d_input[yOffset6 + x + 2];
-        	neighborhood[41] = d_input[yOffset6 + x + 3];
-        	
-        	neighborhood[42] = d_input[yOffset7 + x - 3];
-        	neighborhood[43] = d_input[yOffset7 + x - 2];
-        	neighborhood[44] = d_input[yOffset7 + x - 1];
-        	neighborhood[45] = d_input[yOffset7 + x - 0];
-        	neighborhood[46] = d_input[yOffset7 + x + 1];
-        	neighborhood[47] = d_input[yOffset7 + x + 2];
-        	neighborhood[48] = d_input[yOffset7 + x + 3];
-        	
+		for(int i=0; i<dim_1d; i+=dim){
+			neighborhood[i] = d_input[yOffsets[i/dim] + x - 3];
+			neighborhood[i + 1] = d_input[yOffsets[i/dim] + x - 2];
+			neighborhood[i + 2] = d_input[yOffsets[i/dim] + x - 1];
+			neighborhood[i + 3] = d_input[yOffsets[i/dim] + x];	
+			neighborhood[i + 4] = d_input[yOffsets[i/dim] + x + 1];
+			neighborhood[i + 5] = d_input[yOffsets[i/dim] + x + 2];
+			neighborhood[i + 6] = d_input[yOffsets[i/dim] + x + 3];			
+		}	
 	}
 	else
 	{
@@ -258,7 +183,7 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
         	neighborhood[22] = 0;
         	neighborhood[23] = 0;
         	
-        	neighborhood[24] = d_input[yOffset + x - 0];
+        	neighborhood[24] = d_input[yOffsets[3] + x];
         	
         	neighborhood[25] = 255;
         	neighborhood[26] = 255;
@@ -294,7 +219,7 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	
 	// assign pixel to median
 
-	d_output[yOffset + x] = neighborhood[24];
+	d_output[yOffsets[3] + x] = neighborhood[24];
 
 }
 
