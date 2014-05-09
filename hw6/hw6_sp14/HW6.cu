@@ -228,13 +228,13 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	//sort neighborhood
 	QuickSort(neighborhood, 0, 7 * 7 - 1);
 	
+	d_output[yOffsets[3] + x] = neighborhood[24];
 	// assign pixel to median
 	if(neighborhood[4] == NULL){	
 		printf("X at position is NULL and x is %d and y is %d\n", x, y);
 	}else{	
-		printf("X at position is NOT NULL and x is %d and y %d\n",x,y );
+		printf("X at position is NOT NULL and x is %d and y %d and char is %d\n",x,y,d_output[yOffsets[3] + x]);
 	}	
-	d_output[yOffsets[3] + x] = neighborhood[24];
 
 }
 
