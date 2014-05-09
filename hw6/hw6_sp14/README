@@ -1,1 +1,8 @@
-Fill your code on line 38 on HW6.cu.  The program will run with make run but won't do anything.  Ideally if your code works output.pgm will contain the final image.
+To make the program execute: 
+    make clean
+    make
+    make run
+
+This will output a file called output.pgm that will contain the image to which the MedianFilter is applied.
+
+To change the size of block (e.g. 3x3, 7x7, 11x11, or 15x15) open the Makefile and edit the value after ./hw6 <3 or 7 or 11 or 15> lena.png output.png
