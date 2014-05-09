@@ -87,7 +87,9 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 	yOffsets[0] = (y-1) * rowSize;
 	yOffsets[1] = y * rowSize;
 	yOffsets[2] = (y+1) * rowSize;
-	
+
+
+	printf("blockId.x = %d | blockId.y = %d | threadIdx.x = %d | threadIdx.y = %d | blockDim.x = %d | blockDim.y = %d\n", blockIdx.x, blockIdx.y, threadIdx.x, threadIdx.y, blockDim.x, blockDim.y);	
 	uint8_t neighborhood[3*3];
 	
 	if (y > 0 && y < (gridDim.y * blockDim.y - 1) && x > 0 && x < (rowSize - 1))
@@ -115,9 +117,14 @@ __global__ void medianFilter3( uint8_t *d_input, uint8_t *d_output) {
 
 	//sort neighborhood
 	QuickSort(neighborhood, 0, 3 * 3 - 1);
+	/*
+	if(neighborhood[4] == NULL){	
+		printf("X at position is NULL and x is %d and y is %d\n", x, y);
+	}else{	
+		printf("X at position is NOT NULL and x is %d and y %d\n",x,y );
+	}*/
 	
 	// assign pixel to median
-
 	d_output[yOffsets[1] + x] = neighborhood[4];
 
 }
@@ -143,6 +150,7 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	
 	uint8_t neighborhood[7*7];
 
+	printf("blockId.x = %d | blockId.y = %d | threadIdx.x = %d | threadIdx.y = %d | blockDim.x = %d | blockDim.y = %d\n", blockIdx.x, blockIdx.y, threadIdx.x, threadIdx.y, blockDim.x, blockDim.y);	
 	if (y > 2 && y < (gridDim.y * blockDim.y - 3) && x > 2 && x < (rowSize - 3))
 	{
 		for(int i=0; i<dim_1d; i+=dim){
@@ -221,10 +229,10 @@ __global__ void medianFilter7( uint8_t *d_input, uint8_t *d_output) {
 	QuickSort(neighborhood, 0, 7 * 7 - 1);
 	
 	// assign pixel to median
-	if(neighborhood[24] == NULL){	
-		printf("X at position is NULL\n");
+	if(neighborhood[4] == NULL){	
+		printf("X at position is NULL and x is %d and y is %d\n", x, y);
 	}else{	
-		printf("X at position is NOT NULL\n");
+		printf("X at position is NOT NULL and x is %d and y %d\n",x,y );
 	}	
 	d_output[yOffsets[3] + x] = neighborhood[24];
 
@@ -977,8 +985,10 @@ int main (int argc, char *argv[]) {
     //Writes the new pgm picture
     fp = fopen(argv[3], "w");
     fprintf(fp, "%s\n%d\n%d\n%d\n", magic_number, height, width, gray_scale);
-    for (int i=0;i<median.size();i++)
-        fputc(median[i], fp);
+    for (int i=0;i<median.size();i++){
+        	//printf("%c\n", median[i]);
+		fputc(median[i], fp);
+	}
     fclose(fp);
 
     return 0;
